@@ -65,8 +65,8 @@
                     </select>
                 </div>
                 <div class="col-lg-6 mb-3">
-                    <label for="detail_account_id">@lang('messages.detail_account')</label>
-                    <select name="detail_account_id[]" id="detail_account_id" class="form-control form-select" multiple></select>
+                    <label for="ledger_detail_account_id">@lang('messages.detail_account')</label>
+                    <select name="detail_account_id[]" id="ledger_detail_account_id" class="form-control form-select" multiple></select>
                 </div>
             </div>
             <div class="row">

@@ -1935,7 +1935,7 @@
         });
 
         // Initialize AJAX Select2
-        $('#detail_account_id').select2({
+        $('#ledger_detail_account_id').select2({
             theme: 'bootstrap-5',
             width: '100%',
             placeholder: window.translations.selectPlaceholder,
