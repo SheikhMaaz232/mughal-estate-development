@@ -956,6 +956,212 @@
         </div>
     </div>
 
+    @if ($bookingData->case === 'transfer')
+        <div class="page">
+
+            <!-- Title -->
+            <div class="title" style="font-size:20pt; font-weight:bold; text-align:center; margin-bottom:25px;">
+                File Transfer
+            </div>
+
+            <!-- File Info -->
+            <div class="row">
+                <div>
+                    File No:
+                    <span class="value" style="min-width:140px; text-align:center;">
+                        {{ $bookingNo ?? '' }}
+                    </span>
+                </div>
+
+                <div>
+                    Security Note No:
+                    <span class="value" style="min-width:190px;"></span>
+                </div>
+
+                <div>
+                    Date:
+                    <span class="value" style="min-width:120px; text-align:center;">
+                        {{ $bookingData->date ? \Carbon\Carbon::parse($bookingData->date)->format('d-m-Y') : '' }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Project Info -->
+            <div class="row" style="margin-top: 25px !important; margin-bottom:20px;">
+                <div>
+                    <strong>1- Project Name:</strong>
+                    <span class="value"
+                        style="min-width:581px; text-align:center;">{{ $bookingData->project->name_en }}</span>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 25px !important;">
+                <div>
+                    Project Address:
+                    <span class="value"
+                        style="min-width:590px; text-align:center;">{{ $bookingData->project->address_en }}</span>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 25px !important; ">
+                <div>
+                    A-Unit No:
+                    <span class="value"
+                        style="min-width:160px; text-align:center;">{{ $bookingData->product->name_en }}</span>
+                </div>
+
+                <div>
+                    Phase:
+                    <span class="value"
+                        style="min-width:140px; text-align:center;">{{ $bookingData->project->phase_en }}</span>
+                </div>
+
+                <div>
+                    Area in Marla:
+                    <span class="value"
+                        style="min-width:140px; text-align:center;">{{ $bookingData->product->total_marla }}</span>
+                </div>
+            </div>
+
+            <!-- File Seller -->
+            <div class="section" style="margin-top: 25px !important;">
+                <div class="section-title" style="text-align: center !important; margin-top:5px;">File Seller</div>
+
+                <div class="row" style="margin-top: 25px !important;">
+                    <div>
+                        <strong>2-Name:</strong>
+                        <span class="value"
+                            style="min-width:638px; text-align:center;">{{ $previousBooking->party->name_en }}</span>
+                    </div>
+
+
+                </div>
+
+                <div class="row" style="margin-top: 25px !important;">
+                    <div>
+                        Father / Husband’s Name:
+                        <span class="value"
+                            style="min-width:293px; text-align:center;">{{ $previousBooking->party->father_name_en }}</span>
+                    </div>
+                    <div>
+                        CNIC #:
+                        <span class="value"
+                            style="min-width:170px; text-align:center;">{{ $previousBooking->party->cnic_no }}</span>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 25px !important;">
+                    <div>
+                        Booking Value:
+                        <span class="value"
+                            style="min-width:115px; text-align:center;">{{ $previousBooking->total_amount }}</span>
+                    </div>
+
+                    <div>
+                        Received Amount:
+                        <span class="value"
+                            style="min-width:115px; text-align:center;">{{ $bookingReceivedAmount ?? 0 }}</span>
+                    </div>
+
+                    <div>
+                        Remaining Amount:
+                        <span class="value"
+                            style="min-width:100px; text-align:center;">{{ $remainingBalance ?? 0 }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File Buyer -->
+            <div class="section" style="margin-top: 25px !important;">
+                <div class="section-title" style="text-align: center !important;">File Buyer</div>
+
+                <div class="row" style="margin-top: 25px !important;">
+                    <div>
+                        <strong>3-Name:</strong>
+                        <span class="value"
+                            style="min-width:638px; text-align:center;">{{ $bookingData->party->name_en }}</span>
+                    </div>
+
+
+                </div>
+
+                <div class="row" style="margin-top: 25px !important;">
+                    <div>
+                        Father / Husband’s Name:
+                        <span class="value"
+                            style="min-width:293px; text-align:center;">{{ $bookingData->party->father_name_en }}</span>
+                    </div>
+                    <div>
+                        CNIC #:
+                        <span class="value"
+                            style="min-width:170px; text-align:center;">{{ $bookingData->party->cnic_no }}</span>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 25px !important;">
+                    <div>
+                        Booking Value:
+                        <span class="value"
+                            style="min-width:115px; text-align:center;">{{ $bookingData->total_amount }}</span>
+                    </div>
+
+                    <div>
+                        Transfer Amount:
+                        <span class="value"
+                            style="min-width:115px; text-align:center;">{{ $bookingReceivedAmount ?? 0 }}</span>
+                    </div>
+
+                    <div>
+                        Remaining Amount:
+                        <span class="value"
+                            style="min-width:100px; text-align:center;">{{ $remainingBalance ?? 0 }}</span>
+                    </div>
+                </div>
+            </div>
+
+            {{-- <!-- Transfer Charges --}}
+            <div class="section" style="margin-top: 25px !important;">
+                <div class="section-title">Transfer Charges</div>
+                <div>
+                    <strong>4-Transfer Charges:</strong>
+                    <span class="value"
+                        style="min-width:558px; text-align:center;">{{ $bookingData->transfer_charges ?? '' }}</span>
+                </div>
+
+                <div class="row" style="margin-top: 25px !important;">
+                    <div>
+                        Received Transfer Charges:
+                        <span class="value"
+                            style="min-width:514px; text-align:center;">{{ $bookingData->transfer_charges ?? '' }}</span>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 25px !important;">
+                    <div>
+                        Remarks:
+                        <span class="value" style="min-width:633px; text-align:center;"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Declaration -->
+            <div style="margin-top:20px; font-size:10pt; line-height:1.5;">
+                I hereby declare that I have no objection to transfer this file and its deposit to the above party.
+                And that after today I will not own this file, nor will I be authorized to take any legal action
+                related to this file. Moreover, I have no objection regarding the registry and possession being
+                given to the above party.
+            </div>
+
+            <!-- Signatures -->
+            <div class="signatures" style="margin-top:1in;">
+                <div>Company Signature</div>
+                <div>Seller Signature</div>
+                <div>Buyer Signature</div>
+            </div>
+
+        </div>
+    @endif
+
     <!-- Second Page: Sale Deed -->
     <div class="page">
         <div class="title">Sale Deed</div>
@@ -994,7 +1200,8 @@
                     <td rowspan="7"
                         style="width:140px; height:160px; border:1px solid #000; text-align:center; vertical-align:middle; padding:0;">
                         @if (!empty($bookingData->party->profile_image))
-                            <img src="{{ asset('storage/' . $bookingData->party->profile_image) }}" alt="Party Photo"
+                            <img src="{{ asset('storage/' . $bookingData->party->profile_image) }}"
+                                alt="Party Photo"
                                 style="width:100%; height:100%; object-fit:contain; display:block; margin:0; padding:0;">
                         @else
                             <div style="font-size:10pt; color:#555; line-height:160px;">Photo</div>
@@ -1200,207 +1407,7 @@
         </div>
     </div>
 
-    @if ($bookingData->case === 'transfer')
-        <div class="page">
 
-            <!-- Title -->
-            <div class="title" style="font-size:20pt; font-weight:bold; text-align:center; margin-bottom:25px;">
-                File Transfer
-            </div>
-
-            <!-- File Info -->
-            <div class="row">
-                <div>
-                    File No:
-                    <span class="value" style="min-width:140px; text-align:center;">
-                        {{ $bookingNo ?? '' }}
-                    </span>
-                </div>
-
-                <div>
-                    Security Note No:
-                    <span class="value" style="min-width:190px;"></span>
-                </div>
-
-                <div>
-                    Date:
-                    <span class="value" style="min-width:120px; text-align:center;">
-                        {{ $bookingData->date ? \Carbon\Carbon::parse($bookingData->date)->format('d-m-Y') : '' }}
-                    </span>
-                </div>
-            </div>
-
-            <!-- Project Info -->
-            <div class="row" style="margin-top: 25px !important; margin-bottom:20px;">
-                <div>
-                    <strong>1- Project Name:</strong>
-                    <span class="value"
-                        style="min-width:581px; text-align:center;">{{ $bookingData->project->name_en }}</span>
-                </div>
-            </div>
-
-            <div class="row" style="margin-top: 25px !important;">
-                <div>
-                    Project Address:
-                    <span class="value"
-                        style="min-width:590px; text-align:center;">{{ $bookingData->project->address_en }}</span>
-                </div>
-            </div>
-
-            <div class="row" style="margin-top: 25px !important; ">
-                <div>
-                    A-Unit No:
-                    <span class="value"
-                        style="min-width:160px; text-align:center;">{{ $bookingData->product->name_en }}</span>
-                </div>
-
-                <div>
-                    Phase:
-                    <span class="value"
-                        style="min-width:140px; text-align:center;">{{ $bookingData->project->phase_en }}</span>
-                </div>
-
-                <div>
-                    Area in Marla:
-                    <span class="value"
-                        style="min-width:140px; text-align:center;">{{ $bookingData->product->total_marla }}</span>
-                </div>
-            </div>
-
-            <!-- File Seller -->
-            <div class="section" style="margin-top: 25px !important;">
-                <div class="section-title" style="text-align: center !important; margin-top:5px;">File Seller</div>
-
-                <div class="row" style="margin-top: 25px !important;">
-                    <div>
-                        <strong>2-Name:</strong>
-                        <span class="value"
-                            style="min-width:638px; text-align:center;">{{ $previousBooking->party->name_en }}</span>
-                    </div>
-
-
-                </div>
-
-                <div class="row" style="margin-top: 25px !important;">
-                    <div>
-                        Father / Husband’s Name:
-                        <span class="value"
-                            style="min-width:293px; text-align:center;">{{ $previousBooking->party->father_name_en }}</span>
-                    </div>
-                    <div>
-                        CNIC #:
-                        <span class="value"
-                            style="min-width:170px; text-align:center;">{{ $previousBooking->party->cnic_no }}</span>
-                    </div>
-                </div>
-
-                <div class="row" style="margin-top: 25px !important;">
-                    <div>
-                        Booking Value:
-                        <span class="value"
-                            style="min-width:115px; text-align:center;">{{ $previousBooking->total_amount }}</span>
-                    </div>
-
-                    <div>
-                        Received Amount:
-                        <span class="value" style="min-width:115px; text-align:center;">{{$bookingReceivedAmount ?? 0}}</span>
-                    </div>
-
-                    <div>
-                        Remaining Amount:
-                        <span class="value" style="min-width:100px; text-align:center;">{{$remainingBalance ?? 0}}</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- File Buyer -->
-            <div class="section" style="margin-top: 25px !important;">
-                <div class="section-title" style="text-align: center !important;">File Buyer</div>
-
-                <div class="row" style="margin-top: 25px !important;">
-                    <div>
-                        <strong>3-Name:</strong>
-                        <span class="value"
-                            style="min-width:638px; text-align:center;">{{ $bookingData->party->name_en }}</span>
-                    </div>
-
-
-                </div>
-
-                <div class="row" style="margin-top: 25px !important;">
-                    <div>
-                        Father / Husband’s Name:
-                        <span class="value"
-                            style="min-width:293px; text-align:center;">{{ $bookingData->party->father_name_en }}</span>
-                    </div>
-                    <div>
-                        CNIC #:
-                        <span class="value"
-                            style="min-width:170px; text-align:center;">{{ $bookingData->party->cnic_no }}</span>
-                    </div>
-                </div>
-
-                <div class="row" style="margin-top: 25px !important;">
-                    <div>
-                        Booking Value:
-                        <span class="value"
-                            style="min-width:115px; text-align:center;">{{ $bookingData->total_amount }}</span>
-                    </div>
-
-                    <div>
-                        Transfer Amount:
-                        <span class="value" style="min-width:115px; text-align:center;">{{$bookingReceivedAmount ?? 0}}</span>
-                    </div>
-
-                    <div>
-                        Remaining Amount:
-                        <span class="value" style="min-width:100px; text-align:center;">{{$remainingBalance ?? 0}}</span>
-                    </div>
-                </div>
-            </div>
-
-            {{-- <!-- Transfer Charges --}}
-            <div class="section" style="margin-top: 25px !important;">
-                <div class="section-title">Transfer Charges</div>
-                <div>
-                    <strong>4-Transfer Charges:</strong>
-                    <span class="value"
-                        style="min-width:558px; text-align:center;">{{ $bookingData->transfer_charges ?? '' }}</span>
-                </div>
-
-                <div class="row" style="margin-top: 25px !important;">
-                    <div>
-                        Received Transfer Charges:
-                        <span class="value"
-                            style="min-width:514px; text-align:center;">{{ $bookingData->transfer_charges ?? '' }}</span>
-                    </div>
-                </div>
-
-                <div class="row" style="margin-top: 25px !important;">
-                    <div>
-                        Remarks:
-                        <span class="value" style="min-width:633px; text-align:center;"></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Declaration -->
-            <div style="margin-top:20px; font-size:10pt; line-height:1.5;">
-                I hereby declare that I have no objection to transfer this file and its deposit to the above party.
-                And that after today I will not own this file, nor will I be authorized to take any legal action
-                related to this file. Moreover, I have no objection regarding the registry and possession being
-                given to the above party.
-            </div>
-
-            <!-- Signatures -->
-            <div class="signatures" style="margin-top:1in;">
-                <div>Company Signature</div>
-                <div>Seller Signature</div>
-                <div>Buyer Signature</div>
-            </div>
-
-        </div>
-    @endif
 
     <!-- ================= Third Page (Terms & Conditions) ================= -->
     <div class="page">
