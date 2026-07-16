@@ -35,9 +35,9 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="detail_account_id">@lang('messages.amount_transfer_to_plot')</label>
-                        <select name="detail_account_id" id="detail_account_id"
-                            class="form-control select2 form-select @error('detail_account_id') is-invalid @enderror">
+                        <label for="detail_account_id2">@lang('messages.amount_transfer_to_plot')</label>
+                        <select name="detail_account_id" id="detail_account_id2"
+                            class="form-control select2 form-select @error('detail_account_id2') is-invalid @enderror">
                             <option value="">@lang('messages.detail_account')</option>
                             @foreach ($liabilityAccounts as $detailAccount)
                                 <option value="{{ $detailAccount->id }}"
