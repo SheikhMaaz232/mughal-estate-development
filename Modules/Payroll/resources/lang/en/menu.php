@@ -1,0 +1,20 @@
+<?php
+return [
+    'dashboard' => 'Payroll Dashboard',
+    'qualifications' => 'Qualifications',
+    'payroll' => 'Payroll',
+    'grades' => 'Grade',
+    'payroll-types' => 'Payroll Types',
+    'designations' => 'Designations',
+    'leave-types' => 'Leave Types',
+    'leave-requests' => 'Leave Requests',
+    'holiday-types' => 'Holiday Types',
+    'holidays' => 'Holidays',
+    'shifts' => 'Shifts',
+    'deductions' => 'Deduction',
+    'allowances' => 'Allowances',
+    'employees' => 'Employee',
+    'devices' => 'Devices',
+    'attendance' => 'Attendance',
+    'payrolls' => 'Payrolls',
+];
