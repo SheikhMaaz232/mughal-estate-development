@@ -115,7 +115,7 @@ class ReportController extends Controller
 
 
         $partySchedules = $expandedSchedules->filter(function ($schedule) {
-            return $schedule->party && (($schedule->till_date_short_payment ?? 0) != 0);
+            return $schedule->party;
         })->groupBy(function ($item) {
             return $item->party_id . '_' . $item->account_id;
         })->map(function ($schedules) use ($asOfDate) {
@@ -150,7 +150,64 @@ class ReportController extends Controller
                 'scheduled_after_date' => $scheduledAfterDate,
             ];
         })->values();
+        $ledgerAging = AccountLedger::with(['party', 'detailAccount'])
+            ->when($request->filled('project_id') && !in_array('all', (array) $request->project_id), function ($query) use ($request) {
+                $query->whereIn('project_id', (array) $request->project_id);
+            })
+            ->when($request->filled('party_id') && !in_array('all', (array) $request->party_id), function ($query) use ($request) {
+                $query->whereIn('party_id', (array) $request->party_id);
+            })
+            ->when($asOfDate, function ($query) use ($asOfDate) {
+                $query->whereDate('date', '<=', $asOfDate);
+            })
+            ->get()
+            ->groupBy(function ($entry) {
+                return $entry->party_id . '_' . $entry->detail_account_id;
+            })->map(function ($entries) {
 
+                $party = $entries->first()->party;
+                $account = $entries->first()->detailAccount;
+
+                $debit = $entries->sum('debit');
+                $credit = $entries->sum('credit');
+                $balance = $debit - $credit;
+
+                return (object) [
+
+                    'party_id' => $party?->id,
+                    'account_id' => $account?->id,
+
+                    'party_name_en' => $party?->name_en,
+                    'party_name_ur' => $party?->name_ur,
+
+                    'account_name_en' => $account?->name_en ?? '',
+                    'account_name_ur' => $account?->name_ur ?? '',
+
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'balance' => $balance,
+                ];
+            })
+            ->values();
+
+        $partyCredits = $ledgerAging
+            ->keyBy(function ($item) {
+                return $item->party_id . '_' . $item->account_id;
+            })
+            ->map(fn($item) => $item->credit)
+            ->all();
+
+        $partySchedules = $partySchedules->map(function ($schedule) use ($partyCredits) {
+            $key = $schedule->party_id . '_' . $schedule->account_id;
+
+            $credit = $partyCredits[$key] ?? 0;
+            $schedule->credit = $credit;
+            $schedule->till_date_short_payment = max(0, $schedule->scheduled_by_date - $credit);
+            return $schedule;
+        })->filter(function ($schedule) {
+            return $schedule->till_date_short_payment != 0;
+        })
+            ->values();
 
         return view('reports.recovery-sheet.recoveryReport', compact(
             'asOfDate',

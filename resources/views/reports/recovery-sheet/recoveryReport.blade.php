@@ -4,7 +4,7 @@
 
     <head>
         <meta charset="UTF-8">
-        <title>@lang('messages.bill_aging_report')</title>
+        <title>@lang('messages.recovery_report')</title>
         <style>
             body {
                 font-family: "Segoe UI", Tahoma, sans-serif;
@@ -132,11 +132,10 @@
 
         <div class="report-header">
             <h1>@lang('messages.company_name')</h1>
-            <h2>@lang('menu.bill-aging')</h2>
+            <h2>@lang('messages.recovery_report')</h2>
             @if ($asOfDate)
                 <p>@lang('messages.as_of_date'): {{ $asOfDate->format('d-m-Y') }}</p>
             @endif
-            <p>@lang('messages.report_type'): </p>
         </div>
 
         <div class="summary-box">

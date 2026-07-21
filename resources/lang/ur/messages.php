@@ -776,7 +776,7 @@ return [
     'reset' => 'دوبارہ ترتیب دیں',
     'total' => 'کل',
     'difference' => 'فرق',
-    'company_name' => 'Mughal Estate Developers',
+    'company_name' => 'مغل اسٹیٹ ڈویلپرز',
     'generated_by' => 'تیار کردہ',
     'bill_aging_report' => 'بل ایجنگ رپورٹ',
     'balance_equation' => 'اثاثے = ذمہ داریاں + حصص',
@@ -1390,5 +1390,6 @@ return [
     'plot-no' => 'پلاٹ نمبر',
     'plot-size' => 'پلاٹ کا سائز',
     'marla-size' => 'مرلہ',
-    'booking-value' => 'بکنگ ویلیو'
+    'booking-value' => 'بکنگ ویلیو',
+    'recovery_report' => 'ریکوری رپورٹ'
 ];
