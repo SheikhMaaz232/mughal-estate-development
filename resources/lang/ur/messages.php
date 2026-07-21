@@ -753,7 +753,7 @@ return [
     'party_name' => 'پارٹی کا نام',
     'total_scheduled' => 'کل شیڈیول',
     'amount_due_by_date' => 'تاریخ تک قابل وصول رقم',
-    'till_date_short_payment' => 'تاریخ تک قلیل ادائیگی',
+    'till_date_short_payment' => 'تاریخ تک شارٹ رقم',
     'amount_due_after_date' => 'تاریخ کے بعد قابل وصول رقم',
     'ledger_aging' => 'لیجر ایجنگ',
     'net_balance' => 'صاف بیلنس',
@@ -1387,4 +1387,8 @@ return [
     'status-partial_received' => 'جزوی طور پر وصول شدہ',
     'status-received' => 'وصول شدہ',
     'status-cancelled' => 'منسوخ شدہ',
+    'plot-no' => 'پلاٹ نمبر',
+    'plot-size' => 'پلاٹ کا سائز',
+    'marla-size' => 'مرلہ',
+    'booking-value' => 'بکنگ ویلیو'
 ];

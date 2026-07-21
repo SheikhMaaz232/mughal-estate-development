@@ -1,430 +1,197 @@
-{{-- <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Recovery Sheet Report</title>
-    <style>
-        body {
-            font-family: "Segoe UI", Tahoma, sans-serif;
-            font-size: 14px;
-            color: #2c3e50;
-            margin: 30px;
-        }
+<body class="{{ App::getLocale() === 'ur' ? 'rtl' : 'ltr' }}">
 
-        .report-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .report-header h2 {
-            margin: 0;
-            font-size: 22px;
-            letter-spacing: 1px;
-        }
-
-        .report-header p {
-            margin: 3px 0;
-            color: #7f8c8d;
-            font-size: 13px;
-        }
-
-        .summary-box {
-            margin-bottom: 20px;
-            padding: 10px 15px;
-            background: #f4f6f7;
-            border-left: 4px solid #2c3e50;
-            width: fit-content;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        thead {
-            background-color: #2c3e50;
-            color: white;
-        }
-
-        th,
-        td {
-            padding: 10px 8px;
-            border: 1px solid #dcdde1;
-            text-align: right;
-        }
-
-        th:first-child,
-        td:first-child {
-            text-align: left;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #f9fbfc;
-        }
-
-        tbody tr:hover {
-            background-color: #eef3f7;
-        }
-
-        .total-row {
-            font-weight: bold;
-            background-color: #ecf0f1;
-        }
-
-        .print-btn {
-            padding: 8px 16px;
-            margin-top: 10px;
-            align-content: flex-end;
-            background: green;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        .footer {
-            margin-top: 30px;
-            font-size: 12px;
-            color: #7f8c8d;
-            text-align: right;
-        }
-
-        @media print {
+    <head>
+        <meta charset="UTF-8">
+        <title>@lang('messages.bill_aging_report')</title>
+        <style>
             body {
-                margin: 10px;
+                font-family: "Segoe UI", Tahoma, sans-serif;
+                font-size: 14px;
+                color: #2c3e50;
+                margin: 30px;
+                direction: {{ App::getLocale() === 'ur' ? 'rtl' : 'ltr' }};
+                text-align: {{ App::getLocale() === 'ur' ? 'right' : 'left' }};
             }
 
-            .no-print {
-                display: none;
+            body.rtl {
+                direction: rtl;
+                text-align: right;
+            }
+
+            body.ltr {
+                direction: ltr;
+                text-align: left;
+            }
+
+            .report-header {
+                text-align: center;
+                margin-bottom: 25px;
+            }
+
+            .report-header h2 {
+                margin: 0;
+                font-size: 22px;
+                letter-spacing: 1px;
+            }
+
+            .summary-box {
+                margin-bottom: 20px;
+                padding: 10px 15px;
+                background: #f4f6f7;
+                border-left: 4px solid #2c3e50;
+                width: fit-content;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+            }
+
+            thead {
+                background-color: #2c3e50;
+                color: white;
+            }
+
+            th,
+            td {
+                padding: 10px 8px;
+                border: 1px solid #dcdde1;
+                text-align: right;
+            }
+
+            th:first-child,
+            td:first-child {
+                text-align: left;
+            }
+
+            /* body[dir="rtl"] th:first-child,
+        body[dir="rtl"] td:first-child {
+            text-align: right;
+        } */
+
+            html[dir="rtl"] th:first-child,
+            html[dir="rtl"] td:first-child {
+                text-align: right;
+            }
+
+            tbody tr:nth-child(even) {
+                background-color: #f9fbfc;
+            }
+
+            tbody tr:hover {
+                background-color: #eef3f7;
+            }
+
+            .total-row {
+                font-weight: bold;
+                background-color: #ecf0f1;
             }
 
             .print-btn {
-                display: none;
+                padding: 8px 16px;
+                margin-top: 10px;
+                align-content: flex-end;
+                background: green;
+                color: #fff;
+                border: none;
+                cursor: pointer;
+                margin-bottom: 10px;
+                text-decoration: none;
             }
-        }
-    </style>
-</head>
 
-<body>
-    <a href="{{ route('reports.recovery.sheet.view') }}" class="print-btn" style="background: black !important;">
-        Back
-    </a>
+            .footer {
+                margin-top: 30px;
+                font-size: 12px;
+                color: #7f8c8d;
+                text-align: right;
+            }
 
-    <div class="report-header">
-        <h1>Mughal Estate Developers</h1>
-        <h2>Recovery Sheet Report</h2>
-    </div>
+            @media print {
+                body {
+                    margin: 10px;
+                }
 
-    <div class="summary-box">
-        <div><strong>Total Projects:</strong> {{ $recoveryAccounts->count() }}</div>
-        <div><strong>Total Accounts:</strong> {{ $recoveryAccounts->flatten()->count() }}</div>
-    </div>
+                .no-print {
+                    display: none;
+                }
 
-    <table>
+                .print-btn {
+                    display: none;
+                }
+            }
+        </style>
+    </head>
 
-        <tbody>
-            @php
-                $grandDebit = 0;
-                $grandCredit = 0;
-                $grandBalance = 0;
-            @endphp
+    <body>
+        @php
+            $isUrdu = App::getLocale() === 'ur';
+        @endphp
 
-            @foreach ($recoveryAccounts as $projectName => $accounts)
-                @php
-                    $projectDebit = 0;
-                    $projectCredit = 0;
-                    $projectBalance = 0;
-                @endphp
+        <div class="report-header">
+            <h1>@lang('messages.company_name')</h1>
+            <h2>@lang('menu.bill-aging')</h2>
+            @if ($asOfDate)
+                <p>@lang('messages.as_of_date'): {{ $asOfDate->format('d-m-Y') }}</p>
+            @endif
+            <p>@lang('messages.report_type'): </p>
+        </div>
 
-                <h3 style="margin-top:30px; background:#ecf0f1; padding:8px 10px; border-left:4px solid #2c3e50;">
-                    Project: {{ $projectName }}
-                </h3>
+        <div class="summary-box">
+            <div><strong>@lang('messages.total_parties'):</strong> {{ $partySchedules->count() }}</div>
+            <div><strong>@lang('messages.total_scheduled_amount'):</strong> {{ number_format($partySchedules->sum('total_schedule'), 2) }}
+            </div>
+            <div><strong>@lang('messages.project'): {{ $isUrdu ? $project->name_ur ?? $project->name_en : $project->name_en ?? 'N/A' }}</strong></div>
+        </div>
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Account Name</th>
-                            <th>Total Debit</th>
-                            <th>Total Credit</th>
-                            <th>Balance (Recovery)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        @foreach ($accounts as $account)
-                            @php
-                                $projectDebit += $account->total_debit;
-                                $projectCredit += $account->total_credit;
-                                $projectBalance += $account->balance;
-
-                                $grandDebit += $account->total_debit;
-                                $grandCredit += $account->total_credit;
-                                $grandBalance += $account->balance;
-                            @endphp
-                            <tr>
-                                <td>{{ $account->detailAccount->name_en ?? 'N/A' }}</td>
-                                <td>{{ number_format($account->total_debit, 2) }}</td>
-                                <td>{{ number_format($account->total_credit, 2) }}</td>
-                                <td><strong>{{ number_format($account->balance, 2) }}</strong></td>
-                            </tr>
-                        @endforeach
-
-                        <tr class="total-row">
-                            <td>Project Total</td>
-                            <td>{{ number_format($projectDebit, 2) }}</td>
-                            <td>{{ number_format($projectCredit, 2) }}</td>
-                            <td>{{ number_format($projectBalance, 2) }}</td>
-                        </tr>
-
-                    </tbody>
-                </table>
-            @endforeach
-
-
-            {{-- GRAND TOTAL SECTION
-            <h3 style="margin-top:40px; background:#2c3e50; color:white; padding:10px;">
-                Overall Recovery Summary
-            </h3>
-
+        {{-- @if ($reportType !== 'payable') --}}
+            <h3>@lang('messages.booking_schedule_aging')</h3>
             <table>
                 <thead>
                     <tr>
-                        <th></th>
-                        <th>Total Debit</th>
-                        <th>Total Credit</th>
-                        <th>Balance (Recovery)</th>
+                        <th>@lang('messages.party_name')</th>
+                        <th>@lang('messages.plot-no')</th>
+                        <th>@lang('messages.account_name')</th>
+                        {{-- <th>@lang('messages.project')</th> --}}
+                        <th>@lang('messages.booking-value')</th>
+                        <th>@lang('messages.amount_due_by_date')</th>
+                        <th>@lang('messages.till_date_short_payment')</th>
+                        <th>@lang('messages.amount_due_after_date')</th>
                     </tr>
                 </thead>
-                <tr class="total-row">
-                    <td style="text-align:left;"><strong>Grand Total</strong></td>
-                    <td><strong>{{ number_format($grandDebit, 2) }}</strong></td>
-                    <td><strong>{{ number_format($grandCredit, 2) }}</strong></td>
-                    <td><strong>{{ number_format($grandBalance, 2) }}</strong></td>
-                </tr>
+                <tbody>
+                    @forelse($partySchedules as $schedule)
+                        <tr>
+                            <td>{{ $isUrdu ? $schedule->party_name_ur ?? $schedule->party_name_en : $schedule->party_name_en }}<br>
+                                {{$schedule->party_phone_no_1 ?? "N/A"}}
+                            </td>
+                            <td>{{ $isUrdu ? $schedule->product_name_ur ?? $schedule->product_name_en : $schedule->product_name_en }}<br>
+                                ({{$schedule->product_size ?? "N/A"}} @lang('messages.marla-size'))
+                            </td>
+                            <td>
+                                {{ $isUrdu ? ($schedule->account_name_ur ?: $schedule->account_name_en) : $schedule->account_name_en }}
+                            </td>
+                            {{-- <td>{{ $isUrdu ? implode(', ', $schedule->project_names_ur ?: $schedule->project_names_en) : implode(', ', $schedule->project_names_en) }}
+                            </td> --}}
+                            <td>{{ number_format($schedule->total_schedule, 2) }}</td>
+                            <td>{{ number_format($schedule->scheduled_by_date, 2) }}</td>
+                            <td>{{ number_format($schedule->till_date_short_payment ?? 0, 2) }}</td>
+                            <td>{{ number_format($schedule->scheduled_after_date, 2) }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6">@lang('messages.no_records_found')</td>
+                        </tr>
+                    @endforelse
+                </tbody>
             </table>
-        </tbody>
-    </table>
+        {{-- @endif --}}
 
-    <div class="footer">
-        Generated by {{ config('app.name') }} | {{ now()->format('d M Y h:i A') }}
-    </div>
+        <div class="footer">
+            Generated by {{ config('app.name') }} | {{ now()->format('d-m-Y h:i A') }}
+        </div>
+    </body>
 
-</body>
-
-</html> --}}
-
-
-
-<!DOCTYPE html>
-<html lang="ur" dir="rtl">
-
-<head>
-    <meta charset="UTF-8">
-    <title>ریکوری شیٹ رپورٹ</title>
-    <style>
-        body {
-            font-family: "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", serif;
-            font-size: 16px;
-            color: #2c3e50;
-            margin: 30px;
-            direction: rtl;
-        }
-
-        .report-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .report-header h2 {
-            margin: 0;
-            font-size: 22px;
-            letter-spacing: 1px;
-        }
-
-        .report-header p {
-            margin: 3px 0;
-            color: #7f8c8d;
-            font-size: 13px;
-        }
-
-        .summary-box {
-            margin-bottom: 20px;
-            padding: 10px 15px;
-            background: #f4f6f7;
-            border-right: 4px solid #2c3e50;
-            width: fit-content;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        thead {
-            background-color: #2c3e50;
-            color: white;
-        }
-
-        th,
-        td {
-            padding: 10px 8px;
-            border: 1px solid #dcdde1;
-            text-align: right;
-        }
-
-        th:last-child,
-        td:last-child {
-            text-align: left;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #f9fbfc;
-        }
-
-        tbody tr:hover {
-            background-color: #eef3f7;
-        }
-
-        .total-row {
-            font-weight: bold;
-            background-color: #ecf0f1;
-        }
-
-        .print-btn {
-            padding: 8px 16px;
-            margin-top: 10px;
-            background: green;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        .footer {
-            margin-top: 30px;
-            font-size: 12px;
-            color: #7f8c8d;
-            text-align: left;
-        }
-
-        @media print {
-            body {
-                margin: 10px;
-            }
-
-            .no-print {
-                display: none;
-            }
-
-            .print-btn {
-                display: none;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-    <a href="{{ route('reports.recovery.sheet.view') }}" class="print-btn" style="background: black !important;">
-        واپس جائیں
-    </a>
-
-    <div class="report-header">
-        <h1>مغل اسٹیٹ ڈیولپرز</h1>
-        <h2>ریکوری شیٹ رپورٹ</h2>
-    </div>
-
-    <div class="summary-box">
-        <div><strong>کل پروجیکٹس:</strong> {{ $recoveryAccounts->count() }}</div>
-        <div><strong>کل اکاؤنٹس:</strong> {{ $recoveryAccounts->flatten()->count() }}</div>
-    </div>
-
-    @php
-        $grandDebit = 0;
-        $grandCredit = 0;
-        $grandBalance = 0;
-    @endphp
-
-    @foreach ($recoveryAccounts as $projectName => $accounts)
-        @php
-            $projectDebit = 0;
-            $projectCredit = 0;
-            $projectBalance = 0;
-        @endphp
-
-        <h3 style="margin-top:30px; background:#ecf0f1; padding:8px 10px; border-right:4px solid #2c3e50;">
-            پروجیکٹ: {{ $projectName }}
-        </h3>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>اکاؤنٹ کا نام</th>
-                    <th>کل بنام</th>
-                    <th>کل جمع</th>
-                    <th>بیلنس (ریکوری)</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($accounts as $account)
-                    @php
-                        $projectDebit += $account->total_debit;
-                        $projectCredit += $account->total_credit;
-                        $projectBalance += $account->balance;
-
-                        $grandDebit += $account->total_debit;
-                        $grandCredit += $account->total_credit;
-                        $grandBalance += $account->balance;
-                    @endphp
-                    <tr>
-                        <td>{{ $account->detailAccount->name_ur ?? 'دستیاب نہیں' }}</td>
-                        <td>{{ number_format($account->total_debit, 2) }}</td>
-                        <td>{{ number_format($account->total_credit, 2) }}</td>
-                        <td><strong>{{ number_format($account->balance, 2) }}</strong></td>
-                    </tr>
-                @endforeach
-
-                <tr class="total-row">
-                    <td>پروجیکٹ کا کل</td>
-                    <td>{{ number_format($projectDebit, 2) }}</td>
-                    <td>{{ number_format($projectCredit, 2) }}</td>
-                    <td>{{ number_format($projectBalance, 2) }}</td>
-                </tr>
-
-            </tbody>
-        </table>
-    @endforeach
-
-
-    {{-- GRAND TOTAL SECTION --}}
-    <h3 style="margin-top:40px; background:#2c3e50; color:white; padding:10px;">
-        مجموعی ریکوری خلاصہ
-    </h3>
-
-    <table>
-        <thead>
-            <tr>
-                <th></th>
-                <th> سیل ویلیو</th>
-                <th> وصول رقم</th>
-                <th>بقیہ وصول کرنے والی رقم</th>
-            </tr>
-        </thead>
-        <tr class="total-row">
-            <td><strong>مجموعی کل</strong></td>
-            <td><strong>{{ number_format($grandDebit, 2) }}</strong></td>
-            <td><strong>{{ number_format($grandCredit, 2) }}</strong></td>
-            <td><strong>{{ number_format($grandBalance, 2) }}</strong></td>
-        </tr>
-    </table>
-
-    <div class="footer">
-        تیار کردہ از {{ config('app.name') }} | {{ now()->format('d M Y h:i A') }}
-    </div>
-
-</body>
-
-</html>
+    </html>

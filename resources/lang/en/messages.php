@@ -1406,4 +1406,8 @@ return [
     'status-received' => 'Received',
     'status-cancelled' => 'Cancelled',
     'verify-invoice-confirm' => 'Are you sure you want to verify this invoice?',
+    'plot-no' => 'Plot #',
+    'plot-size' => 'Plot Size',
+    'marla-size' => 'Marla',
+    'booking-value' => 'Booking value'
 ];

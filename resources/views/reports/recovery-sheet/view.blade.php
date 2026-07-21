@@ -28,23 +28,15 @@
         <form action="{{ route('reports.recovery.sheet.report') }}" method="get" id="form-search" target="_blank">
             <div class="row">
                 <div class="col-lg-6 mb-3">
-                    <label for="from_date">@lang('messages.from_date')</label>
-                    <input id="from_date" name="from_date" style="color: black; " class="form-control" type="text"
-                        value="{{ @$request['from_date'] }}" placeholder="@lang('messages.from_date')">
+                    <label for="as_of_date">@lang('messages.as_of_date')</label>
+                    <input id="as_of_date" name="as_of_date" style="color: black; " class="form-control" type="text"
+                        value="{{ @$request['as_of_date'] }}" placeholder="@lang('messages.as_of_date')">
                 </div>
 
-                <div class="col-lg-6 mb-3">
-                    <label for="to_date">@lang('messages.to_date')</label>
-                    <input id="to_date" type="text" name="to_date" class="form-control"
-                        value="{{ @$request['to_date'] }}" placeholder="@lang('messages.to_date')" />
-                </div>
-            </div>
-
-            <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="project_id">@lang('messages.projects')</label>
-                    <select name="project_id[]" id="project_id"
-                        class="form-control select2 form-select @error('project_id') is-invalid @enderror" multiple>
+                    <select name="project_id" id="project_id"
+                        class="form-control select2 form-select @error('project_id') is-invalid @enderror">
                         <option value="all">@lang('messages.select_all_projects')</option>
                         @foreach ($projects as $project)
                             <option value="{{ $project->id }}"
@@ -62,7 +54,7 @@
                 <div class="col-lg-6" style="margin-top: 25px;">
                     <button class="btn btn-primary" type="submit">@lang('messages.search')</button>
 
-                    @if (request()->hasAny(['from_date', 'to_date', 'project_id']))
+                    @if (request()->hasAny(['as_of_date', 'project_id']))
                         <a href="{{ route('reports.recovery.sheet.view') }}" class="btn btn-secondary">@lang('messages.clear')</a>
                     @endif
                 </div>
@@ -71,7 +63,7 @@
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const input = document.getElementById('from_date'); // Change to your input's actual ID
+            const input = document.getElementById('as_of_date'); // Change to your input's actual ID
 
             input.addEventListener('input', function() {
                 // Remove all non-digit characters

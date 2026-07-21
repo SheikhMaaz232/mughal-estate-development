@@ -24,43 +24,180 @@ class ReportController extends Controller
 
     public function getRecoveryReport(Request $request)
     {
-        $projects = $request->project_id;
-        $subSubSubHeads = SubSubSubHead::where('sub_head_id', 1)->whereIn('project_id', $projects)->pluck('id');
-        $detailAccounts = DetailAccount::whereIn('sub_sub_sub_head_id', $subSubSubHeads)->pluck('id');
-        // $ledgerData = AccountLedger::whereIn('detail_account_id', $detailAccounts)->get();
-        // $recoveryAccounts = AccountLedger::selectRaw('
-        //     detail_account_id,
-        //     SUM(debit) as total_debit,
-        //     SUM(credit) as total_credit,
-        //     (SUM(debit) - SUM(credit)) as balance
-        // ')
-        //     ->whereIn('detail_account_id', $detailAccounts)
-        //     ->groupBy('detail_account_id')
-        //     ->havingRaw('SUM(debit) > SUM(credit)')
-        //     ->with('detailAccount') // relationship required
-        //     ->get();
+        $asOfDate = null;
+        if ($request->filled('as_of_date')) {
+            $dateValue = str_replace('/', '-', trim($request->as_of_date));
+            try {
+                $asOfDate = Carbon::createFromFormat('d-m-Y', $dateValue)->endOfDay();
+            } catch (\Exception $e) {
+                try {
+                    $asOfDate = Carbon::parse($dateValue)->endOfDay();
+                } catch (\Exception $e) {
+                    $asOfDate = null;
+                }
+            }
+        }
 
-        $recoveryAccounts = AccountLedger::selectRaw('
-        detail_account_id,
-        SUM(debit) as total_debit,
-        SUM(credit) as total_credit,
-        (SUM(debit) - SUM(credit)) as balance
-            ')
-            ->whereHas('detailAccount.subSubSubHead', function ($q) use ($request) {
-                $q->where('sub_head_id', 1)
-                    ->whereIn('project_id', $request->project_id);
+        $project = Project::find($request->project_id);
+
+        $bookingSchedules = BookingPaymentShedule::with(['booking.party', 'booking.product', 'booking.project', 'booking.detailAccount', 'schedulePeriod'])
+            ->whereHas('booking', function ($query) use ($request) {
+                if ($request->filled('project_id') && !in_array('all', (array) $request->project_id)) {
+                    $query->whereIn('project_id', (array) $request->project_id);
+                }
+                if ($request->filled('party_id') && !in_array('all', (array) $request->party_id)) {
+                    $query->whereIn('party_id', (array) $request->party_id);
+                }
             })
-            ->groupBy('detail_account_id')
-            ->havingRaw('SUM(debit) > SUM(credit)')
-            ->with('detailAccount.subSubSubHead.projects')
-            ->get()
-            ->groupBy(function ($item) {
-                return $item->detailAccount->subSubSubHead->projects->name_en ?? 'Unknown Project';
-            });
+            ->get();
+
+        $expandedSchedules = $bookingSchedules->flatMap(function ($schedule) {
+
+            $scheduleCount = max(1, (int) $schedule->number);
+            $intervalType = strtolower(optional($schedule->schedulePeriod)->title_en ?? '');
+            $startDate = Carbon::parse($schedule->due_date);
+
+            return collect(range(0, $scheduleCount - 1))->map(function ($index) use ($schedule, $intervalType, $startDate) {
+                $dueDate = $startDate->copy();
+
+                switch (trim(strtolower($intervalType))) {
+
+                    case 'monthly':
+                        $dueDate->addMonths($index);
+                        break;
+
+                    case 'quarter':
+                    case 'quarterly':
+                        $dueDate->addMonths($index * 3);
+                        break;
+
+                    case 'half year':
+                    case 'half-year':
+                    case 'half yearly':
+                        $dueDate->addMonths($index * 6);
+                        break;
+
+                    case 'yearly':
+                    case 'year':
+                    case 'annual':
+                        $dueDate->addYears($index);
+                        break;
+
+                    case 'nine monthly':
+                        $dueDate->addMonths($index * 9);
+                        break;
+
+                    case 'weekly':
+                    case 'week':
+                        $dueDate->addWeeks($index);
+                        break;
+
+                    case 'one time':
+                    default:
+                        if ($index > 0) {
+                            return null;
+                        }
+                        break;
+                }
+
+                return (object) [
+                    'party_id' => $schedule->booking->party_id,
+                    'account_id' => $schedule->booking->detail_account_id,
+                    'party' => $schedule->booking->party,
+                    'product' => $schedule->booking->product,
+                    'account' => $schedule->booking->detailAccount,
+                    'project' => $schedule->booking->project,
+                    'pay_amount' => $schedule->pay_amount,
+                    'due_date' => $dueDate,
+                ];
+            })->filter();
+        });
 
 
-        return view('reports.recovery-sheet.recoveryReport', compact('recoveryAccounts'));
+        $partySchedules = $expandedSchedules->filter(function ($schedule) {
+            return $schedule->party && (($schedule->till_date_short_payment ?? 0) != 0);
+        })->groupBy(function ($item) {
+            return $item->party_id . '_' . $item->account_id;
+        })->map(function ($schedules) use ($asOfDate) {
+            $party = $schedules->first()->party;
+            $product = $schedules->first()->product;
+            $account = $schedules->first()->account;
+            $projectNamesEn = $schedules->pluck('project.name_en')->unique()->filter()->values()->all();
+            $projectNamesUr = $schedules->pluck('project.name_ur')->unique()->filter()->values()->all();
+            $totalSchedule = $schedules->sum('pay_amount');
+            $scheduledByDate = $asOfDate ? $schedules->reduce(function ($carry, $schedule) use ($asOfDate) {
+                return $carry + ($schedule->due_date->endOfDay()->lte($asOfDate) ? $schedule->pay_amount : 0);
+            }, 0) : 0;
+            $scheduledAfterDate = $totalSchedule - $scheduledByDate;
+
+            return (object) [
+                'party_id' => $party->id,
+                'account_id' => $account?->id,
+                'account_name_en' => $account?->name_en ?? '',
+                'account_name_ur' => $account?->name_ur ?? '',
+                'party_name_en' => $party->name_en,
+                'party_phone_no_1' => $party->contact_number_1,
+                'party_phone_no_2' => $party->contact_number_2,
+                'party_name_ur' => $party->name_ur,
+                'product_name_en' => $product->name_en,
+                'product_name_ur' => $product->name_ur,
+                'product_size' => $product->total_marla,
+                'project_names' => $projectNamesEn,
+                'project_names_en' => $projectNamesEn,
+                'project_names_ur' => $projectNamesUr,
+                'total_schedule' => $totalSchedule,
+                'scheduled_by_date' => $scheduledByDate,
+                'scheduled_after_date' => $scheduledAfterDate,
+            ];
+        })->values();
+
+
+        return view('reports.recovery-sheet.recoveryReport', compact(
+            'asOfDate',
+            'partySchedules',
+            'project'
+        ));
     }
+
+    // public function getRecoveryReport(Request $request)
+    // {
+    //     $projects = $request->project_id;
+    //     $subSubSubHeads = SubSubSubHead::where('sub_head_id', 1)->whereIn('project_id', $projects)->pluck('id');
+    //     $detailAccounts = DetailAccount::whereIn('sub_sub_sub_head_id', $subSubSubHeads)->pluck('id');
+    //     // $ledgerData = AccountLedger::whereIn('detail_account_id', $detailAccounts)->get();
+    //     // $recoveryAccounts = AccountLedger::selectRaw('
+    //     //     detail_account_id,
+    //     //     SUM(debit) as total_debit,
+    //     //     SUM(credit) as total_credit,
+    //     //     (SUM(debit) - SUM(credit)) as balance
+    //     // ')
+    //     //     ->whereIn('detail_account_id', $detailAccounts)
+    //     //     ->groupBy('detail_account_id')
+    //     //     ->havingRaw('SUM(debit) > SUM(credit)')
+    //     //     ->with('detailAccount') // relationship required
+    //     //     ->get();
+
+    //     $recoveryAccounts = AccountLedger::selectRaw('
+    //     detail_account_id,
+    //     SUM(debit) as total_debit,
+    //     SUM(credit) as total_credit,
+    //     (SUM(debit) - SUM(credit)) as balance
+    //         ')
+    //         ->whereHas('detailAccount.subSubSubHead', function ($q) use ($request) {
+    //             $q->where('sub_head_id', 1)
+    //                 ->whereIn('project_id', $request->project_id);
+    //         })
+    //         ->groupBy('detail_account_id')
+    //         ->havingRaw('SUM(debit) > SUM(credit)')
+    //         ->with('detailAccount.subSubSubHead.projects')
+    //         ->get()
+    //         ->groupBy(function ($item) {
+    //             return $item->detailAccount->subSubSubHead->projects->name_en ?? 'Unknown Project';
+    //         });
+
+
+    //     return view('reports.recovery-sheet.recoveryReport', compact('recoveryAccounts'));
+    // }
 
     public function viewBillAgingReport(Request $request)
     {
