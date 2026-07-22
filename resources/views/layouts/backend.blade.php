@@ -1993,6 +1993,36 @@
             }
         });
 
+         $('#sub_sub_head_id').select2({
+            theme: 'bootstrap-5',
+            width: '100%',
+            placeholder: window.translations.selectPlaceholder,
+            ajax: {
+                url: "{{ route('detail-accounts.fetchSubSubHead') }}",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function(data, params) {
+
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: data.pagination.more
+                        }
+                    };
+                },
+                cache: true
+            }
+        });
+
+
         $('#sub_sub_sub_head_id').select2({
             theme: 'bootstrap-5',
             width: '100%',

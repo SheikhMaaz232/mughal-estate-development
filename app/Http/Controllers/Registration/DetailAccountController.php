@@ -331,4 +331,29 @@ class DetailAccountController extends Controller
             ],
         ]);
     }
+
+    public function fetchSubSubHead(Request $request)
+    {
+        $field = app()->getLocale() === 'ur'
+            ? 'name_ur'
+            : 'name_en';
+
+        $subSubHeads = SubSubHead::query()
+            ->when($request->search, function ($query) use ($request, $field) {
+                $query->where($field, 'like', '%' . $request->search . '%');
+            })
+            ->paginate(20);
+
+        return response()->json([
+            'results' => $subSubHeads->map(function ($subSubHead) use ($field) {
+                return [
+                    'id' => $subSubHead->id,
+                    'text' => $subSubHead->$field,
+                ];
+            }),
+            'pagination' => [
+                'more' => $subSubHeads->hasMorePages(),
+            ],
+        ]);
+    }
 }

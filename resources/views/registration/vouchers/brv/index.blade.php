@@ -56,8 +56,11 @@
                     </select>
                 </div>
             </div>
-            <div class="row ">
-                <div class="col-md-6">
+            <div class="row mb-3">
+                <div class="col-lg-6">
+                    <label for="search">@lang('messages.voucher_no')</label>
+                    <input type="number" step="any" min="0" onwheel="this.blur()" class="form-control"
+                        name="voucher_no" placeholder="@lang('messages.voucher_no')" value="{{ request('voucher_no') }}">
                 </div>
                 <div class="col-md-6 mb-3" style="text-align: end">
                     <button class="btn btn-primary" type="submit">@lang('messages.search')</button>

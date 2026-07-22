@@ -38,6 +38,9 @@ class BankPaymentVoucher extends Model implements Auditable
     public function scopeSearch($query,  $request = null)
     {
         return $query
+            ->when(!empty($request['voucher_no']), function ($q) use ($request) {
+                $q->where('id', $request['voucher_no']);
+            })
 
             ->when(isset($request['detail_account_id']) && is_array($request['detail_account_id']), function ($q) use ($request) {
                 $q->whereIn('detail_account_id', $request['detail_account_id']);

@@ -210,9 +210,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('sub-heads', SubHeadController::class);
     Route::resource('sub-sub-heads', SubSubHeadController::class);
     Route::resource('sub-sub-sub-heads', SubSubSubHeadController::class);
-    Route::resource('detail-accounts', DetailAccountController::class);
     Route::get('/detail-accounts/fetchSubSubSubHead', [DetailAccountController::class, 'fetchSubSubSubHead'])
     ->name('detail-accounts.fetchSubSubSubHead');
+    Route::get('/detail-accounts/fetchSubSubHead', [DetailAccountController::class, 'fetchSubSubHead'])
+    ->name('detail-accounts.fetchSubSubHead');
+    Route::resource('detail-accounts', DetailAccountController::class);
     Route::get('accounts-tree', [DetailAccountController::class, 'tree'])->name('detail-accounts.tree');
     Route::resource('itemRegistration', ItemController::class);
     Route::get('possession-letter/listing', [PossessionLetterController::class, 'bookingListing'])->name('possession-letter.bookingListing');
