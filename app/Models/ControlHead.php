@@ -18,6 +18,17 @@ class ControlHead extends Model implements Auditable
         return $this->belongsTo(MainHead::class);
     }
 
+    public function subHeads()
+    {
+        return $this->hasMany(SubHead::class);
+    }
+
+    public function detailAccounts()
+    {
+        return $this->hasMany(DetailAccount::class)
+            ->whereNull('sub_head_id');
+    }
+
 
     public function scopeSearch($query, $searchTerm = null, $request = null)
     {
@@ -27,7 +38,7 @@ class ControlHead extends Model implements Auditable
                     ->orWhere('name_ur', 'like', "%{$searchTerm}%");
             });
         })
-             ->when(isset($request['main_head_id']) && is_array($request['main_head_id']), function ($q) use ($request) {
+            ->when(isset($request['main_head_id']) && is_array($request['main_head_id']), function ($q) use ($request) {
                 $q->whereIn('main_head_id', $request['main_head_id']);
             });
     }

@@ -1410,5 +1410,7 @@ return [
     'plot-no' => 'Plot #',
     'plot-size' => 'Plot Size',
     'marla-size' => 'Marla',
-    'booking-value' => 'Booking value'
+    'booking-value' => 'Booking value',
+    'expand-all' => 'Expand All',
+    'collapse-all' => 'Collapse All',
 ];

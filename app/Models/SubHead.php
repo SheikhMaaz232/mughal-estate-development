@@ -23,6 +23,17 @@ class SubHead extends Model implements Auditable
         return $this->belongsTo(ControlHead::class);
     }
 
+    public function subSubHeads()
+    {
+        return $this->hasMany(SubSubHead::class);
+    }
+
+    public function detailAccounts()
+    {
+        return $this->hasMany(DetailAccount::class)
+            ->whereNull('sub_sub_head_id');
+    }
+
     public function scopeSearch($query, $searchTerm = null, $request = null,)
     {
         return $query

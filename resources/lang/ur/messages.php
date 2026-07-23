@@ -1391,5 +1391,7 @@ return [
     'plot-size' => 'پلاٹ کا سائز',
     'marla-size' => 'مرلہ',
     'booking-value' => 'بکنگ ویلیو',
-    'recovery_report' => 'ریکوری رپورٹ'
+    'recovery_report' => 'ریکوری رپورٹ',
+    'expand-all' => 'سب کو پھیلائیں',
+    'collapse-all' => 'سب کو بند کریں',
 ];

@@ -59,6 +59,11 @@ class DetailAccount extends Model implements Auditable
         return $this->belongsTo(Project::class, 'project_id');
     }
 
+    public function detailAccounts()
+    {
+        return $this->hasMany(DetailAccount::class);
+    }
+
 
     public function scopeSearch($query, $searchTerm = null, $request = null)
     {

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -12,6 +13,16 @@ class MainHead extends Model implements Auditable
 {
     use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
-    protected $fillable = ['name_en','name_ur'];
+    protected $fillable = ['name_en', 'name_ur'];
 
+    public function controlHeads()
+    {
+        return $this->hasMany(ControlHead::class);
+    }
+
+    public function detailAccounts()
+    {
+        return $this->hasMany(DetailAccount::class)
+            ->whereNull('control_head_id');
+    }
 }
