@@ -26,7 +26,7 @@ class BankReceiptVoucherController extends Controller
     public function index(Request $request)
     {
         $filters = $request->all();
-        $bankReceiptVouchers = BankReceiptVoucher::with('project', 'detailAccount', 'bank')->search($filters)->latest()->paginate(10);
+        $bankReceiptVouchers = BankReceiptVoucher::with('project', 'detailAccount', 'bank')->search($filters)->latest()->paginate(10)->withQueryString();
 
         return view('registration.vouchers.brv.index', compact('bankReceiptVouchers'));
     }

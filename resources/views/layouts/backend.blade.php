@@ -913,7 +913,7 @@
                                 <ul class="nav-main-submenu">
 
                                     <li
-                                        class="nav-main-item{{ request()->routeIs('main-heads.*') || request()->routeIs('control-heads.*') || request()->routeIs('sub-heads.*') || request()->routeIs('sub-sub-heads.*') || request()->routeIs('sub-sub-sub-heads.*') || request()->routeIs('detail-accounts.*') || request()->routeIs('products.*') ? ' open' : '' }}">
+                                        class="nav-main-item{{ request()->routeIs('main-heads.*') || request()->routeIs('control-heads.*') || request()->routeIs('sub-heads.*') || request()->routeIs('sub-sub-heads.*') || request()->routeIs('sub-sub-sub-heads.*') || request()->routeIs('detail-accounts.*') || request()->routeIs('detail-accounts.tree') || request()->routeIs('products.*') ? ' open' : '' }}">
                                         <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                             aria-haspopup="true" aria-expanded="true" href="#">
 

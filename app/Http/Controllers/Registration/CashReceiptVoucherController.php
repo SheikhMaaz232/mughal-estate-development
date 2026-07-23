@@ -25,7 +25,7 @@ class CashReceiptVoucherController extends Controller
     public function index(Request $request)
     {
         $filters = $request->all();
-        $cashReceiptVouchers = CashReceiptVoucher::with('project', 'detailAccount', 'cash')->search($filters)->latest()->paginate(10);
+        $cashReceiptVouchers = CashReceiptVoucher::with('project', 'detailAccount', 'cash')->search($filters)->latest()->paginate(10)->withQueryString();
 
         return view('registration.vouchers.crv.index', compact('cashReceiptVouchers'));
     }

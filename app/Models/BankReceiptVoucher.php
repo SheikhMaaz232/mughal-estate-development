@@ -48,6 +48,11 @@ class BankReceiptVoucher extends Model implements Auditable
             })
             ->when(isset($request['bank_id']) && is_array($request['bank_id']), function ($q) use ($request) {
                 $q->whereIn('bank_id', $request['bank_id']);
+            })
+            ->when(!empty($request['project_id']), function ($q) use ($request) {
+                $q->whereHas('detailAccount.subSubSubHead', function ($query) use ($request) {
+                    $query->where('project_id', $request['project_id']);
+                });
             });
     }
 }

@@ -62,6 +62,20 @@
                     <input type="number" step="any" min="0" onwheel="this.blur()" class="form-control"
                         name="voucher_no" placeholder="@lang('messages.voucher_no')" value="{{ request('voucher_no') }}">
                 </div>
+                <div class="col-lg-6">
+                    <label for="project_id">@lang('messages.projects')</label>
+                    <select name="project_id" id="project_id"
+                        class="form-control form-select select2 @error('project_id') is-invalid @enderror" multiple>
+                        @foreach ($projects as $project)
+                            <option value="{{ $project->id }}"
+                                {{ collect(request('project_id'))->contains($project->id) ? 'selected' : '' }}>
+                                {{ App::getLocale() === 'ur' ? $project->name_ur ?? '-' : $project->name_en ?? '-' }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
                 <div class="col-md-6 mb-3" style="text-align: end">
                     <button class="btn btn-primary" type="submit">@lang('messages.search')</button>
 
