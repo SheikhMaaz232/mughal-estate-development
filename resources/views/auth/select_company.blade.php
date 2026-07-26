@@ -15,7 +15,7 @@
                             <label for="company_id">@lang('messages.company')</label>
                             <select name="company_id" id="company_id" class="form-control form-select  @error('company_id') is-invalid @enderror">
                                 <option value="">@lang('messages.select-company')</option>
-                                @foreach($companies as $company)
+                                @foreach($companiesData as $company)
                                     <option value="{{ $company->id }}">{{ $company->{'name_'.app()->getLocale()} }}</option>
                                 @endforeach
                             </select>

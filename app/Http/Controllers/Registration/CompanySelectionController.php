@@ -11,8 +11,8 @@ class CompanySelectionController extends Controller
 {
     public function showForm()
     {
-        $companies = Company::select('id', 'name_en', 'name_ur')->get();
-        return view('auth.select_company', compact('companies'));
+        $companiesData = Company::select('id', 'name_en', 'name_ur')->get();
+        return view('auth.select_company', compact('companiesData'));
     }
 
     public function storeSelection(Request $request)
