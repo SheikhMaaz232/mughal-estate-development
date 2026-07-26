@@ -1418,7 +1418,7 @@
 
                         <div class="d-flex align-items-center px-2 text-dark fw-bold">
                             @if (isset($selectedCompany))
-                                <img src="{{ $selectedCompany->logo ? asset('storage/' . $selectedCompany->logo) : asset('media/avatars/avatar-default.jpg') }}"
+                                <img src="{{ $selectedCompany->logo ? asset('storage/' . $selectedCompany->logo) : asset('images/avatar.jpg') }}"
                                     alt="Logo" style="height: 30px; width: auto; margin-right: 10px;" />
 
                                 <span>{{ $selectedCompany->{'name_' . app()->getLocale()} }}</span>
@@ -1441,7 +1441,7 @@
                         <button type="button" class="btn btn-sm btn-alt-secondary d-flex align-items-center"
                             id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">
-                            <img class="rounded-circle" src="{{ asset(path: 'storage/' . \Auth::user()->avatar) }}"
+                            <img class="rounded-circle" src="{{ asset(path: 'storage/' . \Auth::user()->avatar)  }}"
                                 alt="Header Avatar" style="width: 21px;">
                             <span
                                 class="d-none d-sm-inline-block ms-2">{{ \Auth::user()->{'name_' . app()->getLocale()} }}</span>
