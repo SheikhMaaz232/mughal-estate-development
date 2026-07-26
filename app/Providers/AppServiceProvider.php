@@ -44,11 +44,6 @@ class AppServiceProvider extends ServiceProvider
             $view->with('selectedCompany', $company);
         });
 
-        if (PHP_OS_FAMILY === 'Windows') {
-            \Illuminate\Support\Facades\Artisan::call('cache:clear');
-            \Illuminate\Support\Facades\Artisan::call('view:clear');
-        }
-
         Paginator::useBootstrapFive();
 
         // if (PHP_OS_FAMILY === 'Windows') {
