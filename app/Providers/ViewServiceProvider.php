@@ -70,113 +70,117 @@ class ViewServiceProvider extends ServiceProvider
             $view->with('leaveTypesList', Cache::rememberForever('leave_types', fn() => LeaveType::all()));
 
             $view->with('groups', Cache::rememberForever('groups', fn() =>
-                Group::select('id','name_en','name_ur')->get()));
+            Group::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('companies', Cache::rememberForever('companies', fn() =>
-                Company::select('id','name_en','name_ur')->get()));
+            Company::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('cities', Cache::rememberForever('cities', fn() =>
-                City::select('id','name_en','name_ur')->get()));
+            City::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('tehsils', Cache::rememberForever('tehsils', fn() =>
-                Tehsil::select('id','name_en','name_ur')->get()));
+            Tehsil::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('departmentTypes', Cache::rememberForever('department_types', fn() =>
-                Department::getDepartmentTypes()));
+            Department::getDepartmentTypes()));
 
             $view->with('roadCategories', Cache::rememberForever('road_categories', fn() =>
-                RoadCategory::select('id','title_en','title_ur')->get()));
+            RoadCategory::select('id', 'title_en', 'title_ur')->get()));
 
             $view->with('mainHeads', Cache::rememberForever('main_heads', fn() =>
-                MainHead::select('id','name_en','name_ur')->get()));
+            MainHead::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('searchControlHeads', Cache::rememberForever('control_heads', fn() =>
-                ControlHead::select('id','name_en','name_ur')->get()));
+            ControlHead::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('searchSubHeads', Cache::rememberForever('sub_heads', fn() =>
-                SubHead::select('id','name_en','name_ur')->get()));
+            SubHead::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('searchSubSubHeads', Cache::rememberForever('sub_sub_heads', fn() =>
-                SubSubHead::select('id','name_en','name_ur')->get()));
+            SubSubHead::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('searchSubSubSubHeads', Cache::rememberForever('sub_sub_sub_heads', fn() =>
-                SubSubSubHead::select('id','name_en','name_ur')->get()));
+            SubSubSubHead::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('units', Cache::rememberForever('units', fn() =>
-                Unit::select('id','name_en','name_ur')->get()));
+            Unit::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('projects', Cache::rememberForever('projects', fn() =>
-                Project::select('id','name_en','name_ur')->get()));
+            Project::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('productsData', Cache::rememberForever('products', fn() =>
-                Product::select('id','name_en','name_ur')->get()));
+            Product::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('casts', Cache::rememberForever('casts', fn() =>
-                Cast::select('id','title_en','title_ur')->get()));
+            Cast::select('id', 'title_en', 'title_ur')->get()));
 
             $view->with('occupations', Cache::rememberForever('occupations', fn() =>
-                OccupationType::select('id','title_en','title_ur')->get()));
+            OccupationType::select('id', 'title_en', 'title_ur')->get()));
 
             $view->with('residentialStatus', Cache::rememberForever('residential_status', fn() =>
-                Residential::select('id','title_en','title_ur')->get()));
+            Residential::select('id', 'title_en', 'title_ur')->get()));
 
             $view->with('banks', Cache::rememberForever('banks', fn() =>
-                Bank::select('id','name_en','name_ur')->get()));
+            Bank::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('facings', Cache::rememberForever('facings', fn() =>
-                Facing::select('id','name_en','name_ur')->get()));
+            Facing::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('relations', Cache::rememberForever('relations', fn() =>
-                Relation::select('id','name_en','name_ur')->get()));
+            Relation::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('scheduleTypes', Cache::rememberForever('schedule_types', fn() =>
-                ScheduleType::select('id','title_en','title_ur')->get()));
+            ScheduleType::select('id', 'title_en', 'title_ur')->get()));
 
             $view->with('schedulePeriods', Cache::rememberForever('schedule_periods', fn() =>
-                SchedulePeriod::select('id','title_en','title_ur')->get()));
+            SchedulePeriod::select('id', 'title_en', 'title_ur')->get()));
 
             $view->with('coaDealers', Cache::rememberForever('coa_dealers', fn() =>
-                DetailAccount::select('id','name_en','name_ur')
-                    ->where('sub_sub_head_id',39)
-                    ->get()));
+            DetailAccount::select('id', 'name_en', 'name_ur')
+                ->where('sub_sub_head_id', 39)
+                ->get()));
 
             $view->with('coaBanks', Cache::rememberForever('coa_banks', fn() =>
-                DetailAccount::select('id','name_en','name_ur')
-                    ->where('sub_sub_head_id',19)
-                    ->get()));
+            DetailAccount::select('id', 'name_en', 'name_ur')
+                ->where('sub_sub_head_id', 19)
+                ->get()));
 
             $view->with('coaPayables', Cache::rememberForever('coa_payables', fn() =>
-                DetailAccount::select('id','name_en','name_ur')
-                    ->where('main_head_id',2)
-                    ->get()));
+            DetailAccount::select('id', 'name_en', 'name_ur')
+                ->where('main_head_id', 2)
+                ->get()));
 
             $view->with('coaReceivables', Cache::rememberForever('coa_receivables', fn() =>
-                DetailAccount::select('id','name_en','name_ur')
-                    ->where('sub_head_id',1)
-                    ->get()));
+            DetailAccount::select('id', 'name_en', 'name_ur')
+                ->where('sub_head_id', 1)
+                ->get()));
 
             $view->with('coaCashAccounts', Cache::rememberForever('coa_cash_accounts', fn() =>
-                DetailAccount::select('id','name_en','name_ur')
-                    ->where('sub_sub_head_id',18)
-                    ->get()));
+            DetailAccount::select('id', 'name_en', 'name_ur')
+                ->where('sub_sub_head_id', 18)
+                ->get()));
 
             $view->with('items', Cache::rememberForever('items', fn() =>
-                Item::select('id','name_en','name_ur')->get()));
+            Item::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('constructionSites', Cache::rememberForever('construction_sites', fn() =>
-                ConstructionSite::select('id','name_en','name_ur')->get()));
+            ConstructionSite::select('id', 'name_en', 'name_ur')->get()));
+
+            $view->with('detailAccounts', Cache::rememberForever('detail_accounts', fn() =>
+            DetailAccount::select('id', 'name_en', 'name_ur')->get()));
 
             $view->with('tenders', Cache::rememberForever('tenders', fn() =>
-                Tender::select('id','title_en','title_ur')->get()));
+            Tender::select('id', 'title_en', 'title_ur')->get()));
 
             $view->with('workOrders', Cache::rememberForever('work_orders', fn() =>
-                WorkOrder::select('id','description_en','description_ur')->get()));
+            WorkOrder::select('id', 'description_en', 'description_ur')->get()));
 
             /**
              * Don't cache this if parties change frequently.
              * Consider AJAX loading if this table is large.
              */
-            $view->with('searchParties',
+            $view->with(
+                'searchParties',
                 Cache::remember('search_parties', now()->addHours(12), function () {
                     return Party::with('cast')
                         ->select(

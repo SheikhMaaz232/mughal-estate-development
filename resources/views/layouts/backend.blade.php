@@ -1364,6 +1364,67 @@
                                 </ul>
                             </li>
 
+                            <li class="nav-main-item{{ request()->is('exective-reports*') ? ' open' : '' }}">
+                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                    aria-haspopup="true" aria-expanded="true" href="#">
+                                    <i class="nav-main-link-icon si si-chart"></i>
+                                    <span class="nav-main-link-name">@lang('menu.executive-reports')</span>
+                                </a>
+
+                                <ul class="nav-main-submenu">
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('reports.recovery.sheet.view.*') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('reports.recovery.sheet.view*') ? ' active' : '' }}"
+                                            href="{{ route('reports.recovery.sheet.view') }}">
+                                            <span class="nav-main-link-name">@lang('menu.recovery-sheet')</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-main-item">
+                                        <a class="nav-main-link{{ request()->routeIs('bankBook.view') ? ' active' : '' }}"
+                                            href="{{ route('bankBook.view') }}">
+                                            <span class="nav-main-link-name">@lang('menu.bank_book')</span>
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('reports.stock-report.filter') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('reports.stock-report.filter') ? ' active' : '' }}"
+                                            href="{{ route('reports.stock-report.filter') }}">
+                                            <span class="nav-main-link-name">@lang('menu.stock-report')</span>
+                                        </a>
+                                    </li>
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('available-plots.filter') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('available-plots.filter') ? ' active' : '' }}"
+                                            href="{{ route('available-plots.filter') }}">
+                                            <span class="nav-main-link-name">@lang('menu.available-plots-report')</span>
+                                        </a>
+                                    </li>
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('reports.bill.aging.*') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('reports.bill.aging.*') ? ' active' : '' }}"
+                                            href="{{ route('reports.bill.aging.view') }}">
+                                            <span class="nav-main-link-name">@lang('menu.bill-aging')</span>
+                                        </a>
+                                    </li>
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('reports.trial.balance.*') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('reports.trial.balance.*') ? ' active' : '' }}"
+                                            href="{{ route('reports.trial.balance.view') }}">
+                                            <span class="nav-main-link-name">@lang('menu.trial-balance')</span>
+                                        </a>
+                                    </li>
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('reports.balance.sheet.*') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('reports.balance.sheet.*') ? ' active' : '' }}"
+                                            href="{{ route('reports.balance.sheet.view') }}">
+                                            <span class="nav-main-link-name">@lang('menu.balance-sheet')</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
                             <li class="nav-main-heading">More</li>
                             @can('audit-log.view')
                                 <li class="nav-main-item">

@@ -91,5 +91,6 @@ return [
     'bank_book' => 'بینک بک',
     'client-invoices' => 'کلائنٹ انوائسز',
     'outstanding-receivables' => 'بقایا جات',
-    'receipt-history' => 'رسیدوں کی تاریخ'
+    'receipt-history' => 'رسیدوں کی تاریخ',
+    'executive-reports' => 'ایگزیکٹو رپورٹس'
 ];
