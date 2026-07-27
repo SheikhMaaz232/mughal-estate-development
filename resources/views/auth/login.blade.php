@@ -83,7 +83,9 @@
                       {{-- Forgot + Submit --}}
                       <div class="d-flex justify-content-between align-items-center mb-4">
                         <div>
-                          <a class="text-muted fs-sm fw-medium d-block d-lg-inline-block mb-1" href="{{ route('password.request') }}">
+                          <a class="text-muted fs-sm fw-medium d-block d-lg-inline-block mb-1"  href="#"
+                           {{-- href="{{ route('password.request') }}" --}}
+                           >
                             Forgot Password?
                           </a>
                         </div>

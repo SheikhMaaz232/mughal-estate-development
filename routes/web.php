@@ -255,7 +255,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('tenders', TenderController::class);
 
     // BOQ Routes
-    Route::get('boq-masters/create/{tenderId}', [BOQMasterController::class, 'create'])->name('boq-masters.create');
+    Route::get('boq-masters/create/{tenderId}', [BOQMasterController::class, 'create'])->name('boq-masters.create.tender');
     Route::post('boq-masters/{boqMasterId}/add-detail', [BOQMasterController::class, 'addDetail'])->name('boq-masters.addDetail');
     Route::put('boq-details/{detailId}', [BOQMasterController::class, 'updateDetail'])->name('boq-masters.updateDetail');
     Route::delete('boq-details/{detailId}', [BOQMasterController::class, 'deleteDetail'])->name('boq-masters.deleteDetail');
