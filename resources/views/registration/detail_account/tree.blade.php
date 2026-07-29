@@ -99,23 +99,23 @@
 
             @media print {
 
-button,
-.pagination,
-form {
+                button,
+                .pagination,
+                form {
 
-    display:none !important;
+                    display:none !important;
 
-}
+            }
 
-body{
+            body{
 
-    margin:0;
+                margin:0;
 
-    padding:10px;
+                padding:10px;
 
-}
+            }
 
-}
+            }
         </style>
         <div class="row mb-3">
 
@@ -140,32 +140,45 @@ body{
 
             <div class="col-md-8">
 
-                <button class="btn btn-primary">
-
+                <button class="btn btn-sm btn-primary">
                     <i class="fa fa-search"></i>
-
-                     @lang('messages.filter')
-
+                    @lang('messages.filter')
                 </button>
 
-                <a href="{{ route('detail-accounts.tree') }}" class="btn btn-secondary">
-
-                     @lang('messages.reset')
-
+                <a href="{{ route('detail-accounts.tree') }}" class="btn btn-sm btn-secondary">
+                    @lang('messages.reset')
                 </a>
 
-                @if (request()->has('project_id'))
-                   <button type="button" class="btn btn-info" onclick="expandTree()">
-    <i class="fa fa-plus-square"></i>  @lang('messages.expand-all')
-</button>
+                @if(request()->has('project_id'))
 
-<button type="button" class="btn btn-warning" onclick="collapseTree()">
-    <i class="fa fa-minus-square"></i>  @lang('messages.collapse-all')
-</button>
+                    <button type="button"
+                            class="btn btn-sm btn-info"
+                            onclick="expandTree()">
+                        <i class="fa fa-plus-square"></i>
+                        @lang('messages.expand-all')
+                    </button>
 
-<button type="button" class="btn btn-success" onclick="printTree()">
-    <i class="fa fa-print"></i>  @lang('messages.print')
-</button>
+                    <button type="button"
+                            class="btn btn-sm btn-warning"
+                            onclick="collapseTree()">
+                        <i class="fa fa-minus-square"></i>
+                        @lang('messages.collapse-all')
+                    </button>
+
+                    <button type="button"
+                            id="level6Btn"
+                            class="btn btn-sm btn-danger"
+                            onclick="toggleLevel6()">
+                        <i class="fa fa-eye-slash"></i>
+                        @lang('messages.hide-Level-6')
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-sm btn-success"
+                            onclick="printTree()">
+                        <i class="fa fa-print"></i>
+                        @lang('messages.print')
+                    </button>
                 @endif
 
                 </form>
@@ -194,9 +207,9 @@ body{
                         <div class="node-wrapper">
                             @if (!empty($mh['control_heads']))
                                 <button class="toggle-btn"
-        onclick="toggleChildren('mh{{ $mh['id'] }}', this)">
-    +
-</button>
+                                        onclick="toggleChildren('mh{{ $mh['id'] }}', this)">
+                                    +
+                                </button>
                             @else
                                 <span class="no-children"></span>
                             @endif
@@ -218,9 +231,9 @@ body{
                                         <div class="node-wrapper">
                                             @if (!empty($ch['sub_heads']))
                                                 <button class="toggle-btn"
-        onclick="toggleChildren('ch{{ $ch['id'] }}', this)">
-    +
-</button>
+                                                        onclick="toggleChildren('ch{{ $ch['id'] }}', this)">
+                                                    +
+                                                </button>
                                             @else
                                                 <span class="no-children"></span>
                                             @endif
@@ -240,9 +253,9 @@ body{
                                                         <div class="node-wrapper">
                                                             @if (!empty($sh['sub_sub_heads']))
                                                                 <button class="toggle-btn"
-        onclick="toggleChildren('sh{{ $sh['id'] }}', this)">
-    +
-</button>
+                                                                        onclick="toggleChildren('sh{{ $sh['id'] }}', this)">
+                                                                    +
+                                                                </button>
                                                             @else
                                                                 <span class="no-children"></span>
                                                             @endif
@@ -263,9 +276,9 @@ body{
                                                                             <div class="node-wrapper">
                                                                                 @if (!empty($ssh['sub_sub_sub_heads']))
                                                                                    <button class="toggle-btn"
-        onclick="toggleChildren('ssh{{ $ssh['id'] }}', this)">
-    +
-</button>
+                                                                                            onclick="toggleChildren('ssh{{ $ssh['id'] }}', this)">
+                                                                                        +
+                                                                                    </button>
                                                                                 @else
                                                                                     <span class="no-children"></span>
                                                                                 @endif
@@ -288,9 +301,9 @@ body{
                                                                                             <div class="node-wrapper">
                                                                                                 @if (!empty($sssh['detail_accounts']))
                                                                                                     <button class="toggle-btn"
-        onclick="toggleChildren('sssh{{ $sssh['id'] }}', this)">
-    +
-</button>
+                                                                                                            onclick="toggleChildren('sssh{{ $sssh['id'] }}', this)">
+                                                                                                        +
+                                                                                                    </button>
                                                                                                 @else
                                                                                                     <span
                                                                                                         class="no-children"></span>
@@ -307,7 +320,7 @@ body{
                                                                                         @endif
 
                                                                                         @if (!empty($sssh['detail_accounts']))
-                                                                                            <ul id="sssh{{ $sssh['id'] }}" class="children-list">
+                                                                                            <ul id="sssh{{ $sssh['id'] }}" class="children-list level-6">
                                                                                                 @foreach ($sssh['detail_accounts'] as $da)
                                                                                                     <li>
                                                                                                         <div
@@ -403,7 +416,7 @@ body{
 </div>
 
 @endif
-       
+
         <div class="mt-4">
             @if($mainHeadsTree)
 
@@ -419,33 +432,27 @@ body{
 
 
 <script>
+let level6Hidden = false;
+
 document.addEventListener("DOMContentLoaded", function () {
 
-    // ===========================
-    // Show Loading Spinner
-    // ===========================
+    // Loading Spinner
     const filterForm = document.getElementById("filterForm");
 
     if (filterForm) {
         filterForm.addEventListener("submit", function () {
-
-            let loading = document.getElementById("loading");
-
+            const loading = document.getElementById("loading");
             if (loading) {
                 loading.style.display = "block";
             }
-
         });
     }
 
-    // ===========================
-    // Collapse all tree nodes initially
-    // ===========================
+    // Collapse all nodes initially
     document.querySelectorAll(".children-list").forEach(function (ul) {
         ul.style.display = "none";
     });
 
-    // Reset all buttons to "+"
     document.querySelectorAll(".toggle-btn").forEach(function (btn) {
         btn.innerHTML = "+";
     });
@@ -453,32 +460,47 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-// ==========================================
-// Expand / Collapse Single Node
-// ==========================================
+// ===============================
+// Toggle Single Node
+// ===============================
 function toggleChildren(id, button) {
+
     let child = document.getElementById(id);
 
     if (!child) return;
 
     if (child.style.display === "none" || child.style.display === "") {
+
         child.style.display = "block";
         button.innerHTML = "-";
+
     } else {
+
         child.style.display = "none";
         button.innerHTML = "+";
+
     }
+
 }
 
 
-// ==========================================
+// ===============================
 // Expand All
-// ==========================================
-function expandAll() {
+// ===============================
+function expandTree() {
 
     document.querySelectorAll(".children-list").forEach(function (ul) {
         ul.style.display = "block";
     });
+
+    // Keep level 6 hidden if user selected Hide
+    if (level6Hidden) {
+
+        document.querySelectorAll(".level-6").forEach(function (ul) {
+            ul.style.display = "none";
+        });
+
+    }
 
     document.querySelectorAll(".toggle-btn").forEach(function (btn) {
         btn.innerHTML = "-";
@@ -486,15 +508,11 @@ function expandAll() {
 
 }
 
-function expandTree() {
-    expandAll();
-}
 
-
-// ==========================================
+// ===============================
 // Collapse All
-// ==========================================
-function collapseAll() {
+// ===============================
+function collapseTree() {
 
     document.querySelectorAll(".children-list").forEach(function (ul) {
         ul.style.display = "none";
@@ -506,32 +524,76 @@ function collapseAll() {
 
 }
 
-function collapseTree() {
-    collapseAll();
+
+// ===============================
+// Hide / Show Level 6
+// ===============================
+function toggleLevel6() {
+
+    level6Hidden = !level6Hidden;
+
+    document.querySelectorAll(".level-6").forEach(function (ul) {
+
+        ul.style.display = level6Hidden ? "none" : "block";
+
+    });
+
+    let btn = document.getElementById("level6Btn");
+
+    if (btn) {
+
+        btn.innerHTML = level6Hidden
+            ? '<i class="fa fa-eye"></i> {{ __("messages.show-Level-6") }}'
+            : '<i class="fa fa-eye-slash"></i> {{ __("messages.hide-level-6") }}';
+
+    }
+
 }
 
 
-// ==========================================
-// Print Tree
-// ==========================================
+// ===============================
+// Print
+// ===============================
 function printTree() {
 
-    expandAll();
+    expandTree();
 
     let printArea = document.getElementById("printArea");
 
-    let popup = window.open("", "_blank", "width=1200,height=800");
+    let clone = printArea.cloneNode(true);
+
+    // Remove +/- buttons
+    clone.querySelectorAll(".toggle-btn").forEach(function (btn) {
+        btn.remove();
+    });
+
+    // Remove level 6 if hidden
+    if (level6Hidden) {
+
+        clone.querySelectorAll(".level-6").forEach(function (ul) {
+            ul.remove();
+        });
+
+    }
+
+    let popup = window.open("", "_blank");
+
+    if (!popup) {
+
+        alert("Popup blocked. Please allow popups.");
+
+        return;
+    }
 
     popup.document.write(`
         <html>
         <head>
-
             <title>Account Tree</title>
 
             <style>
 
                 body{
-                    font-family: Arial, sans-serif;
+                    font-family:Arial;
                     margin:20px;
                 }
 
@@ -558,7 +620,7 @@ function printTree() {
                 Account Tree
             </h2>
 
-            ${printArea.innerHTML}
+            ${clone.innerHTML}
 
         </body>
 
@@ -567,18 +629,21 @@ function printTree() {
 
     popup.document.close();
 
-    popup.focus();
+    popup.onload = function () {
 
-    setTimeout(function () {
+        popup.focus();
 
         popup.print();
 
-        popup.close();
+        popup.onafterprint = function () {
 
-        collapseAll();
+            popup.close();
 
-    }, 500);
+        };
+
+    };
 
 }
+
 </script>
 @endsection

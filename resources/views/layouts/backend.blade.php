@@ -612,30 +612,30 @@
                                     ? ' open'
                                     : '' }}">
 
-                                {{--  @can('admin.view')  --}}
-                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                    aria-haspopup="true" aria-expanded="true" href="#">
-                                    <i class="nav-main-link-icon si si-lock"></i>
-                                    <span class="nav-main-link-name">@lang('menu.admin')</span>
-                                </a>
-                                <ul class="nav-main-submenu">
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('permissions.index') ? ' active' : '' }}"
-                                            href="{{ route('permissions.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.users-permissions')</span>
-                                        </a>
-                                        <a class="nav-main-link{{ request()->routeIs('roles.index') ? ' active' : '' }}"
-                                            href="{{ route('roles.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.roles-and-permissions')</span>
-                                        </a>
+                                {{-- @can('admin.view') --}}
+                                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                        aria-haspopup="true" aria-expanded="true" href="#">
+                                        <i class="nav-main-link-icon si si-lock"></i>
+                                        <span class="nav-main-link-name">@lang('menu.admin')</span>
+                                    </a>
+                                    <ul class="nav-main-submenu">
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('permissions.index') ? ' active' : '' }}"
+                                                href="{{ route('permissions.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.users-permissions')</span>
+                                            </a>
+                                            <a class="nav-main-link{{ request()->routeIs('roles.index') ? ' active' : '' }}"
+                                                href="{{ route('roles.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.roles-and-permissions')</span>
+                                            </a>
 
-                                        <a class="nav-main-link{{ request()->routeIs('users-roles.index') ? ' active' : '' }}"
-                                            href="{{ route('users-roles.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.users-roles')</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                                {{--  @endcan  --}}
+                                            <a class="nav-main-link{{ request()->routeIs('users-roles.index') ? ' active' : '' }}"
+                                                href="{{ route('users-roles.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.users-roles')</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                {{-- @endcan --}}
                             </li>
 
                             <li
@@ -667,220 +667,220 @@
                                     ? ' open'
                                     : '' }}">
 
-                                {{--  @can('registration.view')  --}}
-                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                    aria-haspopup="true" aria-expanded="true" href="#">
-                                    <i class="nav-main-link-icon si si-plus"></i>
-                                    <span class="nav-main-link-name">@lang('menu.registration')</span>
-                                </a>
-                                <ul class="nav-main-submenu">
+                                {{-- @can('registration.view') --}}
+                                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                        aria-haspopup="true" aria-expanded="true" href="#">
+                                        <i class="nav-main-link-icon si si-plus"></i>
+                                        <span class="nav-main-link-name">@lang('menu.registration')</span>
+                                    </a>
+                                    <ul class="nav-main-submenu">
 
 
 
-                                    {{--  @can('user.list')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('users.index') ? ' active' : '' }}"
-                                            href="{{ route('users.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.users')</span>
-                                        </a>
-                                    </li>
+                                        {{-- @can('user.list') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('users.index') ? ' active' : '' }}"
+                                                    href="{{ route('users.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.users')</span>
+                                                </a>
+                                            </li>
 
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('itemRegistration.index') ? ' active' : '' }}"
-                                            href="{{ route('itemRegistration.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.Item-Registration')</span>
-                                        </a>
-                                    </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('itemRegistration.index') ? ' active' : '' }}"
+                                                    href="{{ route('itemRegistration.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.Item-Registration')</span>
+                                                </a>
+                                            </li>
 
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('parties.index') ? ' active' : '' }}"
-                                            href="{{ route('parties.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.party-registration')</span>
-                                        </a>
-                                    </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('parties.index') ? ' active' : '' }}"
+                                                    href="{{ route('parties.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.party-registration')</span>
+                                                </a>
+                                            </li>
 
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('companies.index') ? ' active' : '' }}"
-                                            href="{{ route('companies.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.companies')</span>
-                                        </a>
-                                    </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('companies.index') ? ' active' : '' }}"
+                                                    href="{{ route('companies.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.companies')</span>
+                                                </a>
+                                            </li>
 
-                                    {{-- <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('unitRegistration.index') ? ' active' : '' }}"
-                                            href="{{ route('unitRegistration.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.unitRegistration')</span>
-                                        </a>
-                                    </li> --}}
+                                            {{-- <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('unitRegistration.index') ? ' active' : '' }}"
+                                                    href="{{ route('unitRegistration.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.unitRegistration')</span>
+                                                </a>
+                                            </li> --}}
 
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('relations.index') ? ' active' : '' }}"
-                                            href="{{ route('relations.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.relations')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan  --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('relations.index') ? ' active' : '' }}"
+                                                    href="{{ route('relations.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.relations')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                    {{--  @can('register.group')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('groups.index') ? ' active' : '' }}"
-                                            href="{{ route('groups.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.groups')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan  --}}
+                                        {{-- @can('register.group') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('groups.index') ? ' active' : '' }}"
+                                                    href="{{ route('groups.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.groups')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                    {{--  @can('register.project')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('projects.index') ? ' active' : '' }}"
-                                            href="{{ route('projects.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.projects')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan  --}}
+                                        {{-- @can('register.project') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('projects.index') ? ' active' : '' }}"
+                                                    href="{{ route('projects.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.projects')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                    {{--  @can('register.city')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('cities.index') ? ' active' : '' }}"
-                                            href="{{ route('cities.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.cities')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan  --}}
+                                        {{-- @can('register.city') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('cities.index') ? ' active' : '' }}"
+                                                    href="{{ route('cities.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.cities')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                    {{--  @can('register.residential')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('residentials.index') ? ' active' : '' }}"
-                                            href="{{ route('residentials.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.residential-types')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan  --}}
+                                        {{-- @can('register.residential') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('residentials.index') ? ' active' : '' }}"
+                                                    href="{{ route('residentials.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.residential-types')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                    {{--  @can('register.bank')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('banks.index') ? ' active' : '' }}"
-                                            href="{{ route('banks.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.banks')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan  --}}
+                                        {{-- @can('register.bank') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('banks.index') ? ' active' : '' }}"
+                                                    href="{{ route('banks.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.banks')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                    {{--  @can('register.period')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('periods.index') ? ' active' : '' }}"
-                                            href="{{ route('periods.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.schedule-periods')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan  --}}
+                                        {{-- @can('register.period') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('periods.index') ? ' active' : '' }}"
+                                                    href="{{ route('periods.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.schedule-periods')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                    {{--  @can('register.cast')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('schedule-types.index') ? ' active' : '' }}"
-                                            href="{{ route('schedule-types.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.schedule-type')</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('casts.index') ? ' active' : '' }}"
-                                            href="{{ route('casts.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.casts')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan  --}}
+                                        {{-- @can('register.cast') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('schedule-types.index') ? ' active' : '' }}"
+                                                    href="{{ route('schedule-types.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.schedule-type')</span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('casts.index') ? ' active' : '' }}"
+                                                    href="{{ route('casts.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.casts')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                    {{--  @can('register.warehouse')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('warehouses.index') ? ' active' : '' }}"
-                                            href="{{ route('warehouses.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.warehouses')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan  --}}
+                                        {{-- @can('register.warehouse') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('warehouses.index') ? ' active' : '' }}"
+                                                    href="{{ route('warehouses.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.warehouses')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                    {{--  @can('register.unit')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('units.index') ? ' active' : '' }}"
-                                            href="{{ route('units.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.measurement-units')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan  --}}
+                                        {{-- @can('register.unit') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('units.index') ? ' active' : '' }}"
+                                                    href="{{ route('units.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.measurement-units')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                    {{--  @can('register.tehsil')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('tehsils.index') ? ' active' : '' }}"
-                                            href="{{ route('tehsils.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.tehsils')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan  --}}
+                                        {{-- @can('register.tehsil') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('tehsils.index') ? ' active' : '' }}"
+                                                    href="{{ route('tehsils.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.tehsils')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                    {{--  @can('register.area')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('areas.index') ? ' active' : '' }}"
-                                            href="{{ route('areas.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.areas')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan  --}}
+                                        {{-- @can('register.area') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('areas.index') ? ' active' : '' }}"
+                                                    href="{{ route('areas.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.areas')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                    {{--  @can('register.occupation-type')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('occupation-types.index') ? ' active' : '' }}"
-                                            href="{{ route('occupation-types.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.occupation-types')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan  --}}
+                                        {{-- @can('register.occupation-type') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('occupation-types.index') ? ' active' : '' }}"
+                                                    href="{{ route('occupation-types.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.occupation-types')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                    {{--  @can('register.phase-type')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('phase-types.index') ? ' active' : '' }}"
-                                            href="{{ route('phase-types.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.phase-types')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan
+                                        {{-- @can('register.phase-type') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('phase-types.index') ? ' active' : '' }}"
+                                                    href="{{ route('phase-types.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.phase-types')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                        @can('register.department')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('departments.index') ? ' active' : '' }}"
-                                            href="{{ route('departments.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.department')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan
+                                        {{-- @can('register.department') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('departments.index') ? ' active' : '' }}"
+                                                    href="{{ route('departments.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.department')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                        @can('register.road-category')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('road-categories.index') ? ' active' : '' }}"
-                                            href="{{ route('road-categories.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.road-category')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan
+                                        {{-- @can('register.road-category') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('road-categories.index') ? ' active' : '' }}"
+                                                    href="{{ route('road-categories.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.road-category')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                        @can('register.road-specification')  --}}
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs(patterns: 'road-specifications.index') ? ' active' : '' }}"
-                                            href="{{ route('road-specifications.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.roads-specification')</span>
-                                        </a>
-                                    </li>
-                                    {{--  @endcan
+                                        {{-- @can('register.road-specification') --}}
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs(patterns: 'road-specifications.index') ? ' active' : '' }}"
+                                                    href="{{ route('road-specifications.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.roads-specification')</span>
+                                                </a>
+                                            </li>
+                                        {{-- @endcan --}}
 
-                                        @can('register.road-specification')  --}}
-                                    {{-- <li class="nav-main-item">
+                                        {{-- @can('register.road-specification')  --}}
+                                        {{-- <li class="nav-main-item">
                                         <a class="nav-main-link{{ request()->routeIs(patterns: 'dealers.index') ? ' active' : '' }}"
                                             href="{{ route('dealers.index') }}">
                                             <span class="nav-main-link-name">@lang('menu.dealers')</span>
                                         </a>
-                                    </li> --}}
-                                    {{--  @endcan  --}}
-                                </ul>
-                                {{--  @endcan  --}}
+                                            </li> --}}
+                                        {{--  @endcan  --}}
+                                    </ul>
+                                {{-- @endcan --}}
                             </li>
 
                             <li
@@ -904,366 +904,373 @@
                                     ? ' open'
                                     : '' }}">
 
-                                {{--  @can('registration.view')  --}}
-                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                    aria-haspopup="true" aria-expanded="true" href="#">
-                                    <i class="nav-main-link-icon si si-calculator"></i>
-                                    <span class="nav-main-link-name">@lang('menu.account_module')</span>
-                                </a>
-                                <ul class="nav-main-submenu">
+                                {{-- @can('accounts.view') --}}
+                                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                        aria-haspopup="true" aria-expanded="true" href="#">
+                                        <i class="nav-main-link-icon si si-calculator"></i>
+                                        <span class="nav-main-link-name">@lang('menu.account_module')</span>
+                                    </a>
+                                    <ul class="nav-main-submenu">
 
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('main-heads.*') || request()->routeIs('control-heads.*') || request()->routeIs('sub-heads.*') || request()->routeIs('sub-sub-heads.*') || request()->routeIs('sub-sub-sub-heads.*') || request()->routeIs('detail-accounts.*') || request()->routeIs('detail-accounts.tree') || request()->routeIs('products.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                            aria-haspopup="true" aria-expanded="true" href="#">
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('main-heads.*') || request()->routeIs('control-heads.*') || request()->routeIs('sub-heads.*') || request()->routeIs('sub-sub-heads.*') || request()->routeIs('sub-sub-sub-heads.*') || request()->routeIs('detail-accounts.*') || request()->routeIs('detail-accounts.tree') || request()->routeIs('products.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                                aria-haspopup="true" aria-expanded="true" href="#">
 
-                                            <span class="nav-main-link-name">@lang('menu.chart_of_account')</span>
-                                        </a>
-                                        <ul class="nav-main-submenu">
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('main-heads.index') ? ' active' : '' }}"
-                                                    href="{{ route('main-heads.index') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.main-heads')</span>
-                                                </a>
-                                            </li>
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('control-heads.index') ? ' active' : '' }}"
-                                                    href="{{ route('control-heads.index') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.control-heads')</span>
-                                                </a>
-                                            </li>
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('sub-heads.index') ? ' active' : '' }}"
-                                                    href="{{ route('sub-heads.index') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.sub-heads')</span>
-                                                </a>
-                                            </li>
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('sub-sub-heads.index') ? ' active' : '' }}"
-                                                    href="{{ route('sub-sub-heads.index') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.sub-sub-heads')</span>
-                                                </a>
-                                            </li>
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('sub-sub-sub-heads.index') ? ' active' : '' }}"
-                                                    href="{{ route('sub-sub-sub-heads.index') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.sub-sub-sub-heads')</span>
-                                                </a>
-                                            </li>
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('products.index') ? ' active' : '' }}"
-                                                    href="{{ route('products.index') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.products')</span>
-                                                </a>
-                                            </li>
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('detail-accounts.index') ? ' active' : '' }}"
-                                                    href="{{ route('detail-accounts.index') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.detail-accounts')</span>
-                                                </a>
-                                            </li>
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('detail-accounts.tree') ? ' active' : '' }}"
-                                                    href="{{ route('detail-accounts.tree') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.accounts_tree')</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                                <span class="nav-main-link-name">@lang('menu.chart_of_account')</span>
+                                            </a>
+                                            <ul class="nav-main-submenu">
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('main-heads.index') ? ' active' : '' }}"
+                                                        href="{{ route('main-heads.index') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.main-heads')</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('control-heads.index') ? ' active' : '' }}"
+                                                        href="{{ route('control-heads.index') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.control-heads')</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('sub-heads.index') ? ' active' : '' }}"
+                                                        href="{{ route('sub-heads.index') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.sub-heads')</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('sub-sub-heads.index') ? ' active' : '' }}"
+                                                        href="{{ route('sub-sub-heads.index') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.sub-sub-heads')</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('sub-sub-sub-heads.index') ? ' active' : '' }}"
+                                                        href="{{ route('sub-sub-sub-heads.index') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.sub-sub-sub-heads')</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('products.index') ? ' active' : '' }}"
+                                                        href="{{ route('products.index') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.products')</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('detail-accounts.index') ? ' active' : '' }}"
+                                                        href="{{ route('detail-accounts.index') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.detail-accounts')</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('detail-accounts.tree') ? ' active' : '' }}"
+                                                        href="{{ route('detail-accounts.tree') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.accounts_tree')</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
 
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('bank-payment-voucher.*') || request()->routeIs('bank-receipt-voucher.*') || request()->routeIs('cash-payment-voucher.*') || request()->routeIs('cash-receipt-voucher.*') || request()->routeIs('jv-voucher.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                            aria-haspopup="true" aria-expanded="true" href="#">
-                                            <span class="nav-main-link-name">@lang('menu.vouchers')</span>
-                                        </a>
-                                        <ul class="nav-main-submenu">
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('bank-payment-voucher.*') ? ' active' : '' }}"
-                                                    href="{{ route('bank-payment-voucher.index') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.bpv')</span>
-                                                </a>
-                                            </li>
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('bank-receipt-voucher.*') ? ' active' : '' }}"
-                                                    href="{{ route('bank-receipt-voucher.index') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.brv')</span>
-                                                </a>
-                                            </li>
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('cash-payment-voucher.*') ? ' active' : '' }}"
-                                                    href="{{ route('cash-payment-voucher.index') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.cpv')</span>
-                                                </a>
-                                            </li>
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('cash-receipt-voucher.*') ? ' active' : '' }}"
-                                                    href="{{ route('cash-receipt-voucher.index') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.crv')</span>
-                                                </a>
-                                            </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('bank-payment-voucher.*') || request()->routeIs('bank-receipt-voucher.*') || request()->routeIs('cash-payment-voucher.*') || request()->routeIs('cash-receipt-voucher.*') || request()->routeIs('jv-voucher.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                                aria-haspopup="true" aria-expanded="true" href="#">
+                                                <span class="nav-main-link-name">@lang('menu.vouchers')</span>
+                                            </a>
+                                            <ul class="nav-main-submenu">
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('bank-payment-voucher.*') ? ' active' : '' }}"
+                                                        href="{{ route('bank-payment-voucher.index') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.bpv')</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('bank-receipt-voucher.*') ? ' active' : '' }}"
+                                                        href="{{ route('bank-receipt-voucher.index') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.brv')</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('cash-payment-voucher.*') ? ' active' : '' }}"
+                                                        href="{{ route('cash-payment-voucher.index') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.cpv')</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('cash-receipt-voucher.*') ? ' active' : '' }}"
+                                                        href="{{ route('cash-receipt-voucher.index') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.crv')</span>
+                                                    </a>
+                                                </li>
 
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('jv-voucher.*') ? ' active' : '' }}"
-                                                    href="{{ route('jv-voucher.index') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.journal_voucher')</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('jv-voucher.*') ? ' active' : '' }}"
+                                                        href="{{ route('jv-voucher.index') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.journal_voucher')</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
 
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('client-invoices.*') || request()->routeIs('receipts.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                            aria-haspopup="true" aria-expanded="true" href="#">
-                                            <span class="nav-main-link-name">@lang('menu.client-invoices')</span>
-                                        </a>
-                                        <ul class="nav-main-submenu">
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('client-invoices.*') ? ' active' : '' }}"
-                                                    href="{{ route('client-invoices.index') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.client-invoices')</span>
-                                                </a>
-                                            </li>
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('receipts.outstanding') ? ' active' : '' }}"
-                                                    href="{{ route('receipts.outstanding') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.outstanding-receivables')</span>
-                                                </a>
-                                            </li>
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('receipts.history') ? ' active' : '' }}"
-                                                    href="{{ route('receipts.history') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.receipt-history')</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('client-invoices.*') || request()->routeIs('receipts.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                                aria-haspopup="true" aria-expanded="true" href="#">
+                                                <span class="nav-main-link-name">@lang('menu.client-invoices')</span>
+                                            </a>
+                                            <ul class="nav-main-submenu">
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('client-invoices.*') ? ' active' : '' }}"
+                                                        href="{{ route('client-invoices.index') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.client-invoices')</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('receipts.outstanding') ? ' active' : '' }}"
+                                                        href="{{ route('receipts.outstanding') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.outstanding-receivables')</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('receipts.history') ? ' active' : '' }}"
+                                                        href="{{ route('receipts.history') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.receipt-history')</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
 
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('partyAccount.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                            aria-haspopup="true" aria-expanded="true" href="#">
-                                            <span class="nav-main-link-name">@lang('menu.ledgers')</span>
-                                        </a>
-                                        <ul class="nav-main-submenu">
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('partyAccount.ledger') ? ' active' : '' }}"
-                                                    href="{{ route('partyAccount.ledger') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.party_ledger')</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                                {{--  @endcan  --}}
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('partyAccount.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                                aria-haspopup="true" aria-expanded="true" href="#">
+                                                <span class="nav-main-link-name">@lang('menu.ledgers')</span>
+                                            </a>
+                                            <ul class="nav-main-submenu">
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('partyAccount.ledger') ? ' active' : '' }}"
+                                                        href="{{ route('partyAccount.ledger') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.party_ledger')</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                {{-- @endcan --}}
                             </li>
 
 
                             <li
                                 class="nav-main-item{{ request()->routeIs('bookings.*') || request()->routeIs('bookingReturns.*') || request()->routeIs('registry-order.*') || request()->routeIs('possession-letter.*') ? ' open' : '' }}">
+                                {{-- @can('booking-module.view') --}}
+                                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                        aria-haspopup="true" aria-expanded="true" href="#">
+                                        <i class="nav-main-link-icon si si-plus"></i>
+                                        <span class="nav-main-link-name">@lang('menu.booking')</span>
+                                    </a>
+                                    <ul class="nav-main-submenu">
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('bookings.index') ? ' active' : '' }}"
+                                                href="{{ route('bookings.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.booking_application')</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('bookings.bookingListing') ? ' active' : '' }}"
+                                                href="{{ route('bookings.bookingListing') }}">
+                                                <span class="nav-main-link-name">@lang('messages.bookings')</span>
+                                            </a>
+                                        </li>
 
-                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                    aria-haspopup="true" aria-expanded="true" href="#">
-                                    <i class="nav-main-link-icon si si-plus"></i>
-                                    <span class="nav-main-link-name">@lang('menu.booking')</span>
-                                </a>
-                                <ul class="nav-main-submenu">
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('bookings.index') ? ' active' : '' }}"
-                                            href="{{ route('bookings.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.booking_application')</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('bookings.bookingListing') ? ' active' : '' }}"
-                                            href="{{ route('bookings.bookingListing') }}">
-                                            <span class="nav-main-link-name">@lang('messages.bookings')</span>
-                                        </a>
-                                    </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('bookingReturns.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                                aria-haspopup="true" aria-expanded="true" href="#">
+                                                <span class="nav-main-link-name">@lang('menu.booking-return')</span>
+                                            </a>
+                                            <ul class="nav-main-submenu">
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('bookingReturns.bookingListing') ? ' active' : '' }}"
+                                                        href="{{ route('bookingReturns.bookingListing') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.approved_bookings_cancellation')</span>
+                                                    </a>
+                                                </li>
 
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('bookingReturns.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                            aria-haspopup="true" aria-expanded="true" href="#">
-                                            <span class="nav-main-link-name">@lang('menu.booking-return')</span>
-                                        </a>
-                                        <ul class="nav-main-submenu">
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('bookingReturns.bookingListing') ? ' active' : '' }}"
-                                                    href="{{ route('bookingReturns.bookingListing') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.approved_bookings_cancellation')</span>
-                                                </a>
-                                            </li>
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('bookingReturns.index') ? ' active' : '' }}"
+                                                        href="{{ route('bookingReturns.index') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.bookingReturn')</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
 
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('bookingReturns.index') ? ' active' : '' }}"
-                                                    href="{{ route('bookingReturns.index') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.bookingReturn')</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('registry-order.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                                aria-haspopup="true" aria-expanded="true" href="#">
+                                                <span class="nav-main-link-name">@lang('menu.registry-order')</span>
+                                            </a>
+                                            <ul class="nav-main-submenu">
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('registry-order.bookingListing') ? ' active' : '' }}"
+                                                        href="{{ route('registry-order.bookingListing') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.approved_bookings_registry_letters')</span>
+                                                    </a>
+                                                </li>
 
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('registry-order.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                            aria-haspopup="true" aria-expanded="true" href="#">
-                                            <span class="nav-main-link-name">@lang('menu.registry-order')</span>
-                                        </a>
-                                        <ul class="nav-main-submenu">
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('registry-order.bookingListing') ? ' active' : '' }}"
-                                                    href="{{ route('registry-order.bookingListing') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.approved_bookings_registry_letters')</span>
-                                                </a>
-                                            </li>
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('registry-order.index') ? ' active' : '' }}"
+                                                        href="{{ route('registry-order.index') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.registry-order')</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
 
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('registry-order.index') ? ' active' : '' }}"
-                                                    href="{{ route('registry-order.index') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.registry-order')</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('possession-letter.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                                aria-haspopup="true" aria-expanded="true" href="#">
+                                                <span class="nav-main-link-name">@lang('menu.possession-letter')</span>
+                                            </a>
+                                            <ul class="nav-main-submenu">
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('possession-letter.bookingListing') ? ' active' : '' }}"
+                                                        href="{{ route('possession-letter.bookingListing') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.approved_bookings_possession_letters')</span>
+                                                    </a>
+                                                </li>
 
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('possession-letter.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                            aria-haspopup="true" aria-expanded="true" href="#">
-                                            <span class="nav-main-link-name">@lang('menu.possession-letter')</span>
-                                        </a>
-                                        <ul class="nav-main-submenu">
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('possession-letter.bookingListing') ? ' active' : '' }}"
-                                                    href="{{ route('possession-letter.bookingListing') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.approved_bookings_possession_letters')</span>
-                                                </a>
-                                            </li>
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('possession-letter.index') ? ' active' : '' }}"
+                                                        href="{{ route('possession-letter.index') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.possession-letter')</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
 
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link{{ request()->routeIs('possession-letter.index') ? ' active' : '' }}"
-                                                    href="{{ route('possession-letter.index') }}">
-                                                    <span class="nav-main-link-name">@lang('menu.possession-letter')</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                </ul>
+                                    </ul>
+                                {{-- @endcan --}}
                             </li>
 
                             <li
                                 class="nav-main-item{{ request()->is('purchase-order*') || request()->is('grn*') || request()->is('purchase-invoice*') || request()->is('purchase-return*') ? ' open' : '' }}">
-                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                    aria-haspopup="true" aria-expanded="true" href="#">
-                                    <i class="nav-main-link-icon si si-basket"></i>
-                                    <span class="nav-main-link-name">@lang('menu.purchase-module')</span>
-                                </a>
+                                {{-- @can('purchase-module.view') --}}
+                                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                        aria-haspopup="true" aria-expanded="true" href="#">
+                                        <i class="nav-main-link-icon si si-basket"></i>
+                                        <span class="nav-main-link-name">@lang('menu.purchase-module')</span>
+                                    </a>
 
-                                <ul class="nav-main-submenu">
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('purchase-module.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link{{ request()->routeIs('purchase-order*') ? ' active' : '' }}"
-                                            href="{{ route('purchase-order.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.purchase-order')</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('grn*') ? ' active' : '' }}"
-                                            href="{{ route('grn.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.grn')</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('purchase-invoice*') ? ' active' : '' }}"
-                                            href="{{ route('purchase-invoice.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.purchaseInvoice')</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('purchase-return*') ? ' active' : '' }}"
-                                            href="{{ route('purchase-return.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.purchaseReturn')</span>
-                                        </a>
-                                    </li>
-                                </ul>
+                                    <ul class="nav-main-submenu">
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('purchase-module.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('purchase-order*') ? ' active' : '' }}"
+                                                href="{{ route('purchase-order.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.purchase-order')</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('grn*') ? ' active' : '' }}"
+                                                href="{{ route('grn.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.grn')</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('purchase-invoice*') ? ' active' : '' }}"
+                                                href="{{ route('purchase-invoice.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.purchaseInvoice')</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('purchase-return*') ? ' active' : '' }}"
+                                                href="{{ route('purchase-return.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.purchaseReturn')</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                {{-- @endcan --}}
                             </li>
 
                             <li class="nav-main-item{{ request()->is('sale-invoice*') ? ' open' : '' }}">
-                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                    aria-haspopup="true" aria-expanded="true" href="#">
-                                    <i class="nav-main-link-icon si si-basket"></i>
-                                    <span class="nav-main-link-name">@lang('menu.sale-module')</span>
-                                </a>
+                                {{-- @can('sale-module.view') --}}
+                                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                        aria-haspopup="true" aria-expanded="true" href="#">
+                                        <i class="nav-main-link-icon si si-basket"></i>
+                                        <span class="nav-main-link-name">@lang('menu.sale-module')</span>
+                                    </a>
 
-                                <ul class="nav-main-submenu">
+                                    <ul class="nav-main-submenu">
 
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('sale-invoice*') ? ' active' : '' }}"
-                                            href="{{ route('sale-invoice.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.saleInvoice')</span>
-                                        </a>
-                                    </li>
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('sale-invoice*') ? ' active' : '' }}"
+                                                href="{{ route('sale-invoice.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.saleInvoice')</span>
+                                            </a>
+                                        </li>
 
-                                </ul>
+                                    </ul>
+                                {{-- @endcan --}}
                             </li>
 
                             <li
                                 class="nav-main-item{{ request()->is('construction-site*') || request()->is('tender*') || request()->is('boq-masters*') || request()->is('work-orders*') || request()->is('work-progress*') || request()->is('contractor-bills*') ? ' open' : '' }}">
-                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                    aria-haspopup="true" aria-expanded="true" href="#">
-                                    <i class="nav-main-link-icon si si-home"></i>
-                                    <span class="nav-main-link-name">@lang('menu.construction-module')</span>
-                                </a>
+                                {{-- @can('construction-module.view') --}}
+                                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                        aria-haspopup="true" aria-expanded="true" href="#">
+                                        <i class="nav-main-link-icon si si-home"></i>
+                                        <span class="nav-main-link-name">@lang('menu.construction-module')</span>
+                                    </a>
 
-                                <ul class="nav-main-submenu">
+                                    <ul class="nav-main-submenu">
 
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('construction-sites*') ? ' active' : '' }}"
-                                            href="{{ route('construction-sites.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.construction-site')</span>
-                                        </a>
-                                    </li>
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('construction-sites*') ? ' active' : '' }}"
+                                                href="{{ route('construction-sites.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.construction-site')</span>
+                                            </a>
+                                        </li>
 
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('tenders*') ? ' active' : '' }}"
-                                            href="{{ route('tenders.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.tender')</span>
-                                        </a>
-                                    </li>
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('tenders*') ? ' active' : '' }}"
+                                                href="{{ route('tenders.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.tender')</span>
+                                            </a>
+                                        </li>
 
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('boq-masters*') ? ' active' : '' }}"
-                                            href="{{ route('boq-masters.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.boq')</span>
-                                        </a>
-                                    </li>
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('boq-masters*') ? ' active' : '' }}"
+                                                href="{{ route('boq-masters.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.boq')</span>
+                                            </a>
+                                        </li>
 
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('work-orders*') ? ' active' : '' }}"
-                                            href="{{ route('work-orders.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.work-order')</span>
-                                        </a>
-                                    </li>
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('work-orders*') ? ' active' : '' }}"
+                                                href="{{ route('work-orders.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.work-order')</span>
+                                            </a>
+                                        </li>
 
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('work-progress*') ? ' active' : '' }}"
-                                            href="{{ route('work-progress.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.work-progress')</span>
-                                        </a>
-                                    </li>
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('work-progress*') ? ' active' : '' }}"
+                                                href="{{ route('work-progress.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.work-progress')</span>
+                                            </a>
+                                        </li>
 
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('contractor-bills*') ? ' active' : '' }}"
-                                            href="{{ route('contractor-bills.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.contractor-bill')</span>
-                                        </a>
-                                    </li>
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('contractor-bills*') ? ' active' : '' }}"
+                                                href="{{ route('contractor-bills.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.contractor-bill')</span>
+                                            </a>
+                                        </li>
 
 
-                                </ul>
+                                    </ul>
+                                {{-- @endcan --}}
                             </li>
                             {{--  <li class="nav-main-item">
                                 <a class="nav-main-link{{ request()->routeIs('payroll') ? ' active' : '' }}"
@@ -1274,184 +1281,186 @@
 
                             <li
                                 class="nav-main-item{{ request()->is('land-module*') || request()->is('grn*') || request()->is('land-registration*') || request()->is('transfer-land*') ? ' open' : '' }}">
-                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                    aria-haspopup="true" aria-expanded="true" href="#">
-                                    <i class="nav-main-link-icon si si-layers"></i>
-                                    <span class="nav-main-link-name">@lang('menu.land-module')</span>
-                                </a>
+                                {{-- @can('land-module.view') --}}
+                                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                        aria-haspopup="true" aria-expanded="true" href="#">
+                                        <i class="nav-main-link-icon si si-layers"></i>
+                                        <span class="nav-main-link-name">@lang('menu.land-module')</span>
+                                    </a>
 
-                                <ul class="nav-main-submenu">
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('land-module.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link{{ request()->routeIs('land-registration*') ? ' active' : '' }}"
-                                            href="{{ route('lands.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.land-registration')</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('land-transfer*') ? ' active' : '' }}"
-                                            href="{{ route('land-transfers.index') }}">
-                                            <span class="nav-main-link-name">@lang('menu.land-transfer')</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('land-report*') ? ' active' : '' }}"
-                                            href="{{ route('land-report.area-summary') }}">
-                                            <span class="nav-main-link-name">@lang('menu.land-report')</span>
-                                        </a>
-                                    </li>
-                                </ul>
+                                    <ul class="nav-main-submenu">
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('land-module.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('land-registration*') ? ' active' : '' }}"
+                                                href="{{ route('lands.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.land-registration')</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('land-transfer*') ? ' active' : '' }}"
+                                                href="{{ route('land-transfers.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.land-transfer')</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('land-report*') ? ' active' : '' }}"
+                                                href="{{ route('land-report.area-summary') }}">
+                                                <span class="nav-main-link-name">@lang('menu.land-report')</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                {{-- @endcan --}}
                             </li>
 
                             <li class="nav-main-item{{ request()->is('reports*') ? ' open' : '' }}">
-                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                    aria-haspopup="true" aria-expanded="true" href="#">
-                                    <i class="nav-main-link-icon si si-chart"></i>
-                                    <span class="nav-main-link-name">@lang('menu.reports')</span>
-                                </a>
+                                {{-- @can('reports.view') --}}
+                                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                        aria-haspopup="true" aria-expanded="true" href="#">
+                                        <i class="nav-main-link-icon si si-chart"></i>
+                                        <span class="nav-main-link-name">@lang('menu.reports')</span>
+                                    </a>
 
-                                <ul class="nav-main-submenu">
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('reports.recovery.sheet.view.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link{{ request()->routeIs('reports.recovery.sheet.view*') ? ' active' : '' }}"
-                                            href="{{ route('reports.recovery.sheet.view') }}">
-                                            <span class="nav-main-link-name">@lang('menu.recovery-sheet')</span>
-                                        </a>
-                                    </li>
+                                    <ul class="nav-main-submenu">
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('reports.recovery.sheet.view.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('reports.recovery.sheet.view*') ? ' active' : '' }}"
+                                                href="{{ route('reports.recovery.sheet.view') }}">
+                                                <span class="nav-main-link-name">@lang('menu.recovery-sheet')</span>
+                                            </a>
+                                        </li>
 
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('bankBook.view') ? ' active' : '' }}"
-                                            href="{{ route('bankBook.view') }}">
-                                            <span class="nav-main-link-name">@lang('menu.bank_book')</span>
-                                        </a>
-                                    </li>
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('bankBook.view') ? ' active' : '' }}"
+                                                href="{{ route('bankBook.view') }}">
+                                                <span class="nav-main-link-name">@lang('menu.bank_book')</span>
+                                            </a>
+                                        </li>
 
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('reports.stock-report.filter') ? ' open' : '' }}">
-                                        <a class="nav-main-link{{ request()->routeIs('reports.stock-report.filter') ? ' active' : '' }}"
-                                            href="{{ route('reports.stock-report.filter') }}">
-                                            <span class="nav-main-link-name">@lang('menu.stock-report')</span>
-                                        </a>
-                                    </li>
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('available-plots.filter') ? ' open' : '' }}">
-                                        <a class="nav-main-link{{ request()->routeIs('available-plots.filter') ? ' active' : '' }}"
-                                            href="{{ route('available-plots.filter') }}">
-                                            <span class="nav-main-link-name">@lang('menu.available-plots-report')</span>
-                                        </a>
-                                    </li>
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('reports.bill.aging.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link{{ request()->routeIs('reports.bill.aging.*') ? ' active' : '' }}"
-                                            href="{{ route('reports.bill.aging.view') }}">
-                                            <span class="nav-main-link-name">@lang('menu.bill-aging')</span>
-                                        </a>
-                                    </li>
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('reports.trial.balance.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link{{ request()->routeIs('reports.trial.balance.*') ? ' active' : '' }}"
-                                            href="{{ route('reports.trial.balance.view') }}">
-                                            <span class="nav-main-link-name">@lang('menu.trial-balance')</span>
-                                        </a>
-                                    </li>
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('reports.balance.sheet.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link{{ request()->routeIs('reports.balance.sheet.*') ? ' active' : '' }}"
-                                            href="{{ route('reports.balance.sheet.view') }}">
-                                            <span class="nav-main-link-name">@lang('menu.balance-sheet')</span>
-                                        </a>
-                                    </li>
-                                </ul>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('reports.stock-report.filter') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('reports.stock-report.filter') ? ' active' : '' }}"
+                                                href="{{ route('reports.stock-report.filter') }}">
+                                                <span class="nav-main-link-name">@lang('menu.stock-report')</span>
+                                            </a>
+                                        </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('available-plots.filter') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('available-plots.filter') ? ' active' : '' }}"
+                                                href="{{ route('available-plots.filter') }}">
+                                                <span class="nav-main-link-name">@lang('menu.available-plots-report')</span>
+                                            </a>
+                                        </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('reports.bill.aging.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('reports.bill.aging.*') ? ' active' : '' }}"
+                                                href="{{ route('reports.bill.aging.view') }}">
+                                                <span class="nav-main-link-name">@lang('menu.bill-aging')</span>
+                                            </a>
+                                        </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('reports.trial.balance.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('reports.trial.balance.*') ? ' active' : '' }}"
+                                                href="{{ route('reports.trial.balance.view') }}">
+                                                <span class="nav-main-link-name">@lang('menu.trial-balance')</span>
+                                            </a>
+                                        </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('reports.balance.sheet.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('reports.balance.sheet.*') ? ' active' : '' }}"
+                                                href="{{ route('reports.balance.sheet.view') }}">
+                                                <span class="nav-main-link-name">@lang('menu.balance-sheet')</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                {{-- @endcan --}}
                             </li>
 
                             <li class="nav-main-item{{ request()->is('exective-reports*') ? ' open' : '' }}">
-                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                    aria-haspopup="true" aria-expanded="true" href="#">
-                                    <i class="nav-main-link-icon si si-chart"></i>
-                                    <span class="nav-main-link-name">@lang('menu.executive-reports')</span>
-                                </a>
+                                {{-- @can('executive-reports.view') --}}
+                                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                        aria-haspopup="true" aria-expanded="true" href="#">
+                                        <i class="nav-main-link-icon si si-chart"></i>
+                                        <span class="nav-main-link-name">@lang('menu.executive-reports')</span>
+                                    </a>
 
-                                <ul class="nav-main-submenu">
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('reports.recovery.sheet.view.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link{{ request()->routeIs('reports.recovery.sheet.view*') ? ' active' : '' }}"
-                                            href="{{ route('reports.recovery.sheet.view') }}">
-                                            <span class="nav-main-link-name">@lang('menu.recovery-sheet')</span>
-                                        </a>
-                                    </li>
+                                    <ul class="nav-main-submenu">
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('reports.recovery.sheet.view.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('reports.recovery.sheet.view*') ? ' active' : '' }}"
+                                                href="{{ route('reports.recovery.sheet.view') }}">
+                                                <span class="nav-main-link-name">@lang('menu.recovery-sheet')</span>
+                                            </a>
+                                        </li>
 
-                                    <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->routeIs('bankBook.view') ? ' active' : '' }}"
-                                            href="{{ route('bankBook.view') }}">
-                                            <span class="nav-main-link-name">@lang('menu.bank_book')</span>
-                                        </a>
-                                    </li>
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('bankBook.view') ? ' active' : '' }}"
+                                                href="{{ route('bankBook.view') }}">
+                                                <span class="nav-main-link-name">@lang('menu.bank_book')</span>
+                                            </a>
+                                        </li>
 
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('reports.stock-report.filter') ? ' open' : '' }}">
-                                        <a class="nav-main-link{{ request()->routeIs('reports.stock-report.filter') ? ' active' : '' }}"
-                                            href="{{ route('reports.stock-report.filter') }}">
-                                            <span class="nav-main-link-name">@lang('menu.stock-report')</span>
-                                        </a>
-                                    </li>
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('available-plots.filter') ? ' open' : '' }}">
-                                        <a class="nav-main-link{{ request()->routeIs('available-plots.filter') ? ' active' : '' }}"
-                                            href="{{ route('available-plots.filter') }}">
-                                            <span class="nav-main-link-name">@lang('menu.available-plots-report')</span>
-                                        </a>
-                                    </li>
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('reports.bill.aging.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link{{ request()->routeIs('reports.bill.aging.*') ? ' active' : '' }}"
-                                            href="{{ route('reports.bill.aging.view') }}">
-                                            <span class="nav-main-link-name">@lang('menu.bill-aging')</span>
-                                        </a>
-                                    </li>
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('reports.trial.balance.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link{{ request()->routeIs('reports.trial.balance.*') ? ' active' : '' }}"
-                                            href="{{ route('reports.trial.balance.view') }}">
-                                            <span class="nav-main-link-name">@lang('menu.trial-balance')</span>
-                                        </a>
-                                    </li>
-                                    <li
-                                        class="nav-main-item{{ request()->routeIs('reports.balance.sheet.*') ? ' open' : '' }}">
-                                        <a class="nav-main-link{{ request()->routeIs('reports.balance.sheet.*') ? ' active' : '' }}"
-                                            href="{{ route('reports.balance.sheet.view') }}">
-                                            <span class="nav-main-link-name">@lang('menu.balance-sheet')</span>
-                                        </a>
-                                    </li>
-                                </ul>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('reports.stock-report.filter') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('reports.stock-report.filter') ? ' active' : '' }}"
+                                                href="{{ route('reports.stock-report.filter') }}">
+                                                <span class="nav-main-link-name">@lang('menu.stock-report')</span>
+                                            </a>
+                                        </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('available-plots.filter') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('available-plots.filter') ? ' active' : '' }}"
+                                                href="{{ route('available-plots.filter') }}">
+                                                <span class="nav-main-link-name">@lang('menu.available-plots-report')</span>
+                                            </a>
+                                        </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('reports.bill.aging.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('reports.bill.aging.*') ? ' active' : '' }}"
+                                                href="{{ route('reports.bill.aging.view') }}">
+                                                <span class="nav-main-link-name">@lang('menu.bill-aging')</span>
+                                            </a>
+                                        </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('reports.trial.balance.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('reports.trial.balance.*') ? ' active' : '' }}"
+                                                href="{{ route('reports.trial.balance.view') }}">
+                                                <span class="nav-main-link-name">@lang('menu.trial-balance')</span>
+                                            </a>
+                                        </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('reports.balance.sheet.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('reports.balance.sheet.*') ? ' active' : '' }}"
+                                                href="{{ route('reports.balance.sheet.view') }}">
+                                                <span class="nav-main-link-name">@lang('menu.balance-sheet')</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                {{-- @endcan --}}
                             </li>
 
                             <li class="nav-main-heading">More</li>
-                            @can('audit-log.view')
+                            {{-- @can('audit-log.view') --}}
                                 <li class="nav-main-item">
                                     <a class="nav-main-link{{ request()->routeIs('audit-logs.index') ? ' active' : '' }}"
                                         href="{{ route('audit-logs.index') }}">
                                         <span class="nav-main-link-name">@lang('menu.audit-log')</span>
                                     </a>
                                 </li>
-                            @endcan
-                            @can('registry-types.view')
+                            {{-- @endcan --}}
+                            {{-- @can('registry-types.view') --}}
                                 <li class="nav-main-item">
                                     <a class="nav-main-link{{ request()->routeIs('registry-types.index') ? ' active' : '' }}"
                                         href="{{ route('registry-types.index') }}">
                                         <span class="nav-main-link-name">@lang('menu.registry-types')</span>
                                     </a>
                                 </li>
-                            @endcan
+                            {{-- @endcan --}}
                         </ul>
                     </div>
-                    <!-- END Side Navigation -->
                 </div>
-                <!-- END Sidebar Scrolling -->
             </nav>
-            <!-- END Sidebar -->
         @endif
 
-        <!-- Header -->
         <header id="page-header">
             <!-- Header Content -->
             <div class="content-header">
@@ -1493,8 +1502,8 @@
                 </div>
                 <!-- END Left Section -->
                 {{--  @php
-                dd(Auth::user()->avatar);
-            @endphp  --}}
+                            dd(Auth::user()->avatar);
+                        @endphp  --}}
                 <!-- Right Section -->
                 <div class="d-flex align-items-center">
                     <!-- User Dropdown -->
@@ -1502,7 +1511,7 @@
                         <button type="button" class="btn btn-sm btn-alt-secondary d-flex align-items-center"
                             id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">
-                            <img class="rounded-circle" src="{{ asset(path: 'storage/' . \Auth::user()->avatar)  }}"
+                            <img class="rounded-circle" src="{{ asset(path: 'storage/' . \Auth::user()->avatar) }}"
                                 alt="Header Avatar" style="width: 21px;">
                             <span
                                 class="d-none d-sm-inline-block ms-2">{{ \Auth::user()->{'name_' . app()->getLocale()} }}</span>
@@ -1518,24 +1527,24 @@
                                 {{--  <p class="mb-0 text-muted fs-sm fw-medium">Web Developer</p>  --}}
                             </div>
                             {{--  <div class="p-2">
-                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                    <span class="fs-sm fw-medium">Inbox</span>
-                    <span class="badge rounded-pill bg-primary ms-2">3</span>
-                    </a>
-                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                    <span class="fs-sm fw-medium">Profile</span>
-                    <span class="badge rounded-pill bg-primary ms-2">1</span>
-                    </a>
-                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                    <span class="fs-sm fw-medium">Settings</span>
-                    </a>
-                </div>  --}}
+                                <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
+                                <span class="fs-sm fw-medium">Inbox</span>
+                                <span class="badge rounded-pill bg-primary ms-2">3</span>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
+                                <span class="fs-sm fw-medium">Profile</span>
+                                <span class="badge rounded-pill bg-primary ms-2">1</span>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
+                                <span class="fs-sm fw-medium">Settings</span>
+                                </a>
+                            </div>  --}}
 
                             <div role="separator" class="dropdown-divider m-0"></div>
                             <div class="p-2">
                                 {{--  <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                    <span class="fs-sm fw-medium">Lock Account</span>
-                    </a>  --}}
+                                <span class="fs-sm fw-medium">Lock Account</span>
+                                </a>  --}}
                                 <a class="dropdown-item d-flex align-items-center justify-content-between"
                                     href="#"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -1558,27 +1567,27 @@
                             <a href="{{ route('language.switch', 'ur') }}">اردو</a>
                         </div>
                         {{--  <!-- Session/Locale Debug - Remove after testing -->
-                <form action="{{ route('locale.change') }}" method="POST">
-        @csrf
-        <select name="locale" onchange="this.form.submit()">
-            <option value="en"{{ app()->getLocale() == 'en' ? ' selected' : '' }}>English</option>
-            <option value="es"{{ app()->getLocale() == 'es' ? ' selected' : '' }}>Urdu</option>
-            <!-- Additional language options -->
-        </select>
-    </form>  --}}
+                            <form action="{{ route('locale.change') }}" method="POST">
+                    @csrf
+                    <select name="locale" onchange="this.form.submit()">
+                        <option value="en"{{ app()->getLocale() == 'en' ? ' selected' : '' }}>English</option>
+                        <option value="es"{{ app()->getLocale() == 'es' ? ' selected' : '' }}>Urdu</option>
+                        <!-- Additional language options -->
+                    </select>
+                        </form>  --}}
 
                         <!-- Page Container -->
                         <!--
-                Available classes for #page-container:
+                    Available classes for #page-container:
 
-            <!-- END User Dropdown -->
+                    <!-- END User Dropdown -->
 
                         <!-- Notifications Dropdown -->
                         <div class="dropdown d-inline-block ms-2">
                             {{--  <button type="button" class="btn btn-sm btn-alt-secondary" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-fw fa-bell"></i>
-                <span class="text-primary">•</span>
-                </button>  --}}
+                            <i class="fa fa-fw fa-bell"></i>
+                            <span class="text-primary">•</span>
+                            </button>  --}}
                             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 border-0 fs-sm"
                                 aria-labelledby="page-header-notifications-dropdown">
                                 <div class="p-2 bg-body-light border-bottom text-center rounded-top">
@@ -1664,8 +1673,8 @@
                         <!-- Toggle Side Overlay -->
                         <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
                         {{--  <button type="button" class="btn btn-sm btn-alt-secondary ms-2" data-toggle="layout" data-action="side_overlay_toggle">
-                <i class="fa fa-fw fa-list-ul fa-flip-horizontal"></i>
-            </button>  --}}
+                            <i class="fa fa-fw fa-list-ul fa-flip-horizontal"></i>
+                        </button>  --}}
                         <!-- END Toggle Side Overlay -->
                 </div>
                 <!-- END Right Section -->
@@ -1712,17 +1721,17 @@
 
         <!-- Footer -->
         {{--  <footer id="page-footer" class="bg-body-light">
-        <div class="content py-3">
-            <div class="row fs-sm">
-            <div class="col-sm-6 order-sm-2 py-1 text-center text-sm-end">
-                Crafted with <i class="fa fa-heart text-danger"></i> by <a class="fw-semibold" href="https://pixelcave.com" target="_blank">pixelcave</a>
-            </div>
-            <div class="col-sm-6 order-sm-1 py-1 text-center text-sm-start">
-                <a class="fw-semibold" href="https://pixelcave.com/products/oneui" target="_blank">OneUI</a> &copy; <span data-toggle="year-copy"></span>
-            </div>
-            </div>
-        </div>
-        </footer>  --}}
+                        <div class="content py-3">
+                            <div class="row fs-sm">
+                            <div class="col-sm-6 order-sm-2 py-1 text-center text-sm-end">
+                                Crafted with <i class="fa fa-heart text-danger"></i> by <a class="fw-semibold" href="https://pixelcave.com" target="_blank">pixelcave</a>
+                            </div>
+                            <div class="col-sm-6 order-sm-1 py-1 text-center text-sm-start">
+                                <a class="fw-semibold" href="https://pixelcave.com/products/oneui" target="_blank">OneUI</a> &copy; <span data-toggle="year-copy"></span>
+                            </div>
+                            </div>
+                        </div>
+                        </footer>  --}}
         <!-- END Footer -->
     </div>
     <!-- END Page Container -->
@@ -2054,7 +2063,7 @@
             }
         });
 
-         $('#sub_sub_head_id').select2({
+        $('#sub_sub_head_id').select2({
             theme: 'bootstrap-5',
             width: '100%',
             placeholder: window.translations.selectPlaceholder,

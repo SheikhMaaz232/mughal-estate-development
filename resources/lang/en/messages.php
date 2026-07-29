@@ -1413,4 +1413,7 @@ return [
     'booking-value' => 'Booking value',
     'expand-all' => 'Expand All',
     'collapse-all' => 'Collapse All',
+    'filter' => 'Filter',
+    'hide-Level-6' => 'Hide Level 6',
+    'show-Level-6' => 'Show Level 6'
 ];

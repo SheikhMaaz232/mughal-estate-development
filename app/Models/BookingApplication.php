@@ -126,7 +126,7 @@ class BookingApplication extends Model implements Auditable
 
     public static function generateBookingNo()
     {
-        $getBookingApplication = BookingApplication::max('id');
+        $getBookingApplication = BookingApplication::withoutGlobalScopes()->max('id');
 
         $nextId = $getBookingApplication ? $getBookingApplication + 1 : 1;
 

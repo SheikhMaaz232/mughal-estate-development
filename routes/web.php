@@ -197,7 +197,15 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('main-heads', MainHeadController::class);
+    Route::resource('main-heads', MainHeadController::class)->middleware([
+    'index'   => 'permission:main-head.view',
+    'show'    => 'permission:main-head.view',
+    'create'  => 'permission:main-head.create',
+    'store'   => 'permission:main-head.create',
+    'edit'    => 'permission:main-head.edit',
+    'update'  => 'permission:main-head.edit',
+    'destroy' => 'permission:main-head.delete',
+]);
     Route::resource('control-heads', ControlHeadController::class);
     Route::get('control-head/get-control-head-account/{mainHead}', [ControlHeadController::class, 'getControlAccountForMainHead'])->name('get.control.head.account');
     Route::get('sub-head/get-sub-head-account/{controlHead}', [SubHeadController::class, 'getSubAccountForControlHead'])->name('get.sub.head.account');
@@ -331,7 +339,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/clients/select2', [ClientInvoiceController::class, 'select2'])
     ->name('clients.select2');
-    
+
 
     // Client Invoice Receipt Tracking Routes
     Route::prefix('client-invoices/{invoice}/receipts')->name('client-invoices.receipts.')->group(function () {

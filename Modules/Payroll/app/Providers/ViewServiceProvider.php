@@ -1,8 +1,7 @@
 <?php
 
-namespace Modules\Payroll\app\Providers;
+namespace Modules\Payroll\Providers;
 
-use App\Models\Bank;
 use App\Models\City;
 use App\Models\Company;
 use App\Models\Department;
@@ -19,7 +18,7 @@ use Illuminate\Support\ServiceProvider;
 use Modules\Payroll\App\Models\Allowance;
 use Modules\Payroll\App\Models\Deduction;
 use Modules\Payroll\App\Models\Designation;
-use Modules\Payroll\App\Models\Shift;
+use Modules\Payroll\App\Models\Employee;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -36,7 +35,7 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer(['payroll::.*'], function ($view) {
+        View::composer(['*'], function ($view) {
             Log::info('Payroll view composer called for: ' . $view->getName());
             $view->with('groups', Group::all());
             $view->with('companies', Company::all());
@@ -52,15 +51,17 @@ class ViewServiceProvider extends ServiceProvider
             $view->with('departments', cache()->remember('departments_list', 3600, function () {
                 return Department::all();
             }));
-            $view->with('banks', cache()->remember('banks_list', 3600, function () {
-                return Bank::all();
+            $view->with('employees', cache()->remember('employees_list', 3600, function () {
+                return Employee::all();
             }));
-            $view->with('allowancesList', cache()->remember('allowances_list', 3600, function () {
+
+               $view->with('allowances', cache()->remember('allowances_list', 3600, function () {
                 return Allowance::all();
             }));
-            $view->with('deductionsList', cache()->remember('deductions_list', 3600, function () {
+               $view->with('deductions', cache()->remember('deductions_list', 3600, function () {
                 return Deduction::all();
             }));
+
         });
     }
 }

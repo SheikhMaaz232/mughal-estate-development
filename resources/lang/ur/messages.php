@@ -1394,4 +1394,6 @@ return [
     'recovery_report' => 'ریکوری رپورٹ',
     'expand-all' => 'سب کو پھیلائیں',
     'collapse-all' => 'سب کو بند کریں',
+    'hide-Level-6' => 'لیول 6 چھپائیں',
+    'show-Level-6' => 'لیول 6 دکھائیں'
 ];
