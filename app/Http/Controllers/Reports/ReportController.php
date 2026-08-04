@@ -4,22 +4,39 @@ namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
 use App\Models\AccountLedger;
+use App\Models\BookingApplication;
 use App\Models\BookingPaymentShedule;
 use App\Models\DetailAccount;
 use App\Models\Party;
 use App\Models\Product;
 use App\Models\Project;
-use Illuminate\Support\Collection;
 use App\Models\StockLedger;
 use App\Models\SubSubSubHead;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class ReportController extends Controller
 {
+
+    private function getMasterData()
+    {
+        return [
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
+            \App\Models\Project::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchParties' => Cache::remember('parties_data', 3600, fn() =>
+            \App\Models\Party::with('cast')->select('id', 'name_en', 'name_ur', 'cnic_no', 'contact_number_1', 'cast_id')->get()),
+
+            'detailAccounts' => Cache::remember('detail_accounts_data', 3600, fn() =>
+            DetailAccount::select('id', 'name_en', 'name_ur')->get()),
+        ];
+    }
+
     public function viewRecoverySheet()
     {
-        return view('reports.recovery-sheet.view');
+        return view('reports.recovery-sheet.view', $this->getMasterData());
     }
 
     public function getRecoveryReport(Request $request)
@@ -664,12 +681,13 @@ class ReportController extends Controller
 
     public function stockReportFilter()
     {
-        $projects = Project::orderBy('name_en')->get();
         $products = Product::where('type', 'item')->orderBy('name_en')->get();
 
         return view(
-            'reports.stock.stockReportFilter',
-            compact('projects', 'products')
+            'reports.stock.stockReportFilter', array_merge(
+                $this->getMasterData(),
+                compact('products')
+            )
         );
     }
 
@@ -734,7 +752,6 @@ class ReportController extends Controller
 
     public function availablePlotsReportFilter()
     {
-        $projects = Project::orderBy('name_en')->get();
 
         $products = Product::where('type', 'Direct')
             ->where('status', '!=', 'Booked')
@@ -742,8 +759,10 @@ class ReportController extends Controller
             ->get();
 
         return view(
-            'reports.availablePlots.filter',
-            compact('projects', 'products')
+            'reports.availablePlots.filter', array_merge(
+                $this->getMasterData(),
+                compact('products')
+            )
         );
     }
 
@@ -785,24 +804,69 @@ class ReportController extends Controller
         $grandTotalMarla = $products->sum('total_marla');
 
         return view(
-            'reports.availablePlots.report',
-            compact(
-                'groupedProjects',
-                'grandTotalMarla'
-            )
+            'reports.availablePlots.report', compact('groupedProjects', 'grandTotalMarla')
         );
+    }
+
+    public function directProductProjectReportFilter()
+    {
+
+        return view('exective_reports.direct_products.filterFile', $this->getMasterData());
+    }
+
+    public function directProductProjectReport(Request $request)
+    {
+        $query = Product::with('project')
+            ->where('type', 'Direct');
+
+        if ($request->filled('project_id') && !in_array('all', (array) $request->project_id)) {
+            $query->whereIn('project_id', (array) $request->project_id);
+        }
+
+        $products = $query
+            ->orderBy('project_id')
+            ->orderBy('unit_no')
+            ->get();
+
+        $groupedProjects = $products->groupBy('project_id');
+
+        $bookedProductIds = $products
+            ->filter(fn($product) => strtolower((string) $product->status) === 'booked')
+            ->pluck('id')
+            ->values();
+
+        $bookedAmountByProject = BookingApplication::whereIn('product_id', $bookedProductIds)
+            ->selectRaw('project_id, SUM(total_amount) as total_amount')
+            ->groupBy('project_id')
+            ->get()
+            ->mapWithKeys(function ($row) {
+                return [$row->project_id => (float) $row->total_amount];
+            });
+
+        $grandTotals = [
+            'marla_all' => $products->sum('total_marla'),
+            'amount_all' => $products->sum('total_amount'),
+            'marla_booked' => $products->filter(fn($product) => strtolower((string) $product->status) === 'booked')->sum('total_marla'),
+            'amount_booked' => $bookedAmountByProject->sum(),
+            'marla_verified' => $products->filter(fn($product) => strtolower((string) $product->status) === 'verified')->sum('total_marla'),
+            'amount_verified' => $products->filter(fn($product) => strtolower((string) $product->status) === 'verified')->sum('total_amount'),
+        ];
+
+        return view('exective_reports.direct_products.report', compact(
+            'groupedProjects',
+            'grandTotals',
+            'bookedAmountByProject'
+        ));
     }
 
 
     public function viewBankBook()
     {
-        return view('reports.bankBook.bank-book-view');
+        return view('reports.bankBook.bank-book-view', $this->getMasterData());
     }
 
     public function getBankBookLedger(Request $request)
     {
-        $searchParties = Party::orderBy('name_en')->get();
-        $detailAccounts = DetailAccount::orderBy('name_en')->get();
         $ledger = collect();
 
         $selectedParty = null;
@@ -831,12 +895,9 @@ class ReportController extends Controller
             $ledger = $this->fetchCombinedLedger($accounts, $request);
         }
 
-        return view('reports.bankBook.bank-book-report', compact(
-            'searchParties',
-            'detailAccounts',
-            'ledger',
-            'request',
-            'selectedParty'
+        return view('reports.bankBook.bank-book-report', array_merge(
+            $this->getMasterData(),
+            compact('ledger', 'request', 'selectedParty')
         ));
     }
 

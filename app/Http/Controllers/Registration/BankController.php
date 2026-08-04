@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Registration\StoreBankRequest;
 use App\Http\Requests\Registration\UpdateBankRequest;
 use App\Models\Bank;
+use Illuminate\Support\Facades\Cache;
 
 class BankController extends Controller
 {
@@ -15,6 +16,7 @@ class BankController extends Controller
     public function index()
     {
         $banksListing = Bank::latest()->paginate(10);
+        
         return view('registration.banks.index', compact('banksListing'));
     }
 
@@ -33,8 +35,7 @@ class BankController extends Controller
     {
         Bank::create($request->all());
 
-        return redirect()->route('banks.index')
-            ->with('success', __('messages.record-saved'));
+        return redirect()->route('banks.index')->with('success', __('messages.record-saved'));
     }
 
     /**

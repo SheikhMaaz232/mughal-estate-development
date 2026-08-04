@@ -87,7 +87,7 @@
                         <label for="cast_id">@lang('messages.cast')</label>
                         <select name="cast_id" id="cast_id"
                             class="form-control form-select select2 @error('cast_id') is-invalid @enderror">
-                            <option value="">@lang('messages.select-cast')</option>
+                            <option value="">@lang('messages.select-option')</option>
                             @foreach ($casts as $cast)
                                 <option value="{{ $cast->id }}"
                                     {{ (old('cast_id') ?? $registeredParty->cast_id) == $cast->id ? 'selected' : '' }}>
@@ -106,7 +106,7 @@
                         <label for="residential_status">@lang('messages.residential-Status')</label>
                         <select name="residential_status" id="residential_status"
                             class="form-control form-select select2 @error('residential_status') is-invalid @enderror">
-                            <option value=""></option>
+                            <option value="">@lang('messages.select-option')</option>
                             @foreach ($residentialStatus as $residential)
                                 <option value="{{ $residential->id }}"
                                     {{ (old('residential_status') ?? $registeredParty->residential_status) == $residential->id ? 'selected' : '' }}>
@@ -123,7 +123,7 @@
                         <label for="occupation_id">@lang('messages.occupation')</label>
                         <select name="occupation_id" id="occupation_id"
                             class="form-control form-select select2 @error('occupation_id') is-invalid @enderror">
-                            <option value=""></option>
+                            <option value="">@lang('messages.select-option')</option>
                             @foreach ($occupations as $occupation)
                                 <option value="{{ $occupation->id }}"
                                     {{ (old('occupation_id') ?? $registeredParty->occupation_id) == $occupation->id ? 'selected' : '' }}>

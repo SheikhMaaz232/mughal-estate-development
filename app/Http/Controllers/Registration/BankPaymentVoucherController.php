@@ -8,9 +8,12 @@ use App\Models\AccountLedger;
 use App\Models\BankPaymentVoucher;
 use App\Models\BookingApplication;
 use App\Models\ContractorBillPayment;
+use App\Models\DetailAccount;
+use App\Models\Project;
 use App\Services\BankPaymentVoucherService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class BankPaymentVoucherController extends Controller
@@ -22,6 +25,21 @@ class BankPaymentVoucherController extends Controller
         $this->bankPaymentVoucherService = $bankPaymentVoucherService;
     }
 
+    private function getMasterData()
+    {
+        return [
+            'coaPayables' => Cache::remember('coa_payables_data', 3600, fn() =>
+            DetailAccount::select('id', 'name_en', 'name_ur')->where('main_head_id', 2)->get()),
+
+            'coaBanks' => Cache::remember('coa_banks_data', 3600, fn() =>
+            DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 19)->get()),
+
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
+            Project::select('id', 'name_en', 'name_ur')->get()),
+
+        ];
+    }
+
     /**
      * Display a listing of bankPaymentVouchers.
      */
@@ -30,7 +48,13 @@ class BankPaymentVoucherController extends Controller
         $filters = $request->all();
         $bankPaymentVouchers = BankPaymentVoucher::with('project', 'detailAccount', 'bank')->search($filters)->latest()->paginate(10);
 
-        return view('registration.vouchers.bpv.index', compact('bankPaymentVouchers'));
+
+        return view('registration.vouchers.bpv.index', array_merge(
+            [
+                'bankPaymentVouchers' => $bankPaymentVouchers,
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -39,7 +63,14 @@ class BankPaymentVoucherController extends Controller
     public function create()
     {
         $maxid = BankPaymentVoucher::max('id') + 1;
-        return view('registration.vouchers.bpv.create', compact('maxid'));
+
+
+        return view('registration.vouchers.bpv.create', array_merge(
+            [
+                'maxid' => $maxid,
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -88,7 +119,12 @@ class BankPaymentVoucherController extends Controller
         try {
             $bankPaymentVoucher = $this->bankPaymentVoucherService->getById($id);
 
-            return view('registration.vouchers.bpv.edit', compact('bankPaymentVoucher'));
+            return view('registration.vouchers.bpv.edit', array_merge(
+                [
+                    'bankPaymentVoucher' => $bankPaymentVoucher,
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             return redirect()->route('bank-payment-voucher.index')->with('error', __('messages.unexpected-error'));
         }

@@ -8,7 +8,7 @@
     <div class="col-md-6 mb-3">
         <label for="city_id">@lang('messages.department')</label>
          <select name="department_type" id="department_type" class="form-control form-select @error('department_type') is-invalid @enderror">
-             <option value="">@lang('messages.select-department')</option>
+             <option value="">@lang('messages.select-option')</option>
             @foreach($departmentTypes as $key => $label)
                 <option value="{{ $key }}" {{ (old('department_type', $department->department_type ?? '') == $key) ? 'selected' : '' }}>
                     {{ $label }}

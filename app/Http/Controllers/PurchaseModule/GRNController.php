@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\PurchaseModule;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\PurchaseModule\GRNRequest;
+use App\Models\DetailAccount;
+use App\Models\GoodsReceivedNoteDetail;
+use App\Models\GoodsReceivedNoteMaster;
+use App\Models\Item;
+use App\Models\PurchaseOrder;
+use App\Models\PurchaseOrderDetails;
 use App\Services\GRNService;
 use Illuminate\Http\Request;
-use App\Models\PurchaseOrder;
-use App\Http\Controllers\Controller;
-use App\Models\PurchaseOrderDetails;
-use App\Models\GoodsReceivedNoteMaster;
-use App\Http\Requests\PurchaseModule\GRNRequest;
-use App\Models\GoodsReceivedNoteDetail;
+use Illuminate\Support\Facades\Cache;
 
 class GRNController extends Controller
 {
@@ -21,6 +24,23 @@ class GRNController extends Controller
         $this->grnService = $grnService;
     }
 
+    private function getMasterData()
+    {
+        return [
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
+            \App\Models\Project::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchParties' => Cache::remember('parties_data', 3600, fn() =>
+            \App\Models\Party::with('cast')->select('id', 'name_en', 'name_ur', 'cnic_no', 'contact_number_1', 'cast_id')->get()),
+
+            'detailAccounts' => Cache::remember('detail_accounts_data', 3600, fn() =>
+            DetailAccount::select('id', 'name_en', 'name_ur')->get()),
+
+            'items' => Cache::remember('items_data', 3600, fn() =>
+            Item::select('id', 'name_en', 'name_ur', 'measurement_unit_id')->get()),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -29,7 +49,12 @@ class GRNController extends Controller
         $filters = $request->all();
         $grnsListing = GoodsReceivedNoteMaster::with('party', 'detailAccount', 'project')->search($filters)->latest()->paginate(10);
 
-        return view('purchase-module.grn.index', compact('grnsListing'));
+        return view('purchase-module.grn.index', array_merge(
+            [
+                'grnsListing' => $grnsListing
+            ],
+            $this->getMasterData()
+        ));
     }
 
 
@@ -46,11 +71,18 @@ class GRNController extends Controller
         }
         $grnMaster = GoodsReceivedNoteMaster::select('total_po_quantity', 'total_received_quantity')->where('purchase_order_no', $request->purchase_order_id)->first();
         if ($grnMaster && $grnMaster->total_po_quantity == $grnMaster->total_received_quantity) {
-            return redirect()->back()->with('warning', __('messages.order_quantity_completed'));
+            return redirect()->back()->with('error', __('messages.order_quantity_completed'));
         }
         $purchaseOrderDetails = PurchaseOrderDetails::select('product_id', 'quantity', 'detail_remarks')->where('purchase_order_master_id', $purchaseOrderMaster->id)->get();
 
-        return view('purchase-module.grn.create', compact('maxId', 'purchaseOrderMaster', 'purchaseOrderDetails'));
+        return view('purchase-module.grn.create', array_merge(
+            [
+                'maxId' => $maxId,
+                'purchaseOrderMaster' => $purchaseOrderMaster,
+                'purchaseOrderDetails' => $purchaseOrderDetails
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -78,7 +110,13 @@ class GRNController extends Controller
         $grnMaster = $this->grnService->getById($id);
         $grnDetails = GoodsReceivedNoteDetail::where('master_id', $id)->get();
 
-        return view('purchase-module.grn.edit', compact('grnMaster', 'grnDetails'));
+        return view('purchase-module.grn.edit', array_merge(
+            [
+                'grnMaster' => $grnMaster,
+                'grnDetails' => $grnDetails
+            ],
+            $this->getMasterData()
+        ));
         // } catch (\Exception $e) {
         //     return redirect()->route('grn.index')->with('error', __('messages.unexpected-error'));
         // }
@@ -115,7 +153,13 @@ class GRNController extends Controller
             $goodsReceivedNoteMaster = GoodsReceivedNoteMaster::where('id', $id)->first();
             $goodsReceivedNoteDetails = $this->grnService->getGoodsReceivedNoteDetails($goodsReceivedNoteMaster->id);
 
-            return view('purchase-module.grn.show', compact('goodsReceivedNoteMaster', 'goodsReceivedNoteDetails'));
+            return view('purchase-module.grn.show', array_merge(
+                [
+                    'goodsReceivedNoteMaster' => $goodsReceivedNoteMaster,
+                    'goodsReceivedNoteDetails' => $goodsReceivedNoteDetails
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             // Redirect back with error message
             return redirect()->back()->with('error', __('messages.unexpected-error'));
@@ -149,7 +193,7 @@ class GRNController extends Controller
         try {
             $grnStatus = GoodsReceivedNoteMaster::lockForUpdate()->findOrFail($id);
 
-            // ✅ Update status
+            //  Update status
             $grnStatus->status = $request->status;
             $grnStatus->save();
 

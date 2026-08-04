@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers\Registration;
 
-use App\Models\SubHead;
-use App\Models\SubSubHead;
-use App\Models\ControlHead;
-use App\Models\SubSubSubHead;
-use App\Services\ProductService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Registration\ProductRequest;
+use App\Models\ControlHead;
+use App\Models\Facing;
+use App\Models\MainHead;
 use App\Models\Product;
+use App\Models\Project;
+use App\Models\RoadCategory;
+use App\Models\SubHead;
+use App\Models\SubSubHead;
+use App\Models\SubSubSubHead;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
@@ -20,6 +25,36 @@ class ProductController extends Controller
     public function __construct(ProductService $productService)
     {
         $this->productService = $productService;
+    }
+
+    private function getMasterData()
+    {
+        return [
+            'mainHeads' => Cache::remember('main_heads_data', 3600, fn() =>
+            MainHead::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchControlHeads' => Cache::remember('control_heads_data', 3600, fn() =>
+            ControlHead::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchSubHeads' => Cache::remember('sub_heads_data', 3600, fn() =>
+            SubHead::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchSubSubHeads' => Cache::remember('sub_sub_heads_data', 3600, fn() =>
+            SubSubHead::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchSubSubSubHeads' => Cache::remember('sub_sub_sub_heads_data', 3600, fn() =>
+            SubSubSubHead::select('id', 'name_en', 'name_ur')->get()),
+
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
+            Project::select('id', 'name_en', 'name_ur')->get()),
+
+            'roadCategories' => Cache::remember('road_categories_data', 3600, fn() =>
+            RoadCategory::select('id', 'title_en', 'title_ur')->get()),
+
+            'facings' => Cache::remember('facings_data', 3600, fn() =>
+            Facing::select('id', 'name_en', 'name_ur')->get()),
+
+        ];
     }
 
     /**
@@ -44,7 +79,17 @@ class ProductController extends Controller
             'type'
         )->with('project', 'mainHead', 'controlHead', 'subHead', 'subSubHead', 'subSubSubHead')->search($search)->latest()->paginate(10)->appends(request()->input());
 
-        return view('registration.products.index', compact('products', 'search'));
+
+        return view(
+            'registration.products.index',
+            array_merge(
+                [
+                    'products' => $products,
+                    'search' => $search,
+                ],
+                $this->getMasterData()
+            )
+        );
     }
 
     /**
@@ -52,7 +97,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('registration.products.create');
+        return view('registration.products.create', $this->getMasterData());
     }
 
     /**
@@ -86,7 +131,20 @@ class ProductController extends Controller
         $subSubHeads = SubSubHead::where('sub_head_id', $product->sub_head_id)->get();
         $subSubSubHeads = SubSubSubHead::where('sub_sub_head_id', $product->sub_sub_head_id)->get();
 
-        return view('registration.products.edit', compact('product', 'controlHeads', 'subHeads', 'subSubHeads', 'subSubSubHeads'));
+
+        return view(
+            'registration.products.edit',
+            array_merge(
+                [
+                    'product' => $product,
+                    'controlHeads' => $controlHeads,
+                    'subHeads' => $subHeads,
+                    'subSubHeads' => $subSubHeads,
+                    'subSubSubHeads' => $subSubSubHeads,
+                ],
+                $this->getMasterData()
+            )
+        );
     }
 
     /**

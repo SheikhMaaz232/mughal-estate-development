@@ -52,115 +52,165 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $start = microtime(true);
+        // $start = microtime(true);
 
-        logger()->info('ViewServiceProvider boot START');
-        View::composer('*', function ($view) {
-            $view->with('allowances', Allowance::all());
 
-            $view->with('deductions', Deduction::all());
+        // View::composer([
+        //     'accounts.*',
+        //     'payroll.*',
+        // ], function ($view) {
+        //     $view->with('allowances', cache()->remember('allowances_list', 3600, function () {
+        //         return Allowance::all();
+        //     }));
+        //     $view->with('deductions', cache()->remember('deductions_list', 3600, function () {
+        //         return Deduction::all();
+        //     }));
+        //     $view->with('leaveTypesList', cache()->remember('leave_types_list', 3600, function () {
+        //         return LeaveType::all();
+        //     }));
+        //     // $view->with('groups', Group::select('id','name_en', 'name_ur')->get());
+        //     $view->with('groups', Cache::remember('groups_data', 3600, function () {
+        //         return Group::select('id', 'name_en', 'name_ur')->get();
+        //     }));
 
-            $view->with('leaveTypesList', LeaveType::all());
+        //     $view->with('companies', Cache::remember('companies_data', 3600, function () {
+        //         return Company::select('id', 'name_en', 'name_ur')->get();
+        //     }));
 
-            $view->with('groups', Group::select('id', 'name_en', 'name_ur')->get());
+        //     $view->with('cities', Cache::remember('cities_data', 3600, function () {
+        //         return City::select('id', 'name_en', 'name_ur')->get();
+        //     }));
 
-            $view->with('companies', Company::select('id', 'name_en', 'name_ur')->get());
+        //     $view->with('tehsils', Cache::remember('tehsils_data', 3600, function () {
+        //         return Tehsil::select('id', 'name_en', 'name_ur')->get();
+        //     }));
 
-            $view->with('cities', City::select('id', 'name_en', 'name_ur')->get());
+        //     $view->with('departmentTypes', Cache::remember('departmentTypes_data', 3600, function () {
+        //         return Department::getDepartmentTypes();
+        //     }));
 
-            $view->with('tehsils', Tehsil::select('id', 'name_en', 'name_ur')->get());
+        //     $view->with('roadCategories', Cache::remember('roadCategories_data', 3600, function () {
+        //         return RoadCategory::select('id', 'title_en', 'title_ur')->get();
+        //     }));
 
-            $view->with('departmentTypes', Department::getDepartmentTypes());
+        //     $view->with('mainHeads', Cache::remember('mainHeads_data', 3600, function () {
+        //         return MainHead::select('id', 'name_en', 'name_ur')->get();
+        //     }));
 
-            $view->with('roadCategories', RoadCategory::select('id', 'title_en', 'title_ur')->get());
+        //     $view->with('searchControlHeads', Cache::remember('controlHeads_data', 3600, function () {
+        //         return ControlHead::select('id', 'name_en', 'name_ur')->get();
+        //     }));
 
-            $view->with('mainHeads', MainHead::select('id', 'name_en', 'name_ur')->get());
+        //     $view->with('searchSubHeads', Cache::remember('subHeads_data', 3600, function () {
+        //         return SubHead::select('id', 'name_en', 'name_ur')->get();
+        //     }));
 
-            $view->with('searchControlHeads', ControlHead::select('id', 'name_en', 'name_ur')->get());
+        //     $view->with('searchSubSubHeads', Cache::remember('subSubHeads_data', 3600, function () {
+        //         return SubSubHead::select('id', 'name_en', 'name_ur')->get();
+        //     }));
 
-            $view->with('searchSubHeads', SubHead::select('id', 'name_en', 'name_ur')->get());
+        //     $view->with('searchSubSubSubHeads', Cache::remember('subSubSubHeads_data', 3600, function () {
+        //         return SubSubSubHead::select('id', 'name_en', 'name_ur')->get();
+        //     }));
 
-            $view->with('searchSubSubHeads', SubSubHead::select('id', 'name_en', 'name_ur')->get());
+        //     $view->with('units', Cache::remember('units_data', 3600, function () {
+        //         return Unit::select('id', 'name_en', 'name_ur')->get();
+        //     }));
 
-            $view->with('searchSubSubSubHeads', SubSubSubHead::select('id', 'name_en', 'name_ur')->get());
+        //     $view->with('projects', Cache::remember('projects_data', 3600, function () {
+        //         return Project::select('id', 'name_en', 'name_ur')->get();
+        //     }));
 
-            $view->with('units', Unit::select('id', 'name_en', 'name_ur')->get());
+        //     $view->with('productsData', Cache::remember('productsData_data', 3600, function () {
+        //         return Product::select('id', 'name_en', 'name_ur')->get();
+        //     }));
 
-            $view->with('projects', Project::select('id', 'name_en', 'name_ur')->get());
+        //     $view->with('casts', Cache::remember('casts_data', 3600, function () {
+        //         return Cast::select('id', 'title_en', 'title_ur')->get();
+        //     }));
 
-            $view->with('productsData', Product::select('id', 'name_en', 'name_ur')->get());
+        //     $view->with('occupations', Cache::remember('occupations_data', 3600, function () {
+        //         return OccupationType::select('id', 'title_en', 'title_ur')->get();
+        //     }));
 
-            $view->with('casts', Cast::select('id', 'title_en', 'title_ur')->get());
+        //     $view->with('residentialStatus', Cache::remember('residentialStatus_data', 3600, function () {
+        //         return Residential::select('id', 'title_en', 'title_ur')->get();
+        //     }));
 
-            $view->with('occupations', OccupationType::select('id', 'title_en', 'title_ur')->get());
+        //     $view->with('banks', Cache::remember('banks_data', 3600, function () {
+        //         return Bank::select('id', 'name_en', 'name_ur')->get();
+        //     }));
 
-            $view->with('residentialStatus', Residential::select('id', 'title_en', 'title_ur')->get());
+        //     $view->with('facings', Cache::remember('facings_data', 3600, function () {
+        //         return Facing::select('id', 'name_en', 'name_ur')->get();
+        //     }));
 
-            $view->with('banks', Bank::select('id', 'name_en', 'name_ur')->get());
+        //     $view->with('searchParties', Cache::remember('searchParty', 3600, function () {
+        //         return Party::with('cast')->select('id', 'name_en', 'name_ur', 'cnic_no', 'contact_number_1', 'cast_id')->get();
+        //     }));
 
-            $view->with('facings', Facing::select('id', 'name_en', 'name_ur')->get());
+        //     $view->with('detailAccounts', Cache::remember('detailAccount', 3600, function () {
+        //         return DetailAccount::select('id', 'name_en', 'name_ur')->get();
+        //     }));
+        //     $view->with('relations', Cache::remember('relation', 3600, function () {
+        //         return Relation::select('id', 'name_en', 'name_ur')->get();
+        //     }));
+        //     $view->with('scheduleTypes', Cache::remember('scheduleType', 3600, function () {
+        //         return ScheduleType::select('id', 'title_en', 'title_ur')->get();
+        //     }));
+        //     $view->with('schedulePeriods', Cache::remember('schedulePeriod', 3600, function () {
+        //         return SchedulePeriod::select('id', 'title_en', 'title_ur')->get();
+        //     }));
+        //     $view->with('coaDealers', Cache::remember('coaDealer', 3600, function () {
+        //         return DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 39)->get();
+        //     }));
+        //     $view->with('coaBanks', Cache::remember('coaBank', 3600, function () {
+        //         return DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 19)->get();
+        //     }));
+        //     $view->with('coaPayables', Cache::remember('coaPayable', 3600, function () {
+        //         return DetailAccount::select('id', 'name_en', 'name_ur')->where('main_head_id', 2)->get();
+        //     }));
+        //     $view->with('coaReceivables', Cache::remember('coaReceivable', 3600, function () {
+        //         return DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_head_id', 1)->get();
+        //     }));
+        //     $view->with('coaCashAccounts', Cache::remember('coaCashAccount', 3600, function () {
+        //         return DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 18)->get();
+        //     }));
+        //     $view->with('items', Cache::remember('item', 3600, function () {
+        //         return Item::select('id', 'name_en', 'name_ur')->get();
+        //     }));
+        //     $view->with('constructionSites', Cache::remember('constructionSites', 3600, function () {
+        //         return ConstructionSite::select('id', 'name_en', 'name_ur')->get();
+        //     }));
+        //     $view->with('tenders', Cache::remember('tenders', 3600, function () {
+        //         return Tender::select('id', 'title_en', 'title_ur')->get();
+        //     }));
+        //     $view->with('workOrders', Cache::remember('workOrder', 3600, function () {
+        //         return WorkOrder::select('id', 'description_en', 'description_ur')->get();
+        //     }));
 
-            $view->with('searchParties', Party::with('cast')
-                ->select('id', 'name_en', 'name_ur', 'cnic_no', 'contact_number_1', 'cast_id')
-                ->get());
+        //     // $view->with('companies', Company::select('id','name_en', 'name_ur')->get());
+        //     // $view->with('cities', City::select('id','name_en', 'name_ur')->get());
+        //     // $view->with('tehsils', Tehsil::select('id','name_en', 'name_ur')->get());
+        //     // $view->with('departmentTypes', Department::getDepartmentTypes());
+        //     // $view->with('roadCategories', RoadCategory::select('id','title_en', 'title_ur')->get());
+        //     // $view->with('mainHeads', MainHead::select('id','name_en', 'name_ur')->get());
+        //     // $view->with('searchControlHeads', ControlHead::select('id','name_en', 'name_ur')->get());
+        //     // $view->with('searchSubHeads', SubHead::select('id','name_en', 'name_ur')->get());
+        //     // $view->with('searchSubSubHeads', SubSubHead::select('id','name_en', 'name_ur')->get());
+        //     // $view->with('searchSubSubSubHeads', SubSubSubHead::select('id','name_en', 'name_ur')->get());
+        //     // $view->with('units', Unit::select('id','name_en', 'name_ur')->get());
+        //     // $view->with('projects', Project::select('id','name_en', 'name_ur')->get());
+        //     // $view->with('productsData', Product::select('id','name_en', 'name_ur')->get());
+        //     // $view->with('casts', Cast::select('id','title_en', 'title_ur')->get());
+        //     // $view->with('occupations', OccupationType::select('id','title_en', 'title_ur')->get());
+        //     // $view->with('residentialStatus', Residential::select('id','title_en', 'title_ur')->get());
+        //     // $view->with('banks', Bank::select('id','name_en', 'name_ur')->get());
 
-            $view->with('detailAccounts', DetailAccount::select('id', 'name_en', 'name_ur')->get());
-
-            $view->with('relations', Relation::select('id', 'name_en', 'name_ur')->get());
-
-            $view->with('scheduleTypes', ScheduleType::select('id', 'title_en', 'title_ur')->get());
-
-            $view->with('schedulePeriods', SchedulePeriod::select('id', 'title_en', 'title_ur')->get());
-
-            $view->with('coaDealers', DetailAccount::select('id', 'name_en', 'name_ur')
-                ->where('sub_sub_head_id', 39)
-                ->get());
-
-            $view->with('coaBanks', DetailAccount::select('id', 'name_en', 'name_ur')
-                ->where('sub_sub_head_id', 19)
-                ->get());
-
-            $view->with('coaPayables', DetailAccount::select('id', 'name_en', 'name_ur')
-                ->where('main_head_id', 2)
-                ->get());
-
-            $view->with('coaReceivables', DetailAccount::select('id', 'name_en', 'name_ur')
-                ->where('sub_head_id', 1)
-                ->get());
-
-            $view->with('coaCashAccounts', DetailAccount::select('id', 'name_en', 'name_ur')
-                ->where('sub_sub_head_id', 18)
-                ->get());
-
-            $view->with('items', Item::select('id', 'name_en', 'name_ur')->get());
-
-            $view->with('constructionSites', ConstructionSite::select('id', 'name_en', 'name_ur')->get());
-
-            $view->with('tenders', Tender::select('id', 'title_en', 'title_ur')->get());
-
-            $view->with('workOrders', WorkOrder::select('id', 'description_en', 'description_ur')->get());
-            // $view->with('companies', Company::select('id','name_en', 'name_ur')->get());
-            // $view->with('cities', City::select('id','name_en', 'name_ur')->get());
-            // $view->with('tehsils', Tehsil::select('id','name_en', 'name_ur')->get());
-            // $view->with('departmentTypes', Department::getDepartmentTypes());
-            // $view->with('roadCategories', RoadCategory::select('id','title_en', 'title_ur')->get());
-            // $view->with('mainHeads', MainHead::select('id','name_en', 'name_ur')->get());
-            // $view->with('searchControlHeads', ControlHead::select('id','name_en', 'name_ur')->get());
-            // $view->with('searchSubHeads', SubHead::select('id','name_en', 'name_ur')->get());
-            // $view->with('searchSubSubHeads', SubSubHead::select('id','name_en', 'name_ur')->get());
-            // $view->with('searchSubSubSubHeads', SubSubSubHead::select('id','name_en', 'name_ur')->get());
-            // $view->with('units', Unit::select('id','name_en', 'name_ur')->get());
-            // $view->with('projects', Project::select('id','name_en', 'name_ur')->get());
-            // $view->with('productsData', Product::select('id','name_en', 'name_ur')->get());
-            // $view->with('casts', Cast::select('id','title_en', 'title_ur')->get());
-            // $view->with('occupations', OccupationType::select('id','title_en', 'title_ur')->get());
-            // $view->with('residentialStatus', Residential::select('id','title_en', 'title_ur')->get());
-            // $view->with('banks', Bank::select('id','name_en', 'name_ur')->get());
-
-        });
-        logger()->info(
-            'ViewServiceProvider boot END => ' .
-                round((microtime(true) - $start) * 1000, 2) . ' ms'
-        );
+        // });
+        // logger()->info(
+        //     'ViewServiceProvider boot END => ' .
+        //         round((microtime(true) - $start) * 1000, 2) . ' ms'
+        // );
     }
 }

@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers\Registration;
 
-use App\Models\Party;
-use Illuminate\Http\Request;
-use App\Services\PartiesService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Registration\StorePartiesRequest;
+use App\Models\Bank;
+use App\Models\Cast;
+use App\Models\OccupationType;
+use App\Models\Party;
+use App\Models\Residential;
+use App\Services\PartiesService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class RegisteredPartiesController extends Controller
 {
@@ -17,18 +23,54 @@ class RegisteredPartiesController extends Controller
         $this->partiesService = $partiesService;
     }
 
+    private function getMasterData()
+    {
+        return [
+            'casts' => Cache::remember('casts_data', 3600, fn() =>
+            Cast::select('id', 'title_en', 'title_ur')->get()),
+
+            'occupations' => Cache::remember('occupations_data', 3600, fn() =>
+            OccupationType::select('id', 'title_en', 'title_ur')->get()),
+
+            'residentialStatus' => Cache::remember('residential_status_data', 3600, fn() =>
+            Residential::select('id', 'title_en', 'title_ur')->get()),
+
+            'banks' => Cache::remember('banks_data', 3600, fn() =>
+            Bank::select('id', 'name_en', 'name_ur')->get()),
+        ];
+    }
+
     /**
      * Display a listing of Sub-Sub-Heads.
      */
     public function index(Request $request)
     {
-
         $search = $request->input('search');
-        $request = $request->all();
+        $filters = $request->all();
+        $page = $request->get('page', 1);
 
-        $parties = Party::with('cast', 'residentialStatus', 'occupation')->search($search, $request)->latest()->paginate(10);
+        $cacheKey = 'parties_' . md5(json_encode([
+            'search' => $search,
+            'filters' => $filters,
+            'page' => $page,
+        ]));
 
-        return view('registration.party_registration.index', compact('parties', 'search'));
+        $parties = Cache::remember($cacheKey, 300, function () use ($search, $filters) {
+            return Party::with(['cast', 'residentialStatus', 'occupation'])
+                ->search($search, $filters)
+                ->latest()
+                ->paginate(10);
+        });
+        return view(
+            'registration.party_registration.index',
+            array_merge(
+                [
+                    'parties' => $parties,
+                    'search' => $search,
+                ],
+                $this->getMasterData()
+            )
+        );
     }
 
     /**
@@ -36,7 +78,9 @@ class RegisteredPartiesController extends Controller
      */
     public function create()
     {
-        return view('registration.party_registration.create');
+        return view('registration.party_registration.create',
+            $this->getMasterData()
+        );
     }
 
     /**
@@ -44,10 +88,8 @@ class RegisteredPartiesController extends Controller
      */
     public function store(StorePartiesRequest $request)
     {
-
         try {
             $data = $request->all();
-
             app(PartiesService::class)->create($data);
 
             return redirect()->route('parties.index')->with('success', __('messages.record-saved'));
@@ -65,7 +107,16 @@ class RegisteredPartiesController extends Controller
             $registeredParty = $this->partiesService->getById($id);
             $partyBanks = $this->partiesService->getPartyBanksByPartyId($id);
 
-            return view('registration.party_registration.edit', compact('registeredParty', 'partyBanks'));
+            return view(
+                'registration.party_registration.edit',
+                array_merge(
+                    [
+                        'registeredParty' => $registeredParty,
+                        'partyBanks' => $partyBanks,
+                    ],
+                    $this->getMasterData()
+                )
+            );
         } catch (\Exception $e) {
             return redirect()->route('parties.index')->with('error', __('messages.unexpected-error'));
         }

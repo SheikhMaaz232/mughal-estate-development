@@ -9,6 +9,7 @@ use App\Models\WorkOrderItem;
 use App\Models\WorkProgress;
 use App\Services\WorkProgressService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class WorkProgressController extends Controller
 {
@@ -18,6 +19,15 @@ class WorkProgressController extends Controller
     public function __construct(WorkProgressService $service)
     {
         $this->service = $service;
+    }
+
+     private function getMasterData()
+    {
+        return [
+            'workOrders' => Cache::remember('work_orders_data', 3600, fn() =>
+            WorkOrder::select('id', 'description_en', 'description_ur')->get()),
+
+        ];
     }
 
     public function index(Request $request)
@@ -30,7 +40,13 @@ class WorkProgressController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('Construction-Module.work-progress.index', compact('progresses', 'search'));
+        return view('Construction-Module.work-progress.index', array_merge(
+            [
+                'progresses' => $progresses,
+                'search' => $search
+            ],
+            $this->getMasterData()
+        ));
     }
 
     public function create(Request $request)
@@ -45,7 +61,13 @@ class WorkProgressController extends Controller
         $workOrderData = WorkOrder::with(['constructionSite', 'tender', 'items'])->findOrFail($workOrderId);
         $availableItems = $this->service->getAvailableWorkOrderItems($workOrderId);
 
-        return view('Construction-Module.work-progress.create', compact('workOrderData', 'availableItems'));
+        return view('Construction-Module.work-progress.create', array_merge(
+            [
+                'workOrderData' => $workOrderData,
+                'availableItems' => $availableItems
+            ],
+            $this->getMasterData()
+        ));
     }
 
     public function store(StoreWorkProgressRequest $request)
@@ -75,10 +97,13 @@ class WorkProgressController extends Controller
 
         $availableItems = $this->service->getAvailableWorkOrderItemsEditCase($progress->work_order_id, $progress->id);
 
-        return view('Construction-Module.work-progress.edit', compact(
-            'progress',
-            'workOrderData',
-            'availableItems'
+        return view('Construction-Module.work-progress.edit', array_merge(
+            [
+                'progress' => $progress,
+                'workOrderData' => $workOrderData,
+                'availableItems' => $availableItems
+            ],
+            $this->getMasterData()
         ));
     }
 

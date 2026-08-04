@@ -14,6 +14,7 @@ use App\Models\SubSubHead;
 use App\Models\SubSubSubHead;
 use App\Services\DetailAccountService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class DetailAccountController extends Controller
@@ -23,6 +24,30 @@ class DetailAccountController extends Controller
     public function __construct(DetailAccountService $detailAccountService)
     {
         $this->detailAccountService = $detailAccountService;
+    }
+
+    private function getMasterData()
+    {
+        return [
+            'mainHeads' => Cache::remember('main_heads_data', 3600, fn() =>
+            MainHead::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchControlHeads' => Cache::remember('control_heads_data', 3600, fn() =>
+            ControlHead::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchSubHeads' => Cache::remember('sub_heads_data', 3600, fn() =>
+            SubHead::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchSubSubHeads' => Cache::remember('sub_sub_heads_data', 3600, fn() =>
+            SubSubHead::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchSubSubSubHeads' => Cache::remember('sub_sub_sub_heads_data', 3600, fn() =>
+            SubSubSubHead::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchParties' => Cache::remember('parties_data', 3600, fn() =>
+            \App\Models\Party::with('cast')->select('id', 'name_en', 'name_ur', 'cnic_no', 'contact_number_1', 'cast_id')->get()),
+
+        ];
     }
 
     /**
@@ -35,168 +60,18 @@ class DetailAccountController extends Controller
 
         $detailAccountListings = DetailAccount::with('mainHead', 'controlHead', 'subHead', 'subSubHead', 'subSubSubHead', 'party')->search($search, $filters)->latest()->paginate(10)->appends(request()->input());
 
-        return view('registration.detail_account.index', compact('detailAccountListings', 'search'));
+        return view('registration.detail_account.index', array_merge(
+            [
+                'detailAccountListings' => $detailAccountListings,
+                'search' => $search,
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
      * Display accounts tree view (bilingual).
      */
-    // public function tree()
-    // {
-    //     $mainHeads = MainHead::orderBy('id')->get();
-
-    //     $accountsTree = [];
-
-    //     foreach ($mainHeads as $mh) {
-    //         $mhItem = [
-    //             'id' => $mh->id,
-    //             'name_en' => $mh->name_en,
-    //             'name_ur' => $mh->name_ur,
-    //             'control_heads' => []
-    //         ];
-
-    //         $controlHeads = ControlHead::where('main_head_id', $mh->id)->get();
-    //         foreach ($controlHeads as $ch) {
-    //             $chItem = [
-    //                 'id' => $ch->id,
-    //                 'name_en' => $ch->name_en,
-    //                 'name_ur' => $ch->name_ur,
-    //                 'sub_heads' => []
-    //             ];
-
-    //             $subHeads = SubHead::where('control_head_id', $ch->id)->get();
-    //             foreach ($subHeads as $sh) {
-    //                 $shItem = [
-    //                     'id' => $sh->id,
-    //                     'name_en' => $sh->name_en,
-    //                     'name_ur' => $sh->name_ur,
-    //                     'sub_sub_heads' => []
-    //                 ];
-
-    //                 $subSubHeads = SubSubHead::where('sub_head_id', $sh->id)->get();
-    //                 foreach ($subSubHeads as $ssh) {
-    //                     $sshItem = [
-    //                         'id' => $ssh->id,
-    //                         'name_en' => $ssh->name_en,
-    //                         'name_ur' => $ssh->name_ur,
-    //                         'sub_sub_sub_heads' => []
-    //                     ];
-
-    //                     $subSubSubHeads = SubSubSubHead::where('sub_sub_head_id', $ssh->id)->get();
-    //                     foreach ($subSubSubHeads as $sssh) {
-    //                         $ssshItem = [
-    //                             'id' => $sssh->id,
-    //                             'name_en' => $sssh->name_en,
-    //                             'name_ur' => $sssh->name_ur,
-    //                             'detail_accounts' => []
-    //                         ];
-
-    //                         $detailAccounts = DetailAccount::where('sub_sub_sub_head_id', $sssh->id)->get();
-    //                         foreach ($detailAccounts as $da) {
-    //                             $ssshItem['detail_accounts'][] = [
-    //                                 'id' => $da->id,
-    //                                 'name_en' => $da->name_en,
-    //                                 'name_ur' => $da->name_ur,
-    //                             ];
-    //                         }
-
-    //                         $sshItem['sub_sub_sub_heads'][] = $ssshItem;
-    //                     }
-
-    //                     // detail accounts directly under sub_sub_head (no sub_sub_sub_head)
-    //                     $directDA_SSH = DetailAccount::where('sub_sub_head_id', $ssh->id)
-    //                         ->whereNull('sub_sub_sub_head_id')
-    //                         ->get();
-    //                     foreach ($directDA_SSH as $da) {
-    //                         $sshItem['sub_sub_sub_heads'][] = [
-    //                             'id' => null,
-    //                             'name_en' => null,
-    //                             'name_ur' => null,
-    //                             'detail_accounts' => [
-    //                                 [
-    //                                     'id' => $da->id,
-    //                                     'name_en' => $da->name_en,
-    //                                     'name_ur' => $da->name_ur,
-    //                                 ]
-    //                             ]
-    //                         ];
-    //                     }
-
-    //                     $shItem['sub_sub_heads'][] = $sshItem;
-    //                 }
-
-    //                 // detail accounts directly under sub_head
-    //                 $directDA_SH = DetailAccount::where('sub_head_id', $sh->id)
-    //                     ->whereNull('sub_sub_head_id')
-    //                     ->get();
-    //                 foreach ($directDA_SH as $da) {
-    //                     $shItem['sub_sub_heads'][] = [
-    //                         'id' => null,
-    //                         'name_en' => null,
-    //                         'name_ur' => null,
-    //                         'sub_sub_sub_heads' => [],
-    //                         'detail_accounts' => [
-    //                             [
-    //                                 'id' => $da->id,
-    //                                 'name_en' => $da->name_en,
-    //                                 'name_ur' => $da->name_ur,
-    //                             ]
-    //                         ]
-    //                     ];
-    //                 }
-
-    //                 $chItem['sub_heads'][] = $shItem;
-    //             }
-
-    //             // detail accounts directly under control head
-    //             $directDA_CH = DetailAccount::where('control_head_id', $ch->id)
-    //                 ->whereNull('sub_head_id')
-    //                 ->get();
-    //             foreach ($directDA_CH as $da) {
-    //                 $chItem['sub_heads'][] = [
-    //                     'id' => null,
-    //                     'name_en' => null,
-    //                     'name_ur' => null,
-    //                     'sub_sub_heads' => [],
-    //                     'detail_accounts' => [
-    //                         [
-    //                             'id' => $da->id,
-    //                             'name_en' => $da->name_en,
-    //                             'name_ur' => $da->name_ur,
-    //                         ]
-    //                     ]
-    //                 ];
-    //             }
-
-    //             $mhItem['control_heads'][] = $chItem;
-    //         }
-
-    //         // detail accounts directly under main head
-    //         $directDA_MH = DetailAccount::where('main_head_id', $mh->id)
-    //             ->whereNull('control_head_id')
-    //             ->get();
-    //         foreach ($directDA_MH as $da) {
-    //             $mhItem['control_heads'][] = [
-    //                 'id' => null,
-    //                 'name_en' => null,
-    //                 'name_ur' => null,
-    //                 'sub_heads' => [],
-    //                 'detail_accounts' => [
-    //                     [
-    //                         'id' => $da->id,
-    //                         'name_en' => $da->name_en,
-    //                         'name_ur' => $da->name_ur,
-    //                     ]
-    //                 ]
-    //             ];
-    //         }
-
-    //         $accountsTree[] = $mhItem;
-    //     }
-
-    //     return view('registration.detail_account.tree', compact('accountsTree'));
-    // }
-
     public function tree(Request $request)
     {
         $projects = Project::orderBy('name_en')->get();
@@ -400,7 +275,7 @@ class DetailAccountController extends Controller
             $accountsTree[] = $mhItem;
         }
 
-        return view('registration.detail_account.tree', compact( 'projects','projectId', 'accountsTree', 'mainHeadsTree'));
+        return view('registration.detail_account.tree', compact('projects', 'projectId', 'accountsTree', 'mainHeadsTree'));
     }
 
     /**
@@ -408,7 +283,7 @@ class DetailAccountController extends Controller
      */
     public function create()
     {
-        return view('registration.detail_account.create');
+        return view('registration.detail_account.create', $this->getMasterData());
     }
 
     /**
@@ -448,7 +323,16 @@ class DetailAccountController extends Controller
             $subSubSubHeads = SubSubSubHead::where('sub_sub_head_id', $detailAccount->sub_sub_head_id)->get();
 
 
-            return view('registration.detail_account.edit', compact('detailAccount', 'controlHeads', 'subHeads', 'subSubHeads', 'subSubSubHeads'));
+            return view('registration.detail_account.edit', array_merge(
+                [
+                    'detailAccount' => $detailAccount,
+                    'controlHeads' => $controlHeads,
+                    'subHeads' => $subHeads,
+                    'subSubHeads' => $subSubHeads,
+                    'subSubSubHeads' => $subSubSubHeads,
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             return redirect()->route('detail-accounts.index')->with('error', __('messages.unexpected-error'));
         }

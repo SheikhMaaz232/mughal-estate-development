@@ -89,6 +89,7 @@ return [
     'receipt-history' => 'Receipt History',
     'stock-report' => 'Stock Report',
     'available-plots-report' => 'Available Plots Report',
+    'direct-products-report' => 'Projects Plots Summary',
     'bank_book' => 'Bank Book',
     'executive-reports' => 'Executive Reports'
 

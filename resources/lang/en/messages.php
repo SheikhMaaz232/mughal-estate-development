@@ -20,6 +20,8 @@ return [
     'project-code' => 'Project Code',
     'phase-map' => 'Phase Map',
     'debit-code' => 'Debit Code',
+    'all' => 'All',
+    'generate-direct-products-report' => 'Project Wise Plots Summary',
     'city' => 'City',
     'add-tehsil' => 'Add Tehsil',
     'proceed-to-dashboard' => 'Proceed to Dashboard',

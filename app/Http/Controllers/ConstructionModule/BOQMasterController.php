@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ConstructionModule\StoreBOQMasterRequest;
 use App\Http\Requests\ConstructionModule\UpdateBOQMasterRequest;
 use App\Models\BOQMaster;
+use App\Models\ConstructionSite;
+use App\Models\DetailAccount;
 use App\Models\Item;
 use App\Models\Tender;
 use App\Services\BOQMasterService;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -22,6 +25,22 @@ class BOQMasterController extends Controller
     public function __construct(BOQMasterService $service)
     {
         $this->service = $service;
+    }
+
+    
+    private function getMasterData()
+    {
+        return [
+            'constructionSites' => Cache::remember('construction_sites_data', 3600, fn() =>
+            ConstructionSite::select('id', 'name_en', 'name_ur')->get()),
+
+            // 'detailAccounts' => Cache::remember('detail_accounts_data', 3600, fn() =>
+            // DetailAccount::select('id', 'name_en', 'name_ur')->get()),
+
+            'tenders' => Cache::remember('tenders_data', 3600, fn() =>
+            Tender::select('id', 'title_en', 'title_ur', 'construction_site_id')->get()),
+
+        ];
     }
 
     public function index(Request $request)
@@ -38,7 +57,14 @@ class BOQMasterController extends Controller
 
         $boqs = $query->with(['constructionSite', 'tender'])->latest()->paginate(10);
 
-        return view('Construction-Module.boq.index', compact('boqs', 'constructionSiteId', 'tenderId'));
+        return view('Construction-Module.boq.index', array_merge(
+            [
+                'boqs' => $boqs,
+                'constructionSiteId' => $constructionSiteId,
+                'tenderId' => $tenderId
+            ],
+            $this->getMasterData()
+        ));
     }
 
     public function create(Request $request)
@@ -53,7 +79,10 @@ class BOQMasterController extends Controller
         $tender = Tender::with('constructionSite')->findOrFail($tenderId);
         $items = Item::with('measurementUnit')->get();
 
-        return view('Construction-Module.boq.create', compact('tender', 'items'));
+        return view('Construction-Module.boq.create', array_merge(
+            ['tender' => $tender, 'items' => $items],
+            $this->getMasterData()
+        ));
     }
 
     public function store(StoreBOQMasterRequest $request)
@@ -83,7 +112,10 @@ class BOQMasterController extends Controller
     public function show($id)
     {
         $boqMaster = BOQMaster::with(['constructionSite', 'tender', 'details.item'])->findOrFail($id);
-        return view('Construction-Module.boq.show', compact('boqMaster'));
+        return view('Construction-Module.boq.show', array_merge(
+            ['boqMaster' => $boqMaster],
+            $this->getMasterData()
+        ));
     }
 
     public function edit($id)
@@ -91,7 +123,10 @@ class BOQMasterController extends Controller
         $boqMaster = BOQMaster::with(['constructionSite', 'tender', 'details'])->findOrFail($id);
         $items = Item::all();
 
-        return view('Construction-Module.boq.edit', compact('boqMaster', 'items'));
+        return view('Construction-Module.boq.edit', array_merge(
+            ['boqMaster' => $boqMaster, 'items' => $items],
+            $this->getMasterData()
+        ));
     }
 
     public function update(UpdateBOQMasterRequest $request, $id)

@@ -12,6 +12,7 @@ use App\Models\RegistryOrder;
 use App\Models\SubSubSubHead;
 use App\Services\RegistryOrderService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class RegistryOrderController extends Controller
 {
@@ -22,6 +23,17 @@ class RegistryOrderController extends Controller
         $this->registryOrderService = $registryOrderService;
     }
 
+    private function getMasterData()
+    {
+        return [
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
+            \App\Models\Project::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchParties' => Cache::remember('parties_data', 3600, fn() =>
+            \App\Models\Party::with('cast')->select('id', 'name_en', 'name_ur', 'cnic_no', 'contact_number_1', 'cast_id')->get()),
+        ];
+    }
+
     /**
      * Display a listing of Possession Letters.
      */
@@ -30,7 +42,13 @@ class RegistryOrderController extends Controller
         $search = $request->all();
         $registryOrdersListing = RegistryOrder::with('party', 'booking.project', 'booking.product')->search($search)->latest()->paginate(10)->appends(request()->input());
 
-        return view('registration.registry-order.index', compact('registryOrdersListing', 'request'));
+        return view('registration.registry-order.index', array_merge(
+            [
+                'registryOrdersListing' => $registryOrdersListing,
+                'request' => $request
+            ],
+            $this->getMasterData()
+        ));
     }
 
     public function bookingListing(Request $request)
@@ -38,7 +56,12 @@ class RegistryOrderController extends Controller
         $search = $request->all();
         $bookings = BookingApplication::where('status', 'Verified')->search($search)->latest()->paginate(10);
 
-        return view('registration.registry-order.verifiedBookings', compact('bookings'));
+        return view('registration.registry-order.verifiedBookings', array_merge(
+            [
+                'bookings' => $bookings
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -55,7 +78,13 @@ class RegistryOrderController extends Controller
                 ->back()
                 ->with('error', __('messages.registry_order_exists'));
         }
-        return view('registration.registry-order.create', compact('booking', 'registryAccounts'));
+        return view('registration.registry-order.create', array_merge(
+            [
+                'booking' => $booking,
+                'registryAccounts' => $registryAccounts
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -85,7 +114,13 @@ class RegistryOrderController extends Controller
             $projectSubSubSubHeads = SubSubSubHead::select('id', 'name_en', 'name_ur')->where('project_id', $product->project_id)->pluck('id');
             $registryAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 5)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
 
-            return view('registration.registry-order.edit', compact('registryOrder', 'registryAccounts'));
+            return view('registration.registry-order.edit', array_merge(
+                [
+                    'registryOrder' => $registryOrder,
+                    'registryAccounts' => $registryAccounts
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             return redirect()->route('registry-order.index')->with('error', __('messages.unexpected-error'));
         }
@@ -115,7 +150,12 @@ class RegistryOrderController extends Controller
     public function show(RegistryOrder $registryOrder)
     {
         try {
-            return view('registration.registry-order.show', compact('registryOrder'));
+            return view('registration.registry-order.show', array_merge(
+                [
+                    'registryOrder' => $registryOrder
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             // Redirect back with error message
             return redirect()->back()->with('error', __('messages.unexpected-error'));

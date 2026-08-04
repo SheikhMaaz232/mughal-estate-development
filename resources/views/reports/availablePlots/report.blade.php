@@ -96,7 +96,8 @@
 
                 <thead>
                     <tr>
-                        <th style="width: 50%">@lang('messages.plot')</th>
+                        <th style="width: 40%">@lang('messages.plot')</th>
+                        <th style="width: 10%">@lang('messages.unit_no')</th>
                         <th style="width: 25%">@lang('messages.status')</th>
                         <th style="width: 25%">@lang('messages.marla')</th>
                     </tr>
@@ -108,6 +109,9 @@
                         <tr>
                             <td>
                                 {{ $isUrdu ? $product->name_ur : $product->name_en }}
+                            </td>
+                            <td style="text-align: center;">
+                                {{ $product->unit_no }}
                             </td>
                             <td style="text-align: center;">
                                 @if ($product->status === 'Unverified')
@@ -124,7 +128,7 @@
                     @endforeach
 
                     <tr class="total-row">
-                        <td colspan="2">
+                        <td colspan="3">
                             @lang('messages.project_total')
                         </td>
 

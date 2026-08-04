@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Registration;
 
-use Illuminate\Http\Request;
-use App\Models\PossessionLetter;
-use App\Models\BookingApplication;
 use App\Http\Controllers\Controller;
-use App\Services\PossessionLetterService;
 use App\Http\Requests\Registration\PossessionLetterRequest;
+use App\Models\BookingApplication;
+use App\Models\PossessionLetter;
+use App\Services\PossessionLetterService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class PossessionLetterController extends Controller
 {
@@ -18,6 +19,17 @@ class PossessionLetterController extends Controller
         $this->possessionLetterService = $possessionLetterService;
     }
 
+      private function getMasterData()
+    {
+        return [
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
+            \App\Models\Project::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchParties' => Cache::remember('parties_data', 3600, fn() =>
+            \App\Models\Party::with('cast')->select('id', 'name_en', 'name_ur', 'cnic_no', 'contact_number_1', 'cast_id')->get()),
+        ];
+    }
+
     /**
      * Display a listing of Possession Letters.
      */
@@ -26,7 +38,13 @@ class PossessionLetterController extends Controller
         $search = $request->all();
         $possessionLettersListing = PossessionLetter::with('project', 'product', 'party')->latest()->paginate(10);
 
-        return view('registration.possession-letter.index', compact('possessionLettersListing', 'request'));
+        return view('registration.possession-letter.index', array_merge(
+            [
+                'possessionLettersListing' => $possessionLettersListing,
+                'request' => $request
+            ],
+            $this->getMasterData()
+        ));
     }
 
     public function bookingListing(Request $request)
@@ -34,7 +52,12 @@ class PossessionLetterController extends Controller
         $search = $request->all();
         $bookings = BookingApplication::where('status', 'Verified')->search($search)->latest()->paginate(10);
 
-        return view('registration.possession-letter.verifiedBookings', compact('bookings'));
+        return view('registration.possession-letter.verifiedBookings', array_merge(
+            [
+                'bookings' => $bookings
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -44,7 +67,12 @@ class PossessionLetterController extends Controller
     {
         $booking = BookingApplication::with('party', 'project', 'product')->findOrFail($request->id);
 
-        return view('registration.possession-letter.create', compact('booking'));
+        return view('registration.possession-letter.create', array_merge(
+            [
+                'booking' => $booking
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -72,7 +100,12 @@ class PossessionLetterController extends Controller
         try {
             $possessionLetter = $this->possessionLetterService->getById($id);
 
-            return view('registration.possession-letter.edit', compact('possessionLetter'));
+            return view('registration.possession-letter.edit', array_merge(
+                [
+                    'possessionLetter' => $possessionLetter
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             return redirect()->route('possession-letter.index')->with('error', __('messages.unexpected-error'));
         }
@@ -102,7 +135,12 @@ class PossessionLetterController extends Controller
     public function show(PossessionLetter $possessionLetter)
     {
         try {
-            return view('registration.possession-letter.show', compact('possessionLetter'));
+            return view('registration.possession-letter.show', array_merge(
+                [
+                    'possessionLetter' => $possessionLetter
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             // Redirect back with error message
             return redirect()->back()->with('error', __('messages.unexpected-error'));

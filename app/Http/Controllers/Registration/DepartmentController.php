@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Registration\StoreDepartmentRequest;
 use App\Http\Requests\Registration\UpdateDepartmentRequest;
 use App\Models\Department;
+use Illuminate\Support\Facades\Cache;
 
 class DepartmentController extends Controller
 {
@@ -23,14 +24,15 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        return view('registration.departments.create');
+        $departmentTypes = Department::getDepartmentTypes();
 
+        return view('registration.departments.create', compact('departmentTypes'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-       public function store(StoreDepartmentRequest $request)
+    public function store(StoreDepartmentRequest $request)
     {
         Department::create($request->all());
 
@@ -43,7 +45,9 @@ class DepartmentController extends Controller
      */
     public function edit(Department $department)
     {
-        return view('registration.departments.edit', compact('department'));
+        $departmentTypes = Department::getDepartmentTypes();
+
+        return view('registration.departments.edit', compact('department', 'departmentTypes'));
     }
 
     /**

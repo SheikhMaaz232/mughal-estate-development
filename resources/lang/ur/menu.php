@@ -88,6 +88,7 @@ return [
     'contractor-bill' => 'ٹھیکیدار بل',
     'stock-report' => 'اسٹاک رپورٹ',
     'available-plots-report' => 'دستیاب پلاٹ کی رپورٹ',
+    'direct-products-report' => 'پروجیکٹ پلاٹس سمری',
     'bank_book' => 'بینک بک',
     'client-invoices' => 'کلائنٹ انوائسز',
     'outstanding-receivables' => 'بقایا جات',

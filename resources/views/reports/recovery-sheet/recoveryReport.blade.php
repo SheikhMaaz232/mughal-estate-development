@@ -181,9 +181,19 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6">@lang('messages.no_records_found')</td>
+                            <td colspan="7">@lang('messages.no_records_found')</td>
                         </tr>
                     @endforelse
+
+                    @if ($partySchedules->isNotEmpty())
+                        <tr class="total-row">
+                            <td colspan="3"><strong>@lang('messages.total')</strong></td>
+                            <td><strong>{{ number_format($partySchedules->sum('total_schedule'), 2) }}</strong></td>
+                            <td><strong>{{ number_format($partySchedules->sum('scheduled_by_date'), 2) }}</strong></td>
+                            <td><strong>{{ number_format($partySchedules->sum('till_date_short_payment') ?? 0, 2) }}</strong></td>
+                            <td><strong>{{ number_format($partySchedules->sum('scheduled_after_date'), 2) }}</strong></td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
         {{-- @endif --}}

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Registration;
 
-use Illuminate\Http\Request;
-use App\Models\JournalVoucher;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Services\JournalVoucherService;
+use App\Models\DetailAccount;
 use App\Models\JournalEntry;
+use App\Models\JournalVoucher;
+use App\Models\Project;
+use App\Services\JournalVoucherService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class JournalVoucherController extends Controller
 {
@@ -16,6 +19,18 @@ class JournalVoucherController extends Controller
     public function __construct(JournalVoucherService $journalVoucherService)
     {
         $this->journalVoucherService = $journalVoucherService;
+    }
+
+    private function getMasterData()
+    {
+        return [
+            'detailAccounts' => Cache::remember('detail_accounts_data', 3600, fn() =>
+            DetailAccount::select('id', 'name_en', 'name_ur')->get()),
+
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
+            Project::select('id', 'name_en', 'name_ur')->get()),
+
+        ];
     }
 
     /**
@@ -31,7 +46,12 @@ class JournalVoucherController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('registration.vouchers.jv.index', compact('journalVouchers'));
+        return view('registration.vouchers.jv.index', array_merge(
+            [
+                'journalVouchers' => $journalVouchers,
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -40,7 +60,12 @@ class JournalVoucherController extends Controller
     public function create()
     {
         $maxid = JournalVoucher::withTrashed()->max('id') + 1;
-        return view('registration.vouchers.jv.create', compact('maxid'));
+        return view('registration.vouchers.jv.create', array_merge(
+            [
+                'maxid' => $maxid,
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -74,7 +99,13 @@ class JournalVoucherController extends Controller
             $journalVoucher = $this->journalVoucherService->getById($id);
             $journalVoucherDetails = JournalEntry::where('journal_voucher_id', $journalVoucher->id)->get();
 
-            return view('registration.vouchers.jv.edit', compact('journalVoucher', 'journalVoucherDetails'));
+            return view('registration.vouchers.jv.edit', array_merge(
+                [
+                    'journalVoucher' => $journalVoucher,
+                    'journalVoucherDetails' => $journalVoucherDetails,
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             return redirect()->route('jv-voucher.index')->with('error', __('messages.unexpected-error'));
         }

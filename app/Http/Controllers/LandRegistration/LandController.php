@@ -8,6 +8,7 @@ use App\Http\Requests\LandRegistration\UpdateLandRequest;
 use App\Models\Land;
 use App\Services\LandService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class LandController extends Controller
 {
@@ -18,6 +19,16 @@ class LandController extends Controller
         $this->service = $service;
     }
 
+    private function getMasterData()
+    {
+        return [
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
+            \App\Models\Project::select('id', 'name_en', 'name_ur')->get()),
+
+        ];
+    }
+
+
     public function index(Request $request)
     {
         $query = Land::with('details');
@@ -25,17 +36,17 @@ class LandController extends Controller
         // Search functionality
         if ($request->has('search') && !empty($request->search)) {
             $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
                 $q->where('commission_amount', 'like', "%{$searchTerm}%")
-                ->orWhere('land_amount', 'like', "%{$searchTerm}%")
-                ->orWhere('remarks', 'like', "%{$searchTerm}%")
-                ->orWhereHas('details', function($detailQuery) use ($searchTerm) {
-                    $detailQuery->where('khawat_no', 'like', "%{$searchTerm}%")
-                                ->orWhere('fard_id_no', 'like', "%{$searchTerm}%")
-                                ->orWhere('registry_no', 'like', "%{$searchTerm}%")
-                                ->orWhere('moza', 'like', "%{$searchTerm}%")
-                                ->orWhere('remarks', 'like', "%{$searchTerm}%");
-                });
+                    ->orWhere('land_amount', 'like', "%{$searchTerm}%")
+                    ->orWhere('remarks', 'like', "%{$searchTerm}%")
+                    ->orWhereHas('details', function ($detailQuery) use ($searchTerm) {
+                        $detailQuery->where('khawat_no', 'like', "%{$searchTerm}%")
+                            ->orWhere('fard_id_no', 'like', "%{$searchTerm}%")
+                            ->orWhere('registry_no', 'like', "%{$searchTerm}%")
+                            ->orWhere('moza', 'like', "%{$searchTerm}%")
+                            ->orWhere('remarks', 'like', "%{$searchTerm}%");
+                    });
             });
         }
 
@@ -55,10 +66,12 @@ class LandController extends Controller
 
         $landRegistrations = $query->latest()->paginate(15);
 
-        // Get projects for filter dropdown
-        $projects = \App\Models\Project::all()->pluck('name_en', 'id');
-
-        return view('lands.index', compact('landRegistrations', 'projects'));
+        return view('lands.index', array_merge(
+            [
+                'landRegistrations' => $landRegistrations
+            ],
+            $this->getMasterData()
+        ));
     }
 
     public function create()
@@ -67,14 +80,17 @@ class LandController extends Controller
         $sellerAccounts = $this->service->getPartyAccounts();
         $commissionAccounts = $this->service->getPartyAccounts();
 
-        return view('lands.create', [
-            'land' => null,
-            'details' => [],
-            'method' => 'create',
-            'buyerAccounts' => $partyAccounts,
-            'sellerAccounts' => $sellerAccounts,
-            'commissionAccounts' => $commissionAccounts
-        ]);
+        return view('lands.create', array_merge(
+            [
+                'land' => null,
+                'details' => [],
+                'method' => 'create',
+                'buyerAccounts' => $partyAccounts,
+                'sellerAccounts' => $sellerAccounts,
+                'commissionAccounts' => $commissionAccounts
+            ],
+            $this->getMasterData()
+        ));
     }
 
     public function store(StoreLandRequest $request)
@@ -97,15 +113,18 @@ class LandController extends Controller
         $sellerAccounts = $this->service->getPartyAccounts();
         $commissionAccounts = $this->service->getPartyAccounts();
         $land->load('details');
-        // dd($land);
-        return view('lands.edit', [
-            'land' => $land,
-            'details' => $land->details,
-            'method' => 'edit',
-            'buyerAccounts' => $partyAccounts,
-            'sellerAccounts' => $sellerAccounts,
-            'commissionAccounts' => $commissionAccounts
-        ]);
+       
+        return view('lands.edit', array_merge(
+            [
+                'land' => $land,
+                'details' => $land->details,
+                'method' => 'edit',
+                'buyerAccounts' => $partyAccounts,
+                'sellerAccounts' => $sellerAccounts,
+                'commissionAccounts' => $commissionAccounts
+            ],
+            $this->getMasterData()
+        ));
     }
 
     public function update(UpdateLandRequest $request, Land $land)

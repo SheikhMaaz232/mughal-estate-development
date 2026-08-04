@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers\PurchaseModule;
 
-use Illuminate\Http\Request;
-use App\Models\AccountLedger;
-use App\Models\GeneralJournal;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PurchaseModule\PurchaseReturnRequest;
+use App\Models\AccountLedger;
+use App\Models\DetailAccount;
+use App\Models\GeneralJournal;
+use App\Models\Item;
+use App\Models\PurchaseDetail;
+use App\Models\PurchaseMaster;
 use App\Models\PurchaseReturnDetail;
 use App\Models\PurchaseReturnMaster;
 use App\Services\PurchaseReturnService;
-use App\Http\Requests\PurchaseModule\PurchaseReturnRequest;
-use App\Models\PurchaseDetail;
-use App\Models\PurchaseMaster;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PurchaseReturnController extends Controller
 {
@@ -24,6 +27,23 @@ class PurchaseReturnController extends Controller
         $this->purchaseReturnService = $purchaseReturnService;
     }
 
+    private function getMasterData()
+    {
+        return [
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
+            \App\Models\Project::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchParties' => Cache::remember('parties_data', 3600, fn() =>
+            \App\Models\Party::with('cast')->select('id', 'name_en', 'name_ur', 'cnic_no', 'contact_number_1', 'cast_id')->get()),
+
+            'detailAccounts' => Cache::remember('detail_accounts_data', 3600, fn() =>
+            DetailAccount::select('id', 'name_en', 'name_ur')->get()),
+
+            'items' => Cache::remember('items_data', 3600, fn() =>
+            Item::select('id', 'name_en', 'name_ur', 'measurement_unit_id')->get()),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -32,7 +52,12 @@ class PurchaseReturnController extends Controller
         $filters = $request->all();
         $purchaseReturnsListing = PurchaseReturnMaster::with('party', 'detailAccount', 'project')->search($filters)->latest()->paginate(10);
 
-        return view('purchase-module.purchase-return.index', compact('purchaseReturnsListing'));
+        return view('purchase-module.purchase-return.index', array_merge(
+            [
+                'purchaseReturnsListing' => $purchaseReturnsListing
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -49,7 +74,14 @@ class PurchaseReturnController extends Controller
         $purchaseDetailsData = PurchaseDetail::select('product_id', 'quantity', 'price', 'amount')->where('purchase_master_id', $purchaseMasterData->id)->get();
 
 
-        return view('purchase-module.purchase-return.create', compact('maxId', 'purchaseMasterData', 'purchaseDetailsData'));
+        return view('purchase-module.purchase-return.create', array_merge(
+            [
+                'maxId' => $maxId,
+                'purchaseMasterData' => $purchaseMasterData,
+                'purchaseDetailsData' => $purchaseDetailsData
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -76,7 +108,13 @@ class PurchaseReturnController extends Controller
         $purchaseReturnMaster = $this->purchaseReturnService->getById($id);
         $purchaseReturnDetails = PurchaseReturnDetail::where('purchase_return_master_id', $id)->get();
 
-        return view('purchase-module.purchase-return.edit', compact('purchaseReturnMaster', 'purchaseReturnDetails'));
+        return view('purchase-module.purchase-return.edit', array_merge(
+            [
+                'purchaseReturnMaster' => $purchaseReturnMaster,
+                'purchaseReturnDetails' => $purchaseReturnDetails
+            ],
+            $this->getMasterData()
+        ));
         // } catch (\Exception $e) {
         //     return redirect()->route('purchase-return.index')->with('error', __('messages.unexpected-error'));
         // }
@@ -113,7 +151,13 @@ class PurchaseReturnController extends Controller
             $purchaseReturn = PurchaseReturnMaster::where('id', $id)->first();
             $purchaseReturnDetails = $this->purchaseReturnService->getPurchaseDetails($purchaseReturn->id);
 
-            return view('purchase-module.purchase-return.show', compact('purchaseReturn', 'purchaseReturnDetails'));
+            return view('purchase-module.purchase-return.show', array_merge(
+                [
+                    'purchaseReturn' => $purchaseReturn,
+                    'purchaseReturnDetails' => $purchaseReturnDetails
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             // Redirect back with error message
             return redirect()->back()->with('error', __('messages.unexpected-error'));

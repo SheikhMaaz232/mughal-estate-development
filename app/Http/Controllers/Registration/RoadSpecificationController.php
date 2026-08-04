@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Registration;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Registration\StoreRoadSpecificationRequest;
 use App\Http\Requests\Registration\UpdateRoadSpecificationRequest;
+use App\Models\RoadCategory;
 use App\Models\RoadSpecification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class RoadSpecificationController extends Controller
 {
@@ -24,7 +26,11 @@ class RoadSpecificationController extends Controller
      */
     public function create()
     {
-        return view('registration.road-specifications.create');
+        $roadCategories = Cache::remember('road_categories_data', 3600, function () {
+            return RoadCategory::select('id', 'title_en', 'title_ur')->get();
+        });
+
+        return view('registration.road-specifications.create', compact('roadCategories'));
 
     }
 
@@ -44,7 +50,11 @@ class RoadSpecificationController extends Controller
      */
     public function edit(RoadSpecification $roadSpecification)
     {
-        return view('registration.road-specifications.edit', compact('roadSpecification'));
+        $roadCategories = Cache::remember('road_categories_data', 3600, function () {
+            return RoadCategory::select('id', 'title_en', 'title_ur')->get();
+        });
+
+        return view('registration.road-specifications.edit', compact('roadSpecification', 'roadCategories'));
     }
 
     /**

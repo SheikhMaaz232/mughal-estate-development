@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Registration;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Registration\CashPaymentVoucherRequest;
 use App\Models\AccountLedger;
 use App\Models\CashPaymentVoucher;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
+use App\Models\DetailAccount;
+use App\Models\Project;
 use App\Services\CashPaymentVoucherService;
-use App\Http\Requests\Registration\CashPaymentVoucherRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class CashPaymentVoucherController extends Controller
 {
@@ -19,6 +22,21 @@ class CashPaymentVoucherController extends Controller
         $this->cashPaymentVoucherService = $cashPaymentVoucherService;
     }
 
+    private function getMasterData()
+    {
+        return [
+            'coaPayables' => Cache::remember('coa_payables_data', 3600, fn() =>
+            DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_head_id', 1)->get()),
+
+            'coaCashAccounts' => Cache::remember('coa_cash_accounts_data', 3600, fn() =>
+            DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 18)->get()),
+
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
+            Project::select('id', 'name_en', 'name_ur')->get()),
+
+        ];
+    }
+
     /**
      * Display a listing of cashPaymentVouchers.
      */
@@ -27,7 +45,13 @@ class CashPaymentVoucherController extends Controller
         $filters = $request->all();
         $cashPaymentVouchers = CashPaymentVoucher::with('project', 'detailAccount', 'cash')->search($filters)->latest()->paginate(10);
 
-        return view('registration.vouchers.cpv.index', compact('cashPaymentVouchers'));
+
+        return view('registration.vouchers.cpv.index', array_merge(
+            [
+                'cashPaymentVouchers' => $cashPaymentVouchers,
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -36,7 +60,12 @@ class CashPaymentVoucherController extends Controller
     public function create()
     {
         $maxid = CashPaymentVoucher::max('id') + 1;
-        return view('registration.vouchers.cpv.create', compact('maxid'));
+        return view('registration.vouchers.cpv.create', array_merge(
+            [
+                'maxid' => $maxid,
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -67,7 +96,12 @@ class CashPaymentVoucherController extends Controller
         try {
             $cashPaymentVoucher = $this->cashPaymentVoucherService->getById($id);
 
-            return view('registration.vouchers.cpv.edit', compact('cashPaymentVoucher'));
+            return view('registration.vouchers.cpv.edit', array_merge(
+                [
+                    'cashPaymentVoucher' => $cashPaymentVoucher,
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             return redirect()->route('cash-payment-voucher.index')->with('error', __('messages.unexpected-error'));
         }

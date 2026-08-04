@@ -36,7 +36,6 @@ class ViewServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer(['*'], function ($view) {
-            Log::info('Payroll view composer called for: ' . $view->getName());
             $view->with('groups', Group::all());
             $view->with('companies', Company::all());
             $view->with('cities', City::all());

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Registration;
 
 use App\Http\Controllers\Controller;
-use App\Models\Project;
 use App\Http\Requests\Registration\StoreProjectRequest;
+use App\Models\Group;
+use App\Models\Project;
 use App\Services\CommonService;
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
@@ -36,7 +38,14 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('registration.projects.create');
+        $groups = Cache::remember('groups_data', 3600, function () {
+            return Group::select('id', 'name_en', 'name_ur')->get();
+        });
+        $companies = Cache::remember('companies_data', 3600, function () {
+            return \App\Models\Company::select('id', 'name_en', 'name_ur')->get();
+        });
+
+        return view('registration.projects.create', compact('groups', 'companies'));
     }
 
     /**
@@ -59,7 +68,13 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        return view('registration.projects.edit', compact('project'));
+        $groups = Cache::remember('groups_data', 3600, function () {
+            return Group::select('id', 'name_en', 'name_ur')->get();
+        });
+        $companies = Cache::remember('companies_data', 3600, function () {
+            return \App\Models\Company::select('id', 'name_en', 'name_ur')->get();
+        });
+        return view('registration.projects.edit', compact('project', 'groups', 'companies'));
     }
 
     /**

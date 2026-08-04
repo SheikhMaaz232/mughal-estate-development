@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Registration;
 
-use App\Models\ControlHead;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Services\ControlHeadService;
 use App\Http\Requests\Registration\ControlHeadRequest;
+use App\Models\ControlHead;
+use App\Models\MainHead;
+use App\Services\ControlHeadService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ControlHeadController extends Controller
 {
@@ -27,10 +29,13 @@ class ControlHeadController extends Controller
     {
         $search = $request->input('search');
         $request = $request->all();
+        $mainHeads = Cache::remember('main_heads_data', 3600, function () {
+            return MainHead::select('id', 'name_en', 'name_ur')->get();
+        });
 
         $controlHeads = ControlHead::with('mainHead')->search($search, $request)->latest()->paginate(10);
 
-        return view('registration.control_heads.index', compact('controlHeads', 'search'));
+        return view('registration.control_heads.index', compact('controlHeads', 'search', 'mainHeads'));
     }
 
     /**
@@ -38,7 +43,10 @@ class ControlHeadController extends Controller
      */
     public function create()
     {
-        return view('registration.control_heads.create');
+        $mainHeads = Cache::remember('main_heads_data', 3600, function () {
+            return MainHead::select('id', 'name_en', 'name_ur')->get();
+        });
+        return view('registration.control_heads.create', compact('mainHeads'));
     }
 
     /**
@@ -60,7 +68,10 @@ class ControlHeadController extends Controller
     public function edit($id)
     {
         $controlHeads = $this->controlHeadService->getById($id);
-        return view('registration.control_heads.edit', compact('controlHeads'));
+        $mainHeads = Cache::remember('main_heads_data', 3600, function () {
+            return MainHead::select('id', 'name_en', 'name_ur')->get();
+        });
+        return view('registration.control_heads.edit', compact('controlHeads', 'mainHeads'));
     }
 
     /**

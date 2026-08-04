@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Registration;
 
-use App\Models\ControlHead;
-use App\Services\SubSubHeadService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Registration\SubSubHeadRequest;
+use App\Models\ControlHead;
 use App\Models\MainHead;
 use App\Models\SubHead;
 use App\Models\SubSubHead;
+use App\Services\SubSubHeadService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class SubSubHeadController extends Controller
 {
@@ -20,18 +21,42 @@ class SubSubHeadController extends Controller
         $this->subSubHeadService = $subSubHeadService;
     }
 
+
+    private function getMasterData()
+    {
+        return [
+            'mainHeads' => Cache::remember('main_heads_data', 3600, fn() =>
+            MainHead::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchControlHeads' => Cache::remember('control_heads_data', 3600, fn() =>
+            ControlHead::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchSubHeads' => Cache::remember('sub_heads_data', 3600, fn() =>
+            SubHead::select('id', 'name_en', 'name_ur')->get()),
+
+        ];
+    }
+
     /**
      * Display a listing of Sub-Sub-Heads.
      */
     public function index(Request $request)
     {
-
         $search = $request->input('search');
         $request = $request->all();
 
         $subSubHeads = SubSubHead::with('mainHead', 'controlHead', 'subHead')->search($search, $request)->latest()->paginate(10)->appends(request()->input());
 
-        return view('registration.sub_sub_heads.index', compact('subSubHeads', 'search'));
+        return view(
+            'registration.sub_sub_heads.index',
+            array_merge(
+                [
+                    'subSubHeads' => $subSubHeads,
+                    'search' => $search,
+                ],
+                $this->getMasterData()
+            )
+        );
     }
 
     /**
@@ -39,7 +64,7 @@ class SubSubHeadController extends Controller
      */
     public function create()
     {
-        return view('registration.sub_sub_heads.create');
+        return view('registration.sub_sub_heads.create', $this->getMasterData());
     }
 
     /**
@@ -65,7 +90,17 @@ class SubSubHeadController extends Controller
             $controlHeads = ControlHead::where('main_head_id', $subSubHead->main_head_id)->get();
             $subHeads = SubHead::where('control_head_id', $subSubHead->control_head_id)->get();
 
-            return view('registration.sub_sub_heads.edit', compact('subSubHead', 'controlHeads', 'subHeads'));
+            return view(
+                'registration.sub_sub_heads.edit',
+                array_merge(
+                    [
+                        'subSubHead' => $subSubHead,
+                        'controlHeads' => $controlHeads,
+                        'subHeads' => $subHeads,
+                    ],
+                    $this->getMasterData()
+                )
+            );
         } catch (\Exception $e) {
             return redirect()->route('sub-sub-heads.index')->with('error', __('messages.unexpected-error'));
         }

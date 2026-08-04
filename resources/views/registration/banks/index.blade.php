@@ -41,7 +41,7 @@
             </tr>
         </thead>
             <tbody>
-                @foreach($banks as $bank)
+                @foreach($banksListing as $bank)
                     <tr>
                         <td>{{ $bank->id }}</td>
                         <td>{{ $bank->name_en }}</td>

@@ -10,6 +10,7 @@ use App\Models\DetailAccount;
 use App\Models\Tender;
 use App\Services\TenderService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class TenderController extends Controller
 {
@@ -20,6 +21,18 @@ class TenderController extends Controller
         $this->service = $service;
     }
 
+    private function getMasterData()
+    {
+        return [
+            'constructionSites' => Cache::remember('construction_sites_data', 3600, fn() =>
+            ConstructionSite::select('id', 'name_en', 'name_ur')->get()),
+
+            'detailAccounts' => Cache::remember('detail_accounts_data', 3600, fn() =>
+            DetailAccount::select('id', 'name_en', 'name_ur')->get()),
+
+        ];
+    }
+    
     public function index(Request $request)
     {
         $constructionSiteId = $request->id;
@@ -31,14 +44,23 @@ class TenderController extends Controller
             ->paginate(10)->appends(request()->input());
 
 
-        return view('Construction-Module.tender.index', compact('tendersListing', 'constructionSiteId'));
+        return view('Construction-Module.tender.index', array_merge(
+            [
+                'tendersListing' => $tendersListing,
+                'constructionSiteId' => $constructionSiteId
+            ],
+            $this->getMasterData()
+        ));
     }
 
     public function create(Request $request)
     {
         $site = ConstructionSite::findOrFail($request->id);
 
-        return view('Construction-Module.tender.create', compact('site'));
+        return view('Construction-Module.tender.create', array_merge(
+            ['site' => $site],
+            $this->getMasterData()
+        ));
     }
 
     public function store(StoreTenderRequest $request)
@@ -51,7 +73,10 @@ class TenderController extends Controller
     public function show($id)
     {
         $tender = Tender::findOrFail($id);
-        return view('Construction-Module.tender.show', compact('tender'));
+        return view('Construction-Module.tender.show', array_merge(
+            ['tender' => $tender],
+            $this->getMasterData()
+        ));
     }
 
     public function edit($id)
@@ -60,7 +85,10 @@ class TenderController extends Controller
         $constructionSites = ConstructionSite::all();
         $detailAccounts = DetailAccount::all();
 
-        return view('Construction-Module.tender.edit', compact('tender', 'constructionSites', 'detailAccounts'));
+        return view('Construction-Module.tender.edit', array_merge(
+            ['tender' => $tender, 'constructionSites' => $constructionSites, 'detailAccounts' => $detailAccounts],
+            $this->getMasterData()
+        ));
     }
 
     public function update(UpdateTenderRequest $request, $id)

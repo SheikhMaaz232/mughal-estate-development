@@ -5,11 +5,14 @@ namespace App\Http\Controllers\SaleModule;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SaleModule\SaleInvoiceRequest;
 use App\Models\AccountLedger;
+use App\Models\DetailAccount;
 use App\Models\GeneralJournal;
+use App\Models\Item;
 use App\Models\SaleInvoice;
 use App\Models\SaleInvoiceDetail;
 use App\Services\SaleInvoiceService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -22,6 +25,23 @@ class SaleInvoiceController extends Controller
         $this->saleService = $saleService;
     }
 
+    private function getMasterData()
+    {
+        return [
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
+            \App\Models\Project::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchParties' => Cache::remember('parties_data', 3600, fn() =>
+            \App\Models\Party::with('cast')->select('id', 'name_en', 'name_ur', 'cnic_no', 'contact_number_1', 'cast_id')->get()),
+
+            'detailAccounts' => Cache::remember('detail_accounts_data', 3600, fn() =>
+            DetailAccount::select('id', 'name_en', 'name_ur')->get()),
+
+            'items' => Cache::remember('items_data', 3600, fn() =>
+            Item::select('id', 'name_en', 'name_ur', 'measurement_unit_id')->get()),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -30,7 +50,12 @@ class SaleInvoiceController extends Controller
         $filters = $request->all();
         $saleInvoicesListing = SaleInvoice::with('party', 'detailAccount', 'project')->search($filters)->latest()->paginate(10);
 
-        return view('sale-module.sale.index', compact('saleInvoicesListing'));
+        return view('sale-module.sale.index', array_merge(
+            [
+                'saleInvoicesListing' => $saleInvoicesListing
+            ],
+            $this->getMasterData()
+        ));
     }
 
 
@@ -42,7 +67,12 @@ class SaleInvoiceController extends Controller
         $saleInvoiceId = SaleInvoice::max('id');
         $maxId = $saleInvoiceId ? $saleInvoiceId + 1 : 1;
 
-        return view('sale-module.sale.create', compact('maxId'));
+        return view('sale-module.sale.create', array_merge(
+            [
+                'maxId' => $maxId
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -68,7 +98,13 @@ class SaleInvoiceController extends Controller
             $saleMaster = $this->saleService->getById($id);
             $saleDetails = SaleInvoiceDetail::where('sale_invoice_master_id', $id)->get();
 
-            return view('sale-module.sale.edit', compact('saleMaster', 'saleDetails'));
+            return view('sale-module.sale.edit', array_merge(
+                [
+                    'saleMaster' => $saleMaster,
+                    'saleDetails' => $saleDetails
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             return redirect()->route('sale-invoice.index')->with('error', __('messages.unexpected-error'));
         }
@@ -106,7 +142,13 @@ class SaleInvoiceController extends Controller
             $saleInvoice = SaleInvoice::where('id', $id)->first();
             $saleInvoiceDetails = $this->saleService->getSaleInvoiceDetails($saleInvoice->id);
 
-            return view('sale-module.sale.show', compact('saleInvoice', 'saleInvoiceDetails'));
+            return view('sale-module.sale.show', array_merge(
+                [
+                    'saleInvoice' => $saleInvoice,
+                    'saleInvoiceDetails' => $saleInvoiceDetails
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             // Redirect back with error message
             return redirect()->back()->with('error', __('messages.unexpected-error'));

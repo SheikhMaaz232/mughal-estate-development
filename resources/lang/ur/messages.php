@@ -20,6 +20,8 @@ return [
     'project-code' => 'پروجیکٹ کوڈ',
     'phase-map' => 'فیز نقشہ',
     'debit-code' => 'ڈیبٹ کوڈ',
+    'all' => 'تمام',
+    'generate-direct-products-report' => 'پروجیکٹ وائز پلاٹس سمری',
     'city' => 'شہر',
     'add-tehsil' => 'تحصیل شامل کریں',
     'proceed-to-dashboard' => 'ڈیش بورڈ سے آگے بڑھیں',

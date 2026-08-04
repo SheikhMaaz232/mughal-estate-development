@@ -19,6 +19,7 @@ use App\Models\SubSubSubHead;
 use App\Services\BookingApplicationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -29,6 +30,30 @@ class BookingApplicationController extends Controller
     public function __construct(BookingApplicationService $bookingApplicationService)
     {
         $this->bookingApplicationService = $bookingApplicationService;
+    }
+
+    private function getMasterData()
+    {
+        return [
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
+            \App\Models\Project::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchParties' => Cache::remember('parties_data', 3600, fn() =>
+            \App\Models\Party::with('cast')->select('id', 'name_en', 'name_ur', 'cnic_no', 'contact_number_1', 'cast_id')->get()),
+
+            'detailAccounts' => Cache::remember('detail_accounts_data', 3600, fn() =>
+            \App\Models\DetailAccount::select('id', 'name_en', 'name_ur')->get()),
+
+            'relations' => Cache::remember('relations_data', 3600, fn() =>
+            \App\Models\Relation::select('id', 'name_en', 'name_ur')->get()),
+
+            'scheduleTypes' => Cache::remember('schedule_types_data', 3600, fn() =>
+            \App\Models\ScheduleType::select('id', 'title_en', 'title_ur')->get()),
+
+            'schedulePeriods' => Cache::remember('schedule_periods_data', 3600, fn() =>
+            \App\Models\SchedulePeriod::select('id', 'title_en', 'title_ur')->get())
+
+        ];
     }
 
     /**
@@ -49,7 +74,13 @@ class BookingApplicationController extends Controller
             'type'
         )->with('project')->where('status', 'Verified')->where('type', '!=', 'item')->search($search)->latest()->paginate(10)->appends(request()->input());
 
-        return view('registration.bookings.verifiedProducts', compact('products', 'search'));
+        return view('registration.bookings.verifiedProducts', array_merge(
+            [
+                'products' => $products,
+                'search' => $search,
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -60,7 +91,12 @@ class BookingApplicationController extends Controller
         $search = $request->all();
         $bookings = BookingApplication::with('party', 'detailAccount', 'project', 'product', 'dealer')->search($search)->latest()->paginate(10)->appends(request()->input());
 
-        return view('registration.bookings.index', compact('bookings'));
+        return view('registration.bookings.index', array_merge(
+            [
+                'bookings' => $bookings,
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -83,7 +119,25 @@ class BookingApplicationController extends Controller
         $operatingChargesAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 2)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
         $expenseAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('main_head_id', 4)->where('sub_sub_head_id', 1495)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
 
-        return view('registration.bookings.create', compact('product', 'bookingNo', 'possessionAccounts', 'operatingChargesAccounts', 'bankAccounts', 'dealerAccounts', 'case', 'dealerReceivableAccounts', 'proceedingAccounts', 'developmentChargesAccounts', 'gstAccounts', 'expenseAccounts', 'sevenEAccounts'));
+        return view('registration.bookings.create', array_merge(
+            [
+                'product' => $product,
+                'bookingNo' => $bookingNo,
+                'bankAccounts' => $bankAccounts,
+                'dealerReceivableAccounts' => $dealerReceivableAccounts,
+                'dealerAccounts' => $dealerAccounts,
+                'case' => $case,
+                'possessionAccounts' => $possessionAccounts,
+                'proceedingAccounts' => $proceedingAccounts,
+                'developmentChargesAccounts' => $developmentChargesAccounts,
+                'gstAccounts' => $gstAccounts,
+                'sevenEAccounts' => $sevenEAccounts,
+                'operatingChargesAccounts' => $operatingChargesAccounts,
+                'expenseAccounts' => $expenseAccounts
+            ],
+            $this->getMasterData()
+        ));
+        // compact('product', 'bookingNo', 'possessionAccounts', 'operatingChargesAccounts', 'bankAccounts', 'dealerAccounts', 'case', 'dealerReceivableAccounts', 'proceedingAccounts', 'developmentChargesAccounts', 'gstAccounts', 'expenseAccounts', 'sevenEAccounts')
     }
 
     public function transfer(Request $request)
@@ -106,7 +160,26 @@ class BookingApplicationController extends Controller
         $operatingChargesAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 2)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
         $expenseAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('main_head_id', 4)->where('sub_sub_head_id', 1495)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
 
-        return view('registration.bookings.create', compact('product', 'expenseAccounts', 'bookingApplication', 'bookingNo', 'bankAccounts', 'dealerReceivableAccounts', 'transferAccounts', 'transferCharges', 'dealerAccounts', 'case', 'possessionAccounts', 'proceedingAccounts', 'developmentChargesAccounts', 'gstAccounts', 'operatingChargesAccounts'));
+        return view('registration.bookings.create', array_merge(
+            [
+                'product' => $product,
+                'expenseAccounts' => $expenseAccounts,
+                'bookingApplication' => $bookingApplication,
+                'bookingNo' => $bookingNo,
+                'bankAccounts' => $bankAccounts,
+                'dealerReceivableAccounts' => $dealerReceivableAccounts,
+                'transferAccounts' => $transferAccounts,
+                'transferCharges' => $transferCharges,
+                'dealerAccounts' => $dealerAccounts,
+                'case' => $case,
+                'possessionAccounts' => $possessionAccounts,
+                'proceedingAccounts' => $proceedingAccounts,
+                'developmentChargesAccounts' => $developmentChargesAccounts,
+                'gstAccounts' => $gstAccounts,
+                'operatingChargesAccounts' => $operatingChargesAccounts
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -197,7 +270,25 @@ class BookingApplicationController extends Controller
             $operatingChargesAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 2)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
             $expenseAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('main_head_id', 4)->where('sub_sub_head_id', 1495)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
 
-            return view('registration.bookings.edit', compact('booking', 'dealerAccounts', 'nominees', 'schedules', 'dealerReceivableAccounts', 'possessionAccounts', 'proceedingAccounts', 'developmentChargesAccounts', 'gstAccounts', 'sevenEAccounts', 'operatingChargesAccounts', 'bankAccounts', 'expenseAccounts'));
+            return view('registration.bookings.edit', array_merge(
+                [
+                    'booking' => $booking,
+                    'product' => $product,
+                    'nominees' => $nominees,
+                    'schedules' => $schedules,
+                    'bankAccounts' => $bankAccounts,
+                    'dealerReceivableAccounts' => $dealerReceivableAccounts,
+                    'dealerAccounts' => $dealerAccounts,
+                    'possessionAccounts' => $possessionAccounts,
+                    'proceedingAccounts' => $proceedingAccounts,
+                    'developmentChargesAccounts' => $developmentChargesAccounts,
+                    'gstAccounts' => $gstAccounts,
+                    'sevenEAccounts' => $sevenEAccounts,
+                    'operatingChargesAccounts' => $operatingChargesAccounts,
+                    'expenseAccounts' => $expenseAccounts
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             return redirect()->route('bookings.bookingListing')->with('error', __('messages.unexpected-error'));
         }

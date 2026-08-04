@@ -27,7 +27,7 @@
                                 <tbody>
                                     <tr>
                                         <th width="30%">Group</th>
-                                        <td>{{ $company->group->name_eng ?? 'N/A' }}</td>
+                                        <td>{{ $company->group->name_en ?? 'N/A' }}</td>
                                     </tr>
                                     <tr>
                                         <th>Company Code</th>

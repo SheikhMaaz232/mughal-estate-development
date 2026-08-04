@@ -3,19 +3,22 @@
 namespace App\Http\Controllers\Registration;
 
 use App\Http\Controllers\Controller;
-
 use App\Http\Requests\Registration\MainHeadRequest;
 use App\Http\Requests\Registration\UpdateMainHeadRequest;
 use App\Models\MainHead;
 use App\Services\MainHeadService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 
 class MainHeadController extends Controller
 {
+    use AuthorizesRequests, ValidatesRequests;
     protected $mainHeadService;
 
     public function __construct(MainHeadService $mainHeadService)
     {
+
         $this->mainHeadService = $mainHeadService;
     }
 
@@ -32,7 +35,7 @@ class MainHeadController extends Controller
 
     public function store(MainHeadRequest $request)
     {
-        $this->mainHeadService->create($request->only('name_en','name_ur'));
+        $this->mainHeadService->create($request->only('name_en', 'name_ur'));
         return redirect()->route('main-heads.index')->with('success', __('messages.record-saved'));
     }
     public function edit(MainHead $mainHead)

@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers\Registration;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Registration\StoreItemRequest;
+use App\Models\ControlHead;
 use App\Models\Item;
+use App\Models\MainHead;
 use App\Models\SubHead;
 use App\Models\SubSubHead;
-use App\Models\ControlHead;
-use Illuminate\Http\Request;
 use App\Models\SubSubSubHead;
+use App\Models\Unit;
+use App\Services\CommonService;
+use App\Services\ItemRegistrationService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
-use App\Services\ItemRegistrationService;
-use App\Http\Requests\Registration\StoreItemRequest;
-use App\Services\CommonService;
 
 class ItemController extends Controller
 {
@@ -24,6 +27,34 @@ class ItemController extends Controller
         $this->itemRegistrationService = $itemRegistrationService;
     }
 
+    private function getItemMasterData()
+    {
+        return [
+            'mainHeads' => Cache::remember('main_heads_data', 3600, fn() =>
+            MainHead::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchControlHeads' => Cache::remember('control_heads_data', 3600, fn() =>
+            ControlHead::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchSubHeads' => Cache::remember('sub_heads_data', 3600, fn() =>
+            SubHead::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchSubSubHeads' => Cache::remember('sub_sub_heads_data', 3600, fn() =>
+            SubSubHead::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchSubSubSubHeads' => Cache::remember('sub_sub_sub_heads_data', 3600, fn() =>
+            SubSubSubHead::select('id', 'name_en', 'name_ur')->get()),
+        ];
+    }
+
+    private function getUnitsData()
+    {
+        return [
+            'units' => Cache::remember('units_data', 3600, fn() =>
+            Unit::select('id', 'name_en', 'name_ur')->get()),
+        ];
+    }
+
     /**
      * Display a listing of Items.
      */
@@ -32,9 +63,28 @@ class ItemController extends Controller
         $filters = $request->all();
         $search = $request->input('search');
 
-        $itemsListing = Item::with('mainHead', 'controlHead', 'subHead', 'subSubHead', 'subSubSubHead', 'measurementUnit')->search($search, $filters)->latest()->paginate(10);
+        $itemsListing = Item::with([
+            'mainHead:id,name_en,name_ur',
+            'controlHead:id,name_en,name_ur',
+            'subHead:id,name_en,name_ur',
+            'subSubHead:id,name_en,name_ur',
+            'subSubSubHead:id,name_en,name_ur',
+            'measurementUnit:id,name_en,name_ur',
+        ])
+            ->search($search, $filters)
+            ->latest()
+            ->paginate(10);
 
-        return view('registration.items.index', compact('itemsListing', 'search'));
+        return view(
+            'registration.items.index',
+            array_merge(
+                [
+                    'itemsListing' => $itemsListing,
+                    'search' => $search,
+                ],
+                $this->getItemMasterData()
+            )
+        );
     }
 
     /**
@@ -42,7 +92,12 @@ class ItemController extends Controller
      */
     public function create()
     {
-        return view('registration.items.create');
+        return view('registration.items.create',
+            array_merge(
+                $this->getItemMasterData(),
+                $this->getUnitsData()
+            )
+        );
     }
 
     /**
@@ -123,15 +178,39 @@ class ItemController extends Controller
     {
         try {
             $item = $this->itemRegistrationService->getById($id);
+
             $controlHeads = ControlHead::where('main_head_id', $item->main_head_id)->get();
+
             $subHeads = SubHead::where('control_head_id', $item->control_head_id)->get();
+
             $subSubHeads = SubSubHead::where('sub_head_id', $item->sub_head_id)->get();
+
             $subSubSubHeads = SubSubSubHead::where('sub_sub_head_id', $item->sub_sub_head_id)->get();
 
-
-            return view('registration.items.edit', compact('item', 'controlHeads', 'subHeads', 'subSubHeads', 'subSubSubHeads'));
+            return view(
+                'registration.items.edit',
+                array_merge(
+                    [
+                        'item' => $item,
+                        'controlHeads' => $controlHeads,
+                        'subHeads' => $subHeads,
+                        'subSubHeads' => $subSubHeads,
+                        'subSubSubHeads' => $subSubSubHeads,
+                    ],
+                    [
+                        'mainHeads' => Cache::remember(
+                            'main_heads_data',
+                            3600,
+                            fn() => MainHead::select('id', 'name_en', 'name_ur')->get()
+                        ),
+                    ],
+                    $this->getUnitsData()
+                )
+            );
         } catch (\Exception $e) {
-            return redirect()->route('itemRegistration.index')->with('error', __('messages.unexpected-error'));
+            return redirect()
+                ->route('itemRegistration.index')
+                ->with('error', __('messages.unexpected-error'));
         }
     }
 

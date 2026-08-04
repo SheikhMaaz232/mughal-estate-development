@@ -2,18 +2,30 @@
 
 namespace App\Http\Controllers\Registration;
 
-use App\Models\Party;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\AccountLedger;
 use App\Models\DetailAccount;
+use App\Models\Party;
+use App\Models\Project;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 
 class LedgerController extends Controller
 {
+
+    private function getMasterData()
+    {
+        return [
+            'searchParties' => Cache::remember('parties_data', 3600, fn() =>
+            \App\Models\Party::with('cast')->select('id', 'name_en', 'name_ur', 'cnic_no', 'contact_number_1', 'cast_id')->get()),
+
+        ];
+    }
+
     public function viewPartyAccountLedger()
     {
-        return view('ledgers.account-ledger.partyAccount-ledger-view');
+        return view('ledgers.account-ledger.partyAccount-ledger-view', $this->getMasterData());
     }
 
     public function getPartyAccountLedger(Request $request)

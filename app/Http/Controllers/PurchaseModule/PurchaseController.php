@@ -2,20 +2,23 @@
 
 namespace App\Http\Controllers\PurchaseModule;
 
-use Illuminate\Http\Request;
-use App\Models\AccountLedger;
-use App\Models\PurchaseOrder;
-use App\Models\GeneralJournal;
-use App\Models\PurchaseDetail;
-use App\Models\PurchaseMaster;
-use App\Services\PurchaseService;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\PurchaseOrderDetails;
+use App\Http\Requests\PurchaseModule\PurchaseInvoiceRequest;
+use App\Models\AccountLedger;
+use App\Models\DetailAccount;
+use App\Models\GeneralJournal;
 use App\Models\GoodsReceivedNoteDetail;
 use App\Models\GoodsReceivedNoteMaster;
-use App\Http\Requests\PurchaseModule\PurchaseInvoiceRequest;
+use App\Models\Item;
+use App\Models\PurchaseDetail;
+use App\Models\PurchaseMaster;
+use App\Models\PurchaseOrder;
+use App\Models\PurchaseOrderDetails;
+use App\Services\PurchaseService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PurchaseController extends Controller
 {
@@ -26,6 +29,23 @@ class PurchaseController extends Controller
         $this->purchaseService = $purchaseService;
     }
 
+    private function getMasterData()
+    {
+        return [
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
+            \App\Models\Project::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchParties' => Cache::remember('parties_data', 3600, fn() =>
+            \App\Models\Party::with('cast')->select('id', 'name_en', 'name_ur', 'cnic_no', 'contact_number_1', 'cast_id')->get()),
+
+            'detailAccounts' => Cache::remember('detail_accounts_data', 3600, fn() =>
+            DetailAccount::select('id', 'name_en', 'name_ur')->get()),
+
+            'items' => Cache::remember('items_data', 3600, fn() =>
+            Item::select('id', 'name_en', 'name_ur', 'measurement_unit_id')->get()),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -34,7 +54,12 @@ class PurchaseController extends Controller
         $filters = $request->all();
         $purchaseInvoicesListing = PurchaseMaster::with('party', 'detailAccount', 'project')->search($filters)->latest()->paginate(10);
 
-        return view('purchase-module.purchase.index', compact('purchaseInvoicesListing'));
+        return view('purchase-module.purchase.index', array_merge(
+            [
+                'purchaseInvoicesListing' => $purchaseInvoicesListing
+            ],
+            $this->getMasterData()
+        ));
     }
 
 
@@ -55,7 +80,16 @@ class PurchaseController extends Controller
             return redirect()->back()->with('error', __('messages.purchase_order_not_found'));
         }
 
-        return view('purchase-module.purchase.create', compact('maxId', 'grnMaster', 'grnDetails', 'purchaseOrderMaster', 'purchaseOrderDetails'));
+        return view('purchase-module.purchase.create', array_merge(
+            [
+                'maxId' => $maxId,
+                'grnMaster' => $grnMaster,
+                'grnDetails' => $grnDetails,
+                'purchaseOrderMaster' => $purchaseOrderMaster,
+                'purchaseOrderDetails' => $purchaseOrderDetails
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -81,7 +115,13 @@ class PurchaseController extends Controller
             $purchaseMaster = $this->purchaseService->getById($id);
             $purchaseDetails = PurchaseDetail::where('purchase_master_id', $id)->get();
 
-            return view('purchase-module.purchase.edit', compact('purchaseMaster', 'purchaseDetails'));
+            return view('purchase-module.purchase.edit', array_merge(
+                [
+                    'purchaseMaster' => $purchaseMaster,
+                    'purchaseDetails' => $purchaseDetails
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             return redirect()->route('purchase-invoice.index')->with('error', __('messages.unexpected-error'));
         }
@@ -118,7 +158,13 @@ class PurchaseController extends Controller
             $purchaseMaster = PurchaseMaster::where('id', $id)->first();
             $purchaseInvoiceDetails = $this->purchaseService->getPurchaseDetails($purchaseMaster->id);
 
-            return view('purchase-module.purchase.show', compact('purchaseMaster', 'purchaseInvoiceDetails'));
+            return view('purchase-module.purchase.show', array_merge(
+                [
+                    'purchaseMaster' => $purchaseMaster,
+                    'purchaseInvoiceDetails' => $purchaseInvoiceDetails
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             // Redirect back with error message
             return redirect()->back()->with('error', __('messages.unexpected-error'));

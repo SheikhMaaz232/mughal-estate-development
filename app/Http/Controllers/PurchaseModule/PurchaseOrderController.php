@@ -11,6 +11,7 @@ use App\Models\PurchaseOrderDetails;
 use App\Services\PurchaseOrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
 
 class PurchaseOrderController extends Controller
 {
@@ -22,6 +23,20 @@ class PurchaseOrderController extends Controller
         $this->purchaseOrderService = $purchaseOrderService;
     }
 
+    private function getMasterData()
+    {
+        return [
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
+            \App\Models\Project::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchParties' => Cache::remember('parties_data', 3600, fn() =>
+            \App\Models\Party::with('cast')->select('id', 'name_en', 'name_ur', 'cnic_no', 'contact_number_1', 'cast_id')->get()),
+
+            'detailAccounts' => Cache::remember('detail_accounts_data', 3600, fn() =>
+            DetailAccount::select('id', 'name_en', 'name_ur')->get()),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -30,7 +45,12 @@ class PurchaseOrderController extends Controller
         $filters = $request->all();
         $purchaseOrderListing = PurchaseOrder::with('party', 'detailAccount')->search($filters)->latest()->paginate(10);
 
-        return view('purchase-module.purchase-order.index', compact('purchaseOrderListing'));
+        return view('purchase-module.purchase-order.index', array_merge(
+            [
+                'purchaseOrderListing' => $purchaseOrderListing
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -42,7 +62,12 @@ class PurchaseOrderController extends Controller
 
         $maxId = $purchaseOrderId ? $purchaseOrderId + 1 : 1;
 
-        return view('purchase-module.purchase-order.create', compact('maxId'));
+        return view('purchase-module.purchase-order.create', array_merge(
+            [
+                'maxId' => $maxId
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -68,16 +93,23 @@ class PurchaseOrderController extends Controller
     public function edit($id)
     {
         // try {
-            $purchaseOrder = $this->purchaseOrderService->getById($id);
-            $purchaseOrderDetails = PurchaseOrderDetails::where('purchase_order_master_id', $id)->get();
+        $purchaseOrder = $this->purchaseOrderService->getById($id);
+        $purchaseOrderDetails = PurchaseOrderDetails::where('purchase_order_master_id', $id)->get();
 
-            // Get items for the selected project (for dropdowns)
-            $projectId = $purchaseOrder->project_id;
-            $itemsData = Item::whereHas('subSubSubHead', function ($q) use ($projectId) {
-                $q->where('project_id', $projectId);
-            })->get();
+        // Get items for the selected project (for dropdowns)
+        $projectId = $purchaseOrder->project_id;
+        $itemsData = Item::whereHas('subSubSubHead', function ($q) use ($projectId) {
+            $q->where('project_id', $projectId);
+        })->get();
 
-            return view('purchase-module.purchase-order.edit', compact('purchaseOrder', 'purchaseOrderDetails', 'itemsData'));
+        return view('purchase-module.purchase-order.edit', array_merge(
+            [
+                'purchaseOrder' => $purchaseOrder,
+                'purchaseOrderDetails' => $purchaseOrderDetails,
+                'itemsData' => $itemsData
+            ],
+            $this->getMasterData()
+        ));
         // } catch (\Exception $e) {
         //     return redirect()->route('purchase-order.index')->with('error', __('messages.unexpected-error'));
         // }
@@ -113,7 +145,13 @@ class PurchaseOrderController extends Controller
         try {
             $purchaseOrderDetails = $this->purchaseOrderService->getPurchaseOrderDetails($purchaseOrder->id);
 
-            return view('purchase-module.purchase-order.show', compact('purchaseOrder', 'purchaseOrderDetails'));
+            return view('purchase-module.purchase-order.show', array_merge(
+                [
+                    'purchaseOrder' => $purchaseOrder,
+                    'purchaseOrderDetails' => $purchaseOrderDetails
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             // Redirect back with error message
             return redirect()->back()->with('error', __('messages.unexpected-error'));

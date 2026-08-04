@@ -156,8 +156,6 @@ Route::middleware(['auth', 'company.selected'])->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 });
 
-
-
 Route::prefix('admin')->middleware(['auth', 'role:super-admin'])->group(function () {
     Route::resource('permissions', PermissionController::class);
     Route::resource('roles', RoleController::class);
@@ -197,15 +195,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('main-heads', MainHeadController::class)->middleware([
-    'index'   => 'permission:main-head.view',
-    'show'    => 'permission:main-head.view',
-    'create'  => 'permission:main-head.create',
-    'store'   => 'permission:main-head.create',
-    'edit'    => 'permission:main-head.edit',
-    'update'  => 'permission:main-head.edit',
-    'destroy' => 'permission:main-head.delete',
-]);
+    Route::resource('main-heads', MainHeadController::class);
     Route::resource('control-heads', ControlHeadController::class);
     Route::get('control-head/get-control-head-account/{mainHead}', [ControlHeadController::class, 'getControlAccountForMainHead'])->name('get.control.head.account');
     Route::get('sub-head/get-sub-head-account/{controlHead}', [SubHeadController::class, 'getSubAccountForControlHead'])->name('get.sub.head.account');
@@ -219,9 +209,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('sub-sub-heads', SubSubHeadController::class);
     Route::resource('sub-sub-sub-heads', SubSubSubHeadController::class);
     Route::get('/detail-accounts/fetchSubSubSubHead', [DetailAccountController::class, 'fetchSubSubSubHead'])
-    ->name('detail-accounts.fetchSubSubSubHead');
+        ->name('detail-accounts.fetchSubSubSubHead');
     Route::get('/detail-accounts/fetchSubSubHead', [DetailAccountController::class, 'fetchSubSubHead'])
-    ->name('detail-accounts.fetchSubSubHead');
+        ->name('detail-accounts.fetchSubSubHead');
     Route::resource('detail-accounts', DetailAccountController::class);
     Route::get('accounts-tree', [DetailAccountController::class, 'tree'])->name('detail-accounts.tree');
     Route::resource('itemRegistration', ItemController::class);
@@ -308,7 +298,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/partyAccount-ledger', [LedgerController::class, 'viewPartyAccountLedger'])->name('partyAccount.ledger');
     Route::get('/partyAccount-ledger-report', [LedgerController::class, 'getPartyAccountLedger'])->name('partyAccount.ledger.report');
-     Route::get('/bankBook', [ReportController::class, 'viewBankBook'])->name('bankBook.view');
+    Route::get('/bankBook', [ReportController::class, 'viewBankBook'])->name('bankBook.view');
     Route::get('/bankBook-report', [ReportController::class, 'getBankBookLedger'])->name('bank.book.report');
     Route::get('bookings/listing', [BookingApplicationController::class, 'bookingListing'])->name('bookings.bookingListing');
     Route::get('bookings/get-detail-account/{partyId}', [BookingApplicationController::class, 'getDetailAccountForParty'])->name('get.detail.account.data');
@@ -338,7 +328,7 @@ Route::middleware('auth')->group(function () {
     Route::get('client-invoices/api/clients/{tenderId}', [ClientInvoiceController::class, 'getClients'])->name('client-invoices.getClients');
 
     Route::get('/clients/select2', [ClientInvoiceController::class, 'select2'])
-    ->name('clients.select2');
+        ->name('clients.select2');
 
 
     // Client Invoice Receipt Tracking Routes
@@ -367,6 +357,16 @@ Route::middleware('auth')->group(function () {
         '/reports/available-plots',
         [ReportController::class, 'availablePlotsReport']
     )->name('available-plots.report');
+
+    Route::get(
+        '/exective-reports/direct-products/filter',
+        [ReportController::class, 'directProductProjectReportFilter']
+    )->name('exective-reports.direct-products.filter');
+
+    Route::get(
+        '/exective-reports/direct-products',
+        [ReportController::class, 'directProductProjectReport']
+    )->name('exective-reports.direct-products.report');
 
     Route::get('/reports/stock-report/filter', [ReportController::class, 'stockReportFilter'])->name('reports.stock-report.filter');
 

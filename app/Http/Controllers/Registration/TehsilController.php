@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Registration;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Registration\StoreTehsilRequest;
 use App\Http\Requests\Registration\UpdateTehsilRequest;
+use App\Models\City;
 use App\Models\Tehsil;
+use Illuminate\Support\Facades\Cache;
 
 class TehsilController extends Controller
 {
@@ -23,14 +25,17 @@ class TehsilController extends Controller
      */
     public function create()
     {
-        return view('registration.tehsils.create');
+        $cities = Cache::remember('cities_data', 3600, function () {
+            return City::select('id', 'name_en', 'name_ur')->get();
+        });
 
+        return view('registration.tehsils.create', compact('cities'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-       public function store(StoreTehsilRequest $request)
+    public function store(StoreTehsilRequest $request)
     {
         Tehsil::create($request->all());
 
@@ -43,7 +48,11 @@ class TehsilController extends Controller
      */
     public function edit(Tehsil $tehsil)
     {
-        return view('registration.tehsils.edit', compact('tehsil'));
+        $cities = Cache::remember('cities_data', 3600, function () {
+            return City::select('id', 'name_en', 'name_ur')->get();
+        });
+
+        return view('registration.tehsils.edit', compact('tehsil', 'cities'));
     }
 
     /**

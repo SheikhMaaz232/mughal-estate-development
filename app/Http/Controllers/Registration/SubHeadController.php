@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Registration;
 
-use App\Services\SubHeadService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Registration\SubHeadRequest;
 use App\Models\ControlHead;
+use App\Models\MainHead;
 use App\Models\SubHead;
+use App\Services\SubHeadService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class SubHeadController extends Controller
 {
@@ -30,9 +32,16 @@ class SubHeadController extends Controller
         $search = $request->input('search');
         $request = $request->all();
 
+        $mainHeads = Cache::remember('main_heads_data', 3600, function () {
+            return MainHead::select('id', 'name_en', 'name_ur')->get();
+        });
+        $searchControlHeads = Cache::remember('control_heads_data', 3600, function () {
+            return ControlHead::select('id', 'name_en', 'name_ur')->get();
+        });
+
         $subHeads = SubHead::with('mainHead', 'controlHead')->search($search, $request)->latest()->paginate(10)->appends(request()->input());
 
-        return view('registration.sub_heads.index', compact('subHeads', 'search'));
+        return view('registration.sub_heads.index', compact('subHeads', 'search', 'mainHeads', 'searchControlHeads'));
     }
 
     /**
@@ -40,7 +49,13 @@ class SubHeadController extends Controller
      */
     public function create()
     {
-        return view('registration.sub_heads.create');
+        $mainHeads = Cache::remember('main_heads_data', 3600, function () {
+            return MainHead::select('id', 'name_en', 'name_ur')->get();
+        });
+        $controlHeads = Cache::remember('control_heads_data', 3600, function () {
+            return ControlHead::select('id', 'name_en', 'name_ur')->get();
+        });
+        return view('registration.sub_heads.create', compact('mainHeads', 'controlHeads'));
     }
 
     /**
@@ -62,8 +77,13 @@ class SubHeadController extends Controller
     public function edit($id)
     {
         $subHeads = $this->subHeadService->getById($id);
-        $controlHeads = ControlHead::where('main_head_id', $subHeads->main_head_id)->get();
-        return view('registration.sub_heads.edit', compact('subHeads', 'controlHeads'));
+        $mainHeads = Cache::remember('main_heads_data', 3600, function () {
+            return MainHead::select('id', 'name_en', 'name_ur')->get();
+        });
+        $controlHeads = Cache::remember('control_heads_data', 3600, function () {
+            return ControlHead::select('id', 'name_en', 'name_ur')->get();
+        });
+        return view('registration.sub_heads.edit', compact('subHeads', 'mainHeads', 'controlHeads'));
     }
 
     /**

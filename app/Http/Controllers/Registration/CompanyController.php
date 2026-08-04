@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Registration;
 
 use App\Http\Controllers\Controller;
-
-use App\Models\Company;
 use App\Http\Requests\Registration\StoreCompanyRequest;
 use App\Http\Requests\Registration\UpdateCompanyRequest;
+use App\Models\Company;
+use App\Models\Group;
 use App\Services\CommonService;
 use App\Services\CompanyService;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
@@ -22,13 +23,13 @@ class CompanyController extends Controller
 
     public function index()
     {
-        //Get selected company
-        // $companyId = session('selected_company_id');
-        // $company = Company::find($companyId);
+        $groups = Cache::remember('groups_data', 3600, function () {
+            return Group::select('id', 'name_en', 'name_ur')->get();
+        });
 
         $companies = Company::latest()->paginate(10);
 
-        return view('registration.companies.index', compact('companies'));
+        return view('registration.companies.index', compact('companies', 'groups'));
     }
 
     public function create()
@@ -50,14 +51,17 @@ class CompanyController extends Controller
 
     public function edit($id)
     {
+        $groups = Cache::remember('groups_data', 3600, function () {
+            return Group::select('id', 'name_en', 'name_ur')->get();
+        });
         $company = Company::findOrFail($id);
-        return view('registration.companies.edit', compact('company'));
+        return view('registration.companies.edit', compact('company', 'groups'));
     }
 
     public function update(UpdateCompanyRequest $request, Company $company)
     {
         $data = $request->validated();
-        
+
         if ($company->logo && Storage::exists($company->logo)) {
             Storage::delete($company->logo);
         }

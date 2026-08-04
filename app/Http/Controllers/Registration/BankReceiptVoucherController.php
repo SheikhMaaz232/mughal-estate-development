@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Registration;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Registration\BankReceiptVoucherRequest;
 use App\Models\AccountLedger;
 use App\Models\BankReceiptVoucher;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
-use App\Services\BankReceiptVoucherService;
-use App\Http\Requests\Registration\BankReceiptVoucherRequest;
 use App\Models\BookingApplication;
+use App\Models\DetailAccount;
+use App\Models\Project;
+use App\Services\BankReceiptVoucherService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class BankReceiptVoucherController extends Controller
 {
@@ -20,6 +23,21 @@ class BankReceiptVoucherController extends Controller
         $this->bankReceiptVoucherService = $bankReceiptVoucherService;
     }
 
+    private function getMasterData()
+    {
+        return [
+            'coaReceivables' => Cache::remember('coa_receivables_data', 3600, fn() =>
+            DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_head_id', 1)->get()),
+
+            'coaBanks' => Cache::remember('coa_banks_data', 3600, fn() =>
+            DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 19)->get()),
+
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
+            Project::select('id', 'name_en', 'name_ur')->get()),
+
+        ];
+    }
+
     /**
      * Display a listing of bankReceiptVouchers.
      */
@@ -28,7 +46,12 @@ class BankReceiptVoucherController extends Controller
         $filters = $request->all();
         $bankReceiptVouchers = BankReceiptVoucher::with('project', 'detailAccount', 'bank')->search($filters)->latest()->paginate(10)->withQueryString();
 
-        return view('registration.vouchers.brv.index', compact('bankReceiptVouchers'));
+        return view('registration.vouchers.brv.index', array_merge(
+            [
+                'bankReceiptVouchers' => $bankReceiptVouchers,
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -37,7 +60,13 @@ class BankReceiptVoucherController extends Controller
     public function create()
     {
         $maxid = BankReceiptVoucher::max('id') + 1;
-        return view('registration.vouchers.brv.create', compact('maxid'));
+
+        return view('registration.vouchers.brv.create', array_merge(
+            [
+                'maxid' => $maxid,
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -68,7 +97,12 @@ class BankReceiptVoucherController extends Controller
         try {
             $bankReceiptVoucher = $this->bankReceiptVoucherService->getById($id);
 
-            return view('registration.vouchers.brv.edit', compact('bankReceiptVoucher'));
+            return view('registration.vouchers.brv.edit', array_merge(
+                [
+                    'bankReceiptVoucher' => $bankReceiptVoucher,
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             return redirect()->route('bank-receipt-voucher.index')->with('error', __('messages.unexpected-error'));
         }

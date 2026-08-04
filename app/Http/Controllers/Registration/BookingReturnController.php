@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Registration;
 
-use App\Models\Product;
-use Illuminate\Http\Request;
-use App\Models\AccountLedger;
-use App\Models\BookingReturn;
-use App\Models\BookingApplication;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Services\BookingReturnApplicationService;
 use App\Http\Requests\Registration\BookingReturnRequest;
+use App\Models\AccountLedger;
+use App\Models\BookingApplication;
+use App\Models\BookingReturn;
 use App\Models\DetailAccount;
+use App\Models\Product;
 use App\Models\SubSubSubHead;
+use App\Services\BookingReturnApplicationService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class BookingReturnController extends Controller
 {
@@ -23,6 +24,17 @@ class BookingReturnController extends Controller
         $this->bookingReturnApplicationService = $bookingReturnApplicationService;
     }
 
+    private function getMasterData()
+    {
+        return [
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
+            \App\Models\Project::select('id', 'name_en', 'name_ur')->get()),
+
+            'searchParties' => Cache::remember('parties_data', 3600, fn() =>
+            \App\Models\Party::with('cast')->select('id', 'name_en', 'name_ur', 'cnic_no', 'contact_number_1', 'cast_id')->get()),
+        ];
+    }
+
     /**
      * Display a listing of Sub-Sub-Heads.
      */
@@ -31,7 +43,12 @@ class BookingReturnController extends Controller
         $request = $request->all();
         $bookingReturns = BookingReturn::with('bookingApplication')->latest()->paginate(10);
 
-        return view('registration.booking-returns.index', compact('bookingReturns'));
+        return view('registration.booking-returns.index', array_merge(
+            [
+                'bookingReturns' => $bookingReturns,
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -42,7 +59,12 @@ class BookingReturnController extends Controller
         $search = $request->all();
         $bookings = BookingApplication::where('status', 'Verified')->where('case', '!=', 'ownership_changed')->where('case', '!=', 'ownership_changed')->search($search)->latest()->paginate(10);
 
-        return view('registration.booking-returns.verifiedBookings', compact('bookings'));
+        return view('registration.booking-returns.verifiedBookings', array_merge(
+            [
+                'bookings' => $bookings,
+            ],
+            $this->getMasterData()
+        ));
     }
 
 
@@ -63,7 +85,18 @@ class BookingReturnController extends Controller
         $liabilityAccounts = DetailAccount::whereIn('sub_sub_sub_head_id', $subSubSubHead)->where('sub_sub_head_id', 52)->get();
         $incomeAccounts = DetailAccount::whereIn('sub_sub_sub_head_id', $subSubSubHead)->where('sub_sub_head_id', 130)->get();
 
-        return view('registration.booking-returns.create', compact('data', 'incomeAccounts', 'liabilityAccounts', 'bookingApplication', 'projectDetailAccounts', 'cancellationReceivableAccounts', 'cashBankAccounts'));
+        return view('registration.booking-returns.create', array_merge(
+            [
+                'data' => $data,
+                'incomeAccounts' => $incomeAccounts,
+                'liabilityAccounts' => $liabilityAccounts,
+                'bookingApplication' => $bookingApplication,
+                'projectDetailAccounts' => $projectDetailAccounts,
+                'cancellationReceivableAccounts' => $cancellationReceivableAccounts,
+                'cashBankAccounts' => $cashBankAccounts
+            ],
+            $this->getMasterData()
+        ));
     }
 
     /**
@@ -100,7 +133,18 @@ class BookingReturnController extends Controller
             $liabilityAccounts = DetailAccount::whereIn('sub_sub_sub_head_id', $subSubSubHead)->where('sub_sub_head_id', 52)->get();
             $incomeAccounts = DetailAccount::whereIn('sub_sub_sub_head_id', $subSubSubHead)->where('sub_sub_head_id', 130)->get();
 
-            return view('registration.booking-returns.edit', compact('bookingReturn', 'bookingApplication', 'projectDetailAccounts', 'cancellationReceivableAccounts', 'cashBankAccounts', 'liabilityAccounts', 'incomeAccounts'));
+            return view('registration.booking-returns.edit', array_merge(
+                [
+                    'bookingReturn' => $bookingReturn,
+                    'bookingApplication' => $bookingApplication,
+                    'projectDetailAccounts' => $projectDetailAccounts,
+                    'cancellationReceivableAccounts' => $cancellationReceivableAccounts,
+                    'cashBankAccounts' => $cashBankAccounts,
+                    'liabilityAccounts' => $liabilityAccounts,
+                    'incomeAccounts' => $incomeAccounts
+                ],
+                $this->getMasterData()
+            ));
         } catch (\Exception $e) {
             return redirect()->route('bookings.bookingListing')->with('error', __('messages.unexpected-error'));
         }
@@ -279,6 +323,6 @@ class BookingReturnController extends Controller
             $customerPays = 0;
         }
 
-        return view('registration.booking-returns.show', compact('fileCancellation', 'totalCredit', 'balanceAmount', 'remainingAmount', 'discountValue','customerPays', 'companyPays', 'cancellationsCharges', 'payableAmount'));
+        return view('registration.booking-returns.show', compact('fileCancellation', 'totalCredit', 'balanceAmount', 'remainingAmount', 'discountValue', 'customerPays', 'companyPays', 'cancellationsCharges', 'payableAmount'));
     }
 }
