@@ -612,7 +612,7 @@
                                     ? ' open'
                                     : '' }}">
 
-                                @can('admin.view')
+                                {{-- @can('admin.view') --}}
                                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                         aria-haspopup="true" aria-expanded="true" href="#">
                                         <i class="nav-main-link-icon si si-lock"></i>
@@ -635,7 +635,7 @@
                                             </a>
                                         </li>
                                     </ul>
-                                @endcan
+                                {{-- @endcan --}}
                             </li>
 
                             <li
@@ -667,7 +667,7 @@
                                     ? ' open'
                                     : '' }}">
 
-                                @can('registration.view')
+                                {{-- @can('registration.view') --}}
                                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                         aria-haspopup="true" aria-expanded="true" href="#">
                                         <i class="nav-main-link-icon si si-plus"></i>
@@ -880,7 +880,7 @@
                                             </li> --}}
                                         {{--  @endcan  --}}
                                     </ul>
-                                @endcan
+                                {{-- @endcan --}}
                             </li>
 
                             <li
@@ -904,7 +904,7 @@
                                     ? ' open'
                                     : '' }}">
 
-                                @can('accounts.view')
+                                {{-- @can('accounts.view') --}}
                                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                         aria-haspopup="true" aria-expanded="true" href="#">
                                         <i class="nav-main-link-icon si si-calculator"></i>
@@ -1056,13 +1056,13 @@
                                             </ul>
                                         </li>
                                     </ul>
-                                @endcan
+                                {{-- @endcan --}}
                             </li>
 
 
                             <li
                                 class="nav-main-item{{ request()->routeIs('bookings.*') || request()->routeIs('bookingReturns.*') || request()->routeIs('registry-order.*') || request()->routeIs('possession-letter.*') ? ' open' : '' }}">
-                                @can('booking-module.view')
+                                {{-- @can('booking-module.view') --}}
                                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                         aria-haspopup="true" aria-expanded="true" href="#">
                                         <i class="nav-main-link-icon si si-plus"></i>
@@ -1152,12 +1152,12 @@
                                         </li>
 
                                     </ul>
-                                @endcan
+                                {{-- @endcan --}}
                             </li>
 
                             <li
                                 class="nav-main-item{{ request()->is('purchase-order*') || request()->is('grn*') || request()->is('purchase-invoice*') || request()->is('purchase-return*') ? ' open' : '' }}">
-                                @can('purchase-module.view')
+                                {{-- @can('purchase-module.view') --}}
                                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                         aria-haspopup="true" aria-expanded="true" href="#">
                                         <i class="nav-main-link-icon si si-basket"></i>
@@ -1191,11 +1191,11 @@
                                             </a>
                                         </li>
                                     </ul>
-                                @endcan
+                                {{-- @endcan --}}
                             </li>
 
                             <li class="nav-main-item{{ request()->is('sale-invoice*') ? ' open' : '' }}">
-                                @can('sale-module.view')
+                                {{-- @can('sale-module.view') --}}
                                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                         aria-haspopup="true" aria-expanded="true" href="#">
                                         <i class="nav-main-link-icon si si-basket"></i>
@@ -1212,12 +1212,12 @@
                                         </li>
 
                                     </ul>
-                                @endcan
+                                {{-- @endcan --}}
                             </li>
 
                             <li
                                 class="nav-main-item{{ request()->is('construction-site*') || request()->is('tender*') || request()->is('boq-masters*') || request()->is('work-orders*') || request()->is('work-progress*') || request()->is('contractor-bills*') ? ' open' : '' }}">
-                                @can('construction-module.view')
+                                {{-- @can('construction-module.view') --}}
                                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                         aria-haspopup="true" aria-expanded="true" href="#">
                                         <i class="nav-main-link-icon si si-home"></i>
@@ -1270,7 +1270,7 @@
 
 
                                     </ul>
-                                @endcan
+                                {{-- @endcan --}}
                             </li>
                             {{--  <li class="nav-main-item">
                                 <a class="nav-main-link{{ request()->routeIs('payroll') ? ' active' : '' }}"
@@ -1281,7 +1281,7 @@
 
                             <li
                                 class="nav-main-item{{ request()->is('land-module*') || request()->is('grn*') || request()->is('land-registration*') || request()->is('transfer-land*') ? ' open' : '' }}">
-                                @can('land-module.view')
+                                {{-- @can('land-module.view') --}}
                                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                         aria-haspopup="true" aria-expanded="true" href="#">
                                         <i class="nav-main-link-icon si si-layers"></i>
@@ -1309,7 +1309,7 @@
                                             </a>
                                         </li>
                                     </ul>
-                                @endcan
+                                {{-- @endcan --}}
                             </li>
 
                             <li class="nav-main-item{{ request()->is('reports*') ? ' open' : '' }}">
@@ -1376,7 +1376,7 @@
                             </li>
 
                             <li class="nav-main-item{{ request()->is('exective-reports*') || request()->is('exective-reports.direct-products.filter.*') ? ' open' : '' }}">
-                                @can('executive-reports.view')
+                                {{-- @can('executive-reports.view') --}}
                                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                         aria-haspopup="true" aria-expanded="true" href="#">
                                         <i class="nav-main-link-icon si si-chart"></i>
@@ -1393,26 +1393,26 @@
                                         </li>
 
                                     </ul>
-                                @endcan
+                                {{-- @endcan --}}
                             </li>
 
                             <li class="nav-main-heading">More</li>
-                            @can('audit-log.view')
+                            {{-- @can('audit-log.view') --}}
                                 <li class="nav-main-item">
                                     <a class="nav-main-link{{ request()->routeIs('audit-logs.index') ? ' active' : '' }}"
                                         href="{{ route('audit-logs.index') }}">
                                         <span class="nav-main-link-name">@lang('menu.audit-log')</span>
                                     </a>
                                 </li>
-                            @endcan
-                            @can('registry-types.view')
+                            {{-- @endcan --}}
+                            {{-- @can('registry-types.view') --}}
                                 <li class="nav-main-item">
                                     <a class="nav-main-link{{ request()->routeIs('registry-types.index') ? ' active' : '' }}"
                                         href="{{ route('registry-types.index') }}">
                                         <span class="nav-main-link-name">@lang('menu.registry-types')</span>
                                     </a>
                                 </li>
-                            @endcan
+                            {{-- @endcan --}}
                         </ul>
                     </div>
                 </div>
