@@ -432,6 +432,8 @@
     <script src="{{ asset('js/plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js') }}"></script>
 
+    @yield('script')
+
     {{--  <script src="https://unpkg.com/simple-keyboard/build/index.js"></script>  --}}
     {{--  <script src="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.js"></script>  --}}
     @yield('js')

@@ -58,7 +58,12 @@
 
                     <div class="mb-3">
                         <label>@lang('messages.password')<span class="text-danger">*</span></label>
-                        <input type="password" name="password" maxlength="10" class="form-control">
+                        <div class="input-group">
+                            <input type="password" name="password" maxlength="10" class="form-control password-field" id="password-field-create">
+                            <button type="button" class="btn btn-outline-secondary toggle-password" data-target="password-field-create" aria-label="Show password">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </div>
                         @error('password')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
@@ -66,7 +71,12 @@
 
                     <div class="mb-3">
                         <label>@lang('messages.confirm-password')<span class="text-danger">*</span></label>
-                        <input type="password" name="password_confirmation" maxlength="10" class="form-control">
+                        <div class="input-group">
+                            <input type="password" name="password_confirmation" maxlength="10" class="form-control password-field" id="password-confirmation-field-create">
+                            <button type="button" class="btn btn-outline-secondary toggle-password" data-target="password-confirmation-field-create" aria-label="Show password">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </div>
                         @error('password_confirmation')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
@@ -114,4 +124,26 @@
         </div>
     </div>
 </div>
+@section('script')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.toggle-password').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const target = document.getElementById(this.dataset.target);
+                    if (!target) return;
+
+                    const icon = this.querySelector('i');
+                    if (target.type === 'password') {
+                        target.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        target.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

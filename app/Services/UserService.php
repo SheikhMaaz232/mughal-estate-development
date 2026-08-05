@@ -1,9 +1,11 @@
 <?php
 namespace App\Services;
 
+use App\Mail\UserCredentialsMail;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class UserService
@@ -31,6 +33,12 @@ class UserService
             'password' => Hash::make($data['password']),
             'avatar' => $avatarPath,
         ]);
+
+        try {
+            Mail::to($user->email)->send(new UserCredentialsMail($user, $data['password']));
+        } catch (\Throwable $e) {
+            // Email sending failure should not block creating the user.
+        }
 
         event(new Registered($user));
 
