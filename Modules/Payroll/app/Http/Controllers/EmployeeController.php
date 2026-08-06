@@ -3,9 +3,14 @@
 namespace Modules\Payroll\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bank;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Modules\Payroll\App\Http\Requests\StoreEmployeeRequest;
 use Modules\Payroll\App\Http\Requests\UpdateEmployeeRequest;
+use Modules\Payroll\App\Models\Allowance;
+use Modules\Payroll\App\Models\Deduction;
+use Modules\Payroll\App\Models\Designation;
 use Modules\Payroll\App\Models\Employee;
 use Modules\Payroll\App\Models\LeaveType;
 use Modules\Payroll\App\Services\EmployeeService;
@@ -19,13 +24,31 @@ class EmployeeController extends Controller
         $this->employeeService = $employeeService;
     }
 
+     private function getMasterData()
+    {
+        return [
+            'designations' => Cache::remember('designations_data', 3600, fn() =>
+            Designation::select('id', 'title_en', 'title_ur')->get()),
+
+            'banks' => Cache::remember('banks_data', 3600, fn() =>
+            Bank::select('id', 'name_en', 'name_ur')->get()),
+
+            'allowances' => Cache::remember('allowances_data', 3600, fn() =>
+            Allowance::select('id', 'title_en', 'title_ur')->get()),
+
+            'deductions' => Cache::remember('deductions_data', 3600, fn() =>
+            Deduction::select('id', 'title_en', 'title_ur')->get())
+
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $employeesData = Employee::latest()->paginate(10);
-        return view('payroll::employees.index', compact('employeesData'));
+        return view('payroll::employees.index', compact('employeesData') , $this->getMasterData());
     }
 
     /**
@@ -35,7 +58,7 @@ class EmployeeController extends Controller
     {
         $leaveTypes = LeaveType::orderBy('title_en')->get();
 
-        return view('payroll::employees.create', compact('leaveTypes'));
+        return view('payroll::employees.create', compact('leaveTypes'), $this->getMasterData());
 
     }
 
@@ -64,7 +87,7 @@ class EmployeeController extends Controller
         $employee->load(['contacts', 'banks', 'allowances', 'deductions', 'leaveBalances.leaveType']);
         $leaveTypes = LeaveType::orderBy('title_en')->get();
 
-        return view('payroll::employees.edit', compact('employee', 'leaveTypes'));
+        return view('payroll::employees.edit', compact('employee', 'leaveTypes'), $this->getMasterData());
     }
 
     /**

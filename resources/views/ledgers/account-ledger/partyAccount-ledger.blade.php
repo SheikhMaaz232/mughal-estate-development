@@ -24,6 +24,30 @@
             font-size: 0.9rem;
         }
 
+        .ledger-section-title.ledger-balance-zero {
+            color: #0f5132 !important;
+            background-color: #d1e7dd;
+            padding: 0.35rem 0.6rem;
+            border-radius: 0.25rem;
+        }
+
+        .ledger-section-title.ledger-balance-nonzero {
+            color: #842029 !important;
+            background-color: #f8d7da;
+            padding: 0.35rem 0.6rem;
+            border-radius: 0.25rem;
+        }
+
+        .ledger-closing.ledger-balance-zero {
+            color: #0f5132 !important;
+            background-color: #d1e7dd !important;
+        }
+
+        .ledger-closing.ledger-balance-nonzero {
+            color: #842029 !important;
+            background-color: #f8d7da !important;
+        }
+
         @media print {
 
             /* Hide unnecessary elements */
@@ -203,8 +227,12 @@
                 {{-- Ledgers Section --}}
                 <div class="card-body">
                     @foreach ($ledgers as $ledger)
+                        @php
+                            $isZeroBalance = round((float) ($ledger['closing_balance'] ?? 0), 2) == 0;
+                            $balanceClass = $isZeroBalance ? 'ledger-balance-zero' : 'ledger-balance-nonzero';
+                        @endphp
                         <div class="mb-4">
-                            <h5 class="text-primary fw-bold">
+                            <h5 class="fw-bold ledger-section-title {{ $balanceClass }}">
                                 {{ $isUrdu ? $ledger['account_name_ur'] ?? $ledger['account_name_en'] : $ledger['account_name_en'] }}
                                 @if (!empty($ledger['party_name']))
                                     <small class="text-muted">
@@ -259,7 +287,7 @@
                                             <th colspan="5" class="text-end">
                                                 {{ __('messages.closing_balance') }}
                                             </th>
-                                            <th class="text-end text-primary fw-bold ledger-closing"
+                                            <th class="text-end fw-bold ledger-closing {{ $balanceClass }}"
                                                 data-original="{{ $ledger['closing_balance'] }}">
                                                 {{ number_format($ledger['closing_balance'], 2) }}
                                             </th>

@@ -650,6 +650,8 @@ return [
     'list-of-purchase-return' => 'پرچیز ریٹرن رسیدوں کی فہرست',
     'purchase-return' => 'پرچیز ریٹرن',
     'party_ledger' => 'پارٹی لیجر',
+    'general_journal_ledger' => 'جنرل جرنل لیجر',
+    'opening_balance' => 'اوپننگ بیلنس',
     'from_date' => 'تاریخ سے',
     'to_date' => 'تاریخ تک',
     'party_ledger_report' => 'پارٹی لیجر رپورٹ',

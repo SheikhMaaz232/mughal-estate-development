@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Payroll\App\Http\Controllers\AllowanceController;
 use Modules\Payroll\App\Http\Controllers\AttendanceController;
 use Modules\Payroll\App\Http\Controllers\AttendanceDeviceController;
+use Modules\Payroll\App\Http\Controllers\ContractController;
 use Modules\Payroll\App\Http\Controllers\DeductionController;
 use Modules\Payroll\App\Http\Controllers\DesignationController;
 use Modules\Payroll\App\Http\Controllers\EmployeeController;
@@ -46,6 +47,7 @@ Route::middleware(['auth', 'verified', 'web'])->group(function () {
             Route::resource('deductions', DeductionController::class)->names('deductions');
             Route::resource('allowances', AllowanceController::class)->names('allowances');
             Route::resource('employees', EmployeeController::class)->names('employees');
+            Route::get('/employees/{employee}/contract', [ContractController::class, 'view'])->name('employees.contract');
             Route::resource('devices', AttendanceDeviceController::class)->names('devices');
             Route::prefix('attendance')->group(function () {
 

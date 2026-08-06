@@ -1064,6 +1064,7 @@
                                                         <span class="nav-main-link-name">@lang('menu.party_ledger')</span>
                                                     </a>
                                                 </li>
+
                                             </ul>
                                         </li>
                                     </ul>
@@ -1346,6 +1347,13 @@
                                                 <span class="nav-main-link-name">@lang('menu.bank_book')</span>
                                             </a>
                                         </li>
+
+                                         <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('generalJournal.ledger') ? ' active' : '' }}"
+                                                        href="{{ route('generalJournal.ledger') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.general_journal_ledger')</span>
+                                                    </a>
+                                                </li>
 
                                         <li
                                             class="nav-main-item{{ request()->routeIs('reports.stock-report.filter') ? ' open' : '' }}">

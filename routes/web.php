@@ -298,6 +298,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/partyAccount-ledger', [LedgerController::class, 'viewPartyAccountLedger'])->name('partyAccount.ledger');
     Route::get('/partyAccount-ledger-report', [LedgerController::class, 'getPartyAccountLedger'])->name('partyAccount.ledger.report');
+    Route::get('/generalJournal-ledger', [LedgerController::class, 'viewGeneralJournalLedger'])->name('generalJournal.ledger');
+    Route::get('/generalJournal-ledger-report', [LedgerController::class, 'getGeneralJournalLedger'])->name('generalJournal.ledger.report');
     Route::get('/bankBook', [ReportController::class, 'viewBankBook'])->name('bankBook.view');
     Route::get('/bankBook-report', [ReportController::class, 'getBankBookLedger'])->name('bank.book.report');
     Route::get('bookings/listing', [BookingApplicationController::class, 'bookingListing'])->name('bookings.bookingListing');

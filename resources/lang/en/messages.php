@@ -647,6 +647,8 @@ return [
     'list-of-purchase-return' => 'List Of Purchase Returns',
     'purchase-return' => 'Purchase Return',
     'party_ledger' => 'Party Ledger',
+    'general_journal_ledger' => 'General Journal Ledger',
+    'opening_balance' => 'Opening Balance',
     'from_date' => 'From Date',
     'to_date' => 'To Date',
     'party_ledger_report' => 'Party Ledger Report',

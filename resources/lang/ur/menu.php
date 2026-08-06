@@ -58,6 +58,7 @@ return [
     'purchaseReturn' => 'پرچیز ریٹرن',
     'ledgers' => 'لیجرز',
     'party_ledger' => 'پارٹی لیجر',
+    'general_journal_ledger' => 'جنرل جرنل لیجر',
     'possession-letter' => 'قبضہ لیٹر',
     'approved_bookings' => 'تصدیق شدہ بکنگ کی فھرست',
     'land-module' => 'زمین کا ماڈیول',

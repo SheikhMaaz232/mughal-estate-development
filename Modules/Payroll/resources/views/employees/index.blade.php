@@ -80,6 +80,12 @@
                                         aria-label="View Employee Detail" data-bs-original-title="View Employee Detail">
                                         <i class="fas fa-eye"></i>
                                     </a>
+
+                                    <a href="{{ route('payroll.employees.contract', $employee->id) }}"
+                                        class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip"
+                                        aria-label="Download Employment Contract" data-bs-original-title="Download Employment Contract">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
                                 </div>
                             </td>
                             </tr>

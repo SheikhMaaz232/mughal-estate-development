@@ -29,6 +29,15 @@
             position: relative;
         }
 
+        .pageTerms {
+            width: 8.5in;
+            min-height: 14in;
+            margin: 0 auto;
+            box-sizing: border-box;
+            padding: 1.0in 0.6in 0.6in 0.6in;
+            position: relative;
+        }
+
         .page2 {
             width: 8.5in;
             min-height: 14in;
@@ -733,7 +742,7 @@
     </div>
 
     <!-- ================= Third Page (Terms & Conditions) ================= -->
-    <div class="page">
+    <div class="pageTerms">
 
         <div class="title" style="margin-bottom: 0px !important;">TERMS AND CONDITIONS
         </div>
@@ -796,10 +805,22 @@
                     reservation.</li>
                 <li>The area of the plot mentioned is approximate. If the actual measurement of the area is found more
                     or less, the buyer shall be charged on the actual allocated area on a proportionate basis.</li>
+
+                <li>as per the contract, the company will be bound to provide the client with project development,
+                    possession, and plot registry within the stipulated period. However, if there is any delay or
+                    stoppage in the approval or development works of the project due to any reasons, then the company
+                    can transfer the client to any of its other projects.</li>
+                <li>The parties here to agree with all obligations and restrictions contained here in all the
+                    circumstances under this agreement and each and everyone of such covenant, obligations and each
+                    every part there of shall be deemed to be a severable and an independent covenant.</li>
+                <li>That the property will not be used for any other purposes, except for the within have been expressly
+                    mentioned in this agreement even after the execution of the sale deed and passing on the title to
+                    client.</li>
+
             </ol>
 
             <!-- Footer Section -->
-            <div style="margin-top:60px; display:flex; justify-content:space-between;">
+            <div style="margin-top:70px; display:flex; justify-content:space-between;">
                 <div style="width:45%; text-align:left;">
 
                 </div>
@@ -811,7 +832,13 @@
     </div>
 
 
-    <div class="page">
+    <div class="pageTerms">
+
+        <div class="title" style="margin-bottom: 0px !important;">TERMS AND CONDITIONS
+        </div>
+        <div class="content" style="margin: 0px !important;">
+            <p style="text-align:center; font-weight:bold; font-size: 20px;">Annexure – B</p>
+        </div>
 
         <div class="row">
             <div style="color: red !important;">
@@ -831,11 +858,13 @@
             {{-- <p style="margin-top:15px; font-weight:bold;">Now therefore, this agreement witness and parties mutually agree as follows:
             </p> --}}
 
-            <ol start="9" style="margin-left:-25px; margin-top:10px;">
-                <li>as per the contract, the company will be bound to provide the client with project development,
-                    possession, and plot registry within the stipulated period. However, if there is any delay or
-                    stoppage in the approval or development works of the project due to any reasons, then the company
-                    can transfer the client to any of its other projects.</li>
+            <ol start="12" style="margin-left:-25px; margin-top:10px;">
+                <li>in the event of any dispute or differences regarding any matter touching the interpretation or
+                    any clause here of, performance of any agreement, committing of default by any of the party or any
+                    other ancillary or incidental matter, it shall be referred to and finally determined by arbitration
+                    accordance with the provision of Arbitration Act, 1940. The cost of the arbitration shall be born by
+                    person invoking the remedy.</li>
+
                 <li>
                     <ul style="list-style-type:upper-alpha; margin-left:-20px; ">
                         <li>That the Company shall provide in the Project common amenities, facilities such as roads,
@@ -866,9 +895,24 @@
                     </ul>
                 </li>
 
-                <li>The parties here to agree with all obligations and restrictions contained here in all the
-                    circumstances under this agreement and each and everyone of such covenant, obligations and each
-                    every part there of shall be deemed to be a severable and an independent covenant.</li>
+                <li>That the territorial jurisdiction shall be the same area where the registered office of the company
+                    would be situated not with standing where the instant agreement is executed.</li>
+                <li>That is no case the Client shall ask the company to revise or modify the design concept and such
+                    extemal architectural features as window elements, railings and exterior finishes etc.</li>
+                <li>That the client here by nominates Mr/Mrs./Miss. For the purpose of dealing with the Company and the
+                    person so nominated shall be for all intents and purposes treated as the representative of the
+                    client for the due performance of the Agreement.</li>
+                <li>That the client shall not be authorized to transfer his/her rights in the Agreement unless with the
+                    permission of the company and subject to the payment of charges to be determined by the Company at
+                    the time of transfer.</li>
+                <li>That the address given by the Client in this agn agreement shall be deemed to be correct
+                    official/postal address for any correspondence, and a letter/notice by post/Courier by the Company
+                    at the said address shall be deemed to the proper and valid notice for the purpose of these terms
+                    and conditions.</li>
+                <li>That this is certify that the Company and the client have studied this Agreement, the translation of
+                    which has been read out and explained in the language they understand, and they, after understanding
+                    and following all the clauses, have a fixed their signatures.</li>
+
             </ol>
 
             <!-- Footer Section -->
@@ -883,7 +927,12 @@
         </div>
     </div>
 
-    <div class="page">
+    <div class="pageTerms">
+        <div class="title" style="margin-bottom: 0px !important;">TERMS AND CONDITIONS
+        </div>
+        <div class="content" style="margin: 0px !important;">
+            <p style="text-align:center; font-weight:bold; font-size: 20px;">Annexure – B</p>
+        </div>
 
         <div class="row">
             <div style="color: red !important;">
@@ -903,33 +952,8 @@
             {{-- <p style="margin-top:15px; font-weight:bold;">Now therefore, this agreement witness and parties mutually agree as follows:
             </p> --}}
 
-            <ol start="12" style="margin-left:-25px; margin-top:20px;">
-                <li>That the property will not be used for any other purposes, except for the within have been expressly
-                    mentioned in this agreement even after the execution of the sale deed and passing on the title to
-                    client.</li>
-                <li>in the event of any dispute or differences regarding any matter touching the interpretation or
-                    any clause here of, performance of any agreement, committing of default by any of the party or any
-                    other ancillary or incidental matter, it shall be referred to and finally determined by arbitration
-                    accordance with the provision of Arbitration Act, 1940. The cost of the arbitration shall be born by
-                    person invoking the remedy.</li>
+            <ol start="20" style="margin-left:-25px; margin-top:20px;">
 
-                <li>That the territorial jurisdiction shall be the same area where the registered office of the company
-                    would be situated not with standing where the instant agreement is executed.</li>
-                <li>That is no case the Client shall ask the company to revise or modify the design concept and such
-                    extemal architectural features as window elements, railings and exterior finishes etc.</li>
-                <li>That the client here by nominates Mr/Mrs./Miss. For the purpose of dealing with the Company and the
-                    person so nominated shall be for all intents and purposes treated as the representative of the
-                    client for the due performance of the Agreement.</li>
-                <li>That the client shall not be authorized to transfer his/her rights in the Agreement unless with the
-                    permission of the company and subject to the payment of charges to be determined by the Company at
-                    the time of transfer.</li>
-                <li>That the address given by the Client in this agn agreement shall be deemed to be correct
-                    official/postal address for any correspondence, and a letter/notice by post/Courier by the Company
-                    at the said address shall be deemed to the proper and valid notice for the purpose of these terms
-                    and conditions.</li>
-                <li>That this is certify that the Company and the client have studied this Agreement, the translation of
-                    which has been read out and explained in the language they understand, and they, after understanding
-                    and following all the clauses, have a fixed their signatures.</li>
                 <li>If the plot area is less on the spot, the company will refund the amount based on the booking price.
                     If the area is more, the user will pay according to the price available on the spot.</li>
                 <li>For project improvement and road access requirements, the company reserves the right to change the
@@ -940,10 +964,13 @@
                     at the time of sale so that the buyer can take possession from the company and start construction.
                 </li>
 
+                <li>The company shall not be bound to accept the return of a sold plot.</li>
+
+
             </ol>
 
             <!-- Footer Section -->
-            <div style="margin-top:2.4in; display:flex; justify-content:space-between;">
+            <div style="margin-top:8.5in; display:flex; justify-content:space-between;">
                 <div style="width:45%; text-align:left;">
 
                     <p><b>Company Signature</b></p>
@@ -1410,7 +1437,7 @@
 
 
     <!-- ================= Third Page (Terms & Conditions) ================= -->
-    <div class="page">
+    <div class="pageTerms">
 
         <div class="title" style="margin-bottom: 0px !important;">TERMS AND CONDITIONS
         </div>
@@ -1473,10 +1500,22 @@
                     reservation.</li>
                 <li>The area of the plot mentioned is approximate. If the actual measurement of the area is found more
                     or less, the buyer shall be charged on the actual allocated area on a proportionate basis.</li>
+
+                <li>as per the contract, the company will be bound to provide the client with project development,
+                    possession, and plot registry within the stipulated period. However, if there is any delay or
+                    stoppage in the approval or development works of the project due to any reasons, then the company
+                    can transfer the client to any of its other projects.</li>
+                <li>The parties here to agree with all obligations and restrictions contained here in all the
+                    circumstances under this agreement and each and everyone of such covenant, obligations and each
+                    every part there of shall be deemed to be a severable and an independent covenant.</li>
+                <li>That the property will not be used for any other purposes, except for the within have been expressly
+                    mentioned in this agreement even after the execution of the sale deed and passing on the title to
+                    client.</li>
+
             </ol>
 
             <!-- Footer Section -->
-            <div style="margin-top:60px; display:flex; justify-content:space-between;">
+            <div style="margin-top:70px; display:flex; justify-content:space-between;">
                 <div style="width:45%; text-align:left;">
 
                 </div>
@@ -1488,7 +1527,13 @@
     </div>
 
 
-    <div class="page">
+    <div class="pageTerms">
+
+        <div class="title" style="margin-bottom: 0px !important;">TERMS AND CONDITIONS
+        </div>
+        <div class="content" style="margin: 0px !important;">
+            <p style="text-align:center; font-weight:bold; font-size: 20px;">Annexure – B</p>
+        </div>
 
         <div class="row">
             <div style="color: red !important;">
@@ -1508,11 +1553,13 @@
             {{-- <p style="margin-top:15px; font-weight:bold;">Now therefore, this agreement witness and parties mutually agree as follows:
             </p> --}}
 
-            <ol start="9" style="margin-left:-25px; margin-top:10px;">
-                <li>as per the contract, the company will be bound to provide the client with project development,
-                    possession, and plot registry within the stipulated period. However, if there is any delay or
-                    stoppage in the approval or development works of the project due to any reasons, then the company
-                    can transfer the client to any of its other projects.</li>
+            <ol start="12" style="margin-left:-25px; margin-top:10px;">
+                <li>in the event of any dispute or differences regarding any matter touching the interpretation or
+                    any clause here of, performance of any agreement, committing of default by any of the party or any
+                    other ancillary or incidental matter, it shall be referred to and finally determined by arbitration
+                    accordance with the provision of Arbitration Act, 1940. The cost of the arbitration shall be born by
+                    person invoking the remedy.</li>
+
                 <li>
                     <ul style="list-style-type:upper-alpha; margin-left:-20px; ">
                         <li>That the Company shall provide in the Project common amenities, facilities such as roads,
@@ -1543,10 +1590,23 @@
                     </ul>
                 </li>
 
-                <li>The parties here to agree with all obligations and restrictions contained here in all the
-                    circumstances under this agreement and each and everyone of such covenant, obligations and each
-                    every part there of shall be deemed to be a severable and an independent covenant.</li>
-
+                <li>That the territorial jurisdiction shall be the same area where the registered office of the company
+                    would be situated not with standing where the instant agreement is executed.</li>
+                <li>That is no case the Client shall ask the company to revise or modify the design concept and such
+                    extemal architectural features as window elements, railings and exterior finishes etc.</li>
+                <li>That the client here by nominates Mr/Mrs./Miss. For the purpose of dealing with the Company and the
+                    person so nominated shall be for all intents and purposes treated as the representative of the
+                    client for the due performance of the Agreement.</li>
+                <li>That the client shall not be authorized to transfer his/her rights in the Agreement unless with the
+                    permission of the company and subject to the payment of charges to be determined by the Company at
+                    the time of transfer.</li>
+                <li>That the address given by the Client in this agn agreement shall be deemed to be correct
+                    official/postal address for any correspondence, and a letter/notice by post/Courier by the Company
+                    at the said address shall be deemed to the proper and valid notice for the purpose of these terms
+                    and conditions.</li>
+                <li>That this is certify that the Company and the client have studied this Agreement, the translation of
+                    which has been read out and explained in the language they understand, and they, after understanding
+                    and following all the clauses, have a fixed their signatures.</li>
 
             </ol>
 
@@ -1562,7 +1622,12 @@
         </div>
     </div>
 
-    <div class="page">
+    <div class="pageTerms">
+        <div class="title" style="margin-bottom: 0px !important;">TERMS AND CONDITIONS
+        </div>
+        <div class="content" style="margin: 0px !important;">
+            <p style="text-align:center; font-weight:bold; font-size: 20px;">Annexure – B</p>
+        </div>
 
         <div class="row">
             <div style="color: red !important;">
@@ -1582,45 +1647,25 @@
             {{-- <p style="margin-top:15px; font-weight:bold;">Now therefore, this agreement witness and parties mutually agree as follows:
             </p> --}}
 
-            <ol start="12" style="margin-left:-25px; margin-top:20px;">
-                <li>That the property will not be used for any other purposes, except for the within have been expressly
-                    mentioned in this agreement even after the execution of the sale deed and passing on the title to
-                    client.</li>
-                <li>in the event of any dispute or differences regarding any matter touching the interpretation or
-                    any clause here of, performance of any agreement, committing of default by any of the party or any
-                    other ancillary or incidental matter, it shall be referred to and finally determined by arbitration
-                    accordance with the provision of Arbitration Act, 1940. The cost of the arbitration shall be born by
-                    person invoking the remedy.</li>
+            <ol start="20" style="margin-left:-25px; margin-top:20px;">
 
-                <li>That the territorial jurisdiction shall be the same area where the registered office of the company
-                    would be situated not with standing where the instant agreement is executed.</li>
-                <li>That is no case the Client shall ask the company to revise or modify the design concept and such
-                    extemal architectural features as window elements, railings and exterior finishes etc.</li>
-                <li>That the client here by nominates Mr/Mrs./Miss. For the purpose of dealing with the Company and the
-                    person so nominated shall be for all intents and purposes treated as the representative of the
-                    client for the due performance of the Agreement.</li>
-                <li>That the client shall not be authorized to transfer his/her rights in the Agreement unless with the
-                    permission of the company and subject to the payment of charges to be determined by the Company at
-                    the time of transfer.</li>
-                <li>That the address given by the Client in this agn agreement shall be deemed to be correct
-                    official/postal address for any correspondence, and a letter/notice by post/Courier by the Company
-                    at the said address shall be deemed to the proper and valid notice for the purpose of these terms
-                    and conditions.</li>
-                <li>That this is certify that the Company and the client have studied this Agreement, the translation of
-                    which has been read out and explained in the language they understand, and they, after understanding
-                    and following all the clauses, have a fixed their signatures.</li>
                 <li>If the plot area is less on the spot, the company will refund the amount based on the booking price.
                     If the area is more, the user will pay according to the price available on the spot.</li>
                 <li>For project improvement and road access requirements, the company reserves the right to change the
                     location of the plot if necessary.</li>
+
                 <li>
                     The file holder or registry holder who will sell his plot must transfer the file to the buyer's name
                     at the time of sale so that the buyer can take possession from the company and start construction.
                 </li>
+
+                <li>The company shall not be bound to accept the return of a sold plot.</li>
+
+
             </ol>
 
             <!-- Footer Section -->
-            <div style="margin-top:2.4in; display:flex; justify-content:space-between;">
+            <div style="margin-top:8.5in; display:flex; justify-content:space-between;">
                 <div style="width:45%; text-align:left;">
 
                     <p><b>Company Signature</b></p>

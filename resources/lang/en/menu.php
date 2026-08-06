@@ -52,6 +52,7 @@ return [
     'purchaseReturn' => 'Purchase Return',
     'ledgers' => 'Ledgers',
     'party_ledger' => 'Party Ledger',
+    'general_journal_ledger' => 'General Journal Ledger',
     'possession-letter' => 'Possession Letter',
     'approved_bookings' => 'List Of Approved Bookings',
     'land-module' => 'Land Module',
