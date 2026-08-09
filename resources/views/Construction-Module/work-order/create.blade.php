@@ -229,7 +229,7 @@
             <td><strong class="remaining-qty_${rowId}">${item.remaining_quantity}</strong></td>
             <td>
                 <input type="hidden" name="boq_item_id[]" value="${item.id}">
-                <input type="number" name="quantity[]" class="form-control quantity-input_${rowId}" step="0.0001" min="0" max="${item.remaining_quantity}" required value="">
+                <input type="number" name="quantity[]" class="form-control quantity_input_${rowId}" step="0.0001" min="0" max="${item.remaining_quantity}" required value="">
             </td>
             <td>
                 <input type="number" name="rate[]" class="form-control rate-input_${rowId}" step="0.01" min="0" required value="${item.rate}">
@@ -300,7 +300,7 @@
         //     }
 
         function attachRowListeners(rowId, maxQuantity) {
-            const quantityInput = document.querySelector(`.quantity-input_${rowId}`);
+            const quantityInput = document.querySelector(`.quantity_input_${rowId}`);
             const rateInput = document.querySelector(`.rate-input_${rowId}`);
 
             [quantityInput, rateInput].forEach(input => {
@@ -312,7 +312,7 @@
         }
 
         function calculateRowAmount(rowId) {
-            const quantity = parseFloat(document.querySelector(`.quantity-input_${rowId}`).value) || 0;
+            const quantity = parseFloat(document.querySelector(`.quantity_input_${rowId}`).value) || 0;
             const rate = parseFloat(document.querySelector(`.rate-input_${rowId}`).value) || 0;
             const amount = quantity * rate;
 
@@ -321,7 +321,7 @@
         }
 
         function validateQuantity(rowId, maxQuantity) {
-            const quantityInput = document.querySelector(`.quantity-input_${rowId}`);
+            const quantityInput = document.querySelector(`.quantity_input_${rowId}`);
             const quantity = parseFloat(quantityInput.value) || 0;
 
             if (quantity > maxQuantity) {

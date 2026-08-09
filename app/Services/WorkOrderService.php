@@ -35,13 +35,11 @@ class WorkOrderService
                 continue;
             }
 
-
             $quantity = $quantities[$index] ?? 0;
             $rate = $rates[$index] ?? 0;
 
             // Validate quantity doesn't exceed remaining BOQ quantity
             $this->validateQuantity($data['boq_id'], $boqItemId, $quantity);
-
 
             $amount = $quantity * $rate;
             WorkOrderItem::create([
@@ -87,8 +85,8 @@ class WorkOrderService
         $rates = $data['rate'] ?? [];
 
         $totalAmount = 0;
-        foreach ($boqItemIds as $index => $boqItemId) {
-            if (!$boqItemId) {
+        foreach ($boqItemIds as $index => $boqSingleItem) {
+            if (!$boqSingleItem) {
                 continue;
             }
 
@@ -96,13 +94,13 @@ class WorkOrderService
             $rate = $rates[$index] ?? 0;
 
             // Validate quantity doesn't exceed remaining BOQ quantity
-            $oldQuantity = $oldQuantities[$boqItemId] ?? 0;
-            $this->validateQuantityForUpdate($data['boq_id'], $boqItemId, $quantity, $oldQuantity);
+            $oldQuantity = $oldQuantities[$boqSingleItem] ?? 0;
+            $this->validateQuantityForUpdate($data['boq_id'], $boqSingleItem, $quantity, $oldQuantity);
 
             $amount = $quantity * $rate;
             WorkOrderItem::create([
                 'work_order_id' => $workOrder->id,
-                'boq_item_id' => $boqItemId,
+                'boq_item_id' => $boqSingleItem,
                 'quantity' => $quantity,
                 'rate' => $rate,
                 'amount' => $amount,
@@ -130,6 +128,7 @@ class WorkOrderService
      */
     public function validateQuantity(int $boqId, int $boqItemId, $quantity): void
     {
+        // dd($boqId, $boqItemId, $quantity);
         $boqItem = BOQDetail::where('boq_master_id', $boqId)
             ->where('item_id', $boqItemId)
             ->first();
@@ -191,7 +190,7 @@ class WorkOrderService
                 $usedQuantity = WorkOrderItem::whereHas('workOrder', function ($query) use ($boqId) {
                     $query->where('boq_id', $boqId);
                 })
-                    ->where('boq_item_id', $item->id)
+                    ->where('boq_item_id', $item->item_id)
                     ->sum('quantity');
 
                 return [

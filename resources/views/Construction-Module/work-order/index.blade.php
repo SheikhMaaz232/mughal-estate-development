@@ -233,7 +233,8 @@
             boqList.innerHTML = '';
 
             // Fetch BOQs for the selected tender
-            fetch(`/boq-masters/get-by-tender/${tenderId}`)
+            fetch('{{ route('boq-masters.getByTender', ['tenderId' => '__TENDER_ID__']) }}'.replace(
+                    '__TENDER_ID__', tenderId))
                 .then(response => response.json())
                 .then(data => {
                     loadingSpinner.style.display = 'none';

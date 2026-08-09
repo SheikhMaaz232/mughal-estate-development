@@ -27,7 +27,7 @@ class BOQMasterController extends Controller
         $this->service = $service;
     }
 
-    
+
     private function getMasterData()
     {
         return [
