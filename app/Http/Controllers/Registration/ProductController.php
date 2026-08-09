@@ -30,6 +30,9 @@ class ProductController extends Controller
     private function getMasterData()
     {
         return [
+             'projects' => Cache::remember('projects_data', 3600, fn() =>
+            Project::select('id', 'name_en', 'name_ur')->get()),
+
             'mainHeads' => Cache::remember('main_heads_data', 3600, fn() =>
             MainHead::select('id', 'name_en', 'name_ur')->get()),
 
@@ -44,9 +47,6 @@ class ProductController extends Controller
 
             'searchSubSubSubHeads' => Cache::remember('sub_sub_sub_heads_data', 3600, fn() =>
             SubSubSubHead::select('id', 'name_en', 'name_ur')->get()),
-
-            'projects' => Cache::remember('projects_data', 3600, fn() =>
-            Project::select('id', 'name_en', 'name_ur')->get()),
 
             'roadCategories' => Cache::remember('road_categories_data', 3600, fn() =>
             RoadCategory::select('id', 'title_en', 'title_ur')->get()),
@@ -80,16 +80,7 @@ class ProductController extends Controller
         )->with('project', 'mainHead', 'controlHead', 'subHead', 'subSubHead', 'subSubSubHead')->search($search)->latest()->paginate(10)->appends(request()->input());
 
 
-        return view(
-            'registration.products.index',
-            array_merge(
-                [
-                    'products' => $products,
-                    'search' => $search,
-                ],
-                $this->getMasterData()
-            )
-        );
+        return view('registration.products.index' , array_merge([ 'products' => $products, 'search' => $search, ], $this->getMasterData()));
     }
 
     /**

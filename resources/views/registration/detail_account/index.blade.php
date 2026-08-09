@@ -72,7 +72,8 @@
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label for="sub_sub_head_id">@lang('messages.sub-sub-heads')</label>
-                    <select name="sub_sub_head_id[]" id="sub_sub_head_id"
+                    <select name="sub_sub_head_id[]" id="sub_sub_head_id" class="form-control form-select" multiple></select>
+                    {{-- <select name="sub_sub_head_id[]" id="sub_sub_head_id"
                         class="form-control form-select select2 @error('sub_sub_head_id') is-invalid @enderror" multiple>
                         @foreach ($searchSubSubHeads as $subSubHead)
                             <option value="{{ $subSubHead->id }}"
@@ -80,7 +81,7 @@
                                 {{ App::getLocale() === 'ur' ? $subSubHead->name_ur ?? '-' : $subSubHead->name_en ?? '-' }}
                             </option>
                         @endforeach
-                    </select>
+                    </select> --}}
                 </div>
             </div>
             <div class="row">
