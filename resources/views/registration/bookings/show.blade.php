@@ -43,7 +43,7 @@
             min-height: 14in;
             margin: 0 auto;
             box-sizing: border-box;
-            padding: 0.1in 0.6in 0.6in 0.2in;
+            padding: 0.8in 1in 0.6in 0.6in;
             position: relative;
         }
 
