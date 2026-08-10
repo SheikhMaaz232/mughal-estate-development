@@ -1824,7 +1824,9 @@
             </div>
         </div>
     </div> --}}
-
+    @php
+                        $balanceAmount = 0;
+                    @endphp
     @foreach ($expandedSchedules->chunk(38) as $pageSchedules)
         <div class="page2">
 
@@ -1845,38 +1847,59 @@
                     </div>
                 </div>
 
-                <div class="schedule-title">Payment Schedule</div>
+                <div class="schedule-title"> <b>Payment Schedule</b></div>
             @else
                 <div class="schedule-title">
-                    Payment Schedule (Continued)
+                   <b> Payment Schedule (Continued)</b>
                 </div>
             @endif
 
             <table>
                 <thead>
                     <tr>
-                        <th>Type</th>
-                        <th>Period</th>
-                        <th>Due Date</th>
-                        <th>No</th>
-                        <th>P/Amount</th>
-                        <th>Total</th>
+                        <th style="border: 1px solid #000;
+            padding: 6px;
+            text-align: center;">
+                            Type
+                        </th>
+                        <th style="border: 1px solid #000;
+            padding: 6px;
+            text-align: center;">
+                            Period</th>
+                        <th style="border: 1px solid #000;
+            padding: 6px;
+            text-align: center;">
+                            Due
+                            Date</th>
+                        <th style="border: 1px solid #000;
+            padding: 6px;
+            text-align: center;">
+                            No
+                        </th>
+                        <th style="border: 1px solid #000;
+            padding: 6px;
+            text-align: center;">
+                            P/Amount</th>
+                        <th style="border: 1px solid #000;
+            padding: 6px;
+            text-align: center;">
+                            Total
+                        </th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @php
-                        $balanceAmount = 0;
-                    @endphp
+                    
                     @foreach ($pageSchedules as $schedule)
                         @php
                             $balanceAmount += $schedule->pay_amount;
+                            $rowNumber = ($loop->parent->index * 38) + $loop->iteration;
                         @endphp
                         <tr>
                             <td>{{ $schedule->type }}</td>
                             <td>{{ $schedule->period }}</td>
                             <td>{{ \Carbon\Carbon::parse($schedule->due_date)->format('d M Y') }}</td>
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $rowNumber  }}</td>
                             <td>{{ number_format($schedule->pay_amount) }}</td>
                             <td>{{ number_format($balanceAmount, 2) }}</td>
                         </tr>
