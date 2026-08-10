@@ -40,11 +40,12 @@
 
         .page2 {
             width: 8.5in;
-            min-height: 14in;
-            margin: 0 auto;
+            height: 14in;
             box-sizing: border-box;
-            padding: 0.8in 1in 0.6in 0.6in;
+            padding: 0.2in 0.8in 0.6in 0.6in;
+            margin: 0 auto;
             position: relative;
+            page-break-after: always;
         }
 
         .title {
@@ -172,6 +173,39 @@
             .page {
                 margin: 0;
                 box-shadow: none;
+            }
+
+            .page2 {
+                width: 8.5in;
+                margin: auto;
+                padding: auto;
+                box-sizing: border-box;
+            }
+
+            .page2::before {
+                content: "";
+                display: block;
+                height: 0.8in;
+            }
+
+            .page2::after {
+                content: "";
+                display: block;
+                height: 0.6in;
+            }
+
+            .page2 table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            .page2 thead {
+                display: table-header-group;
+            }
+
+            .page2 tr {
+                break-inside: avoid;
+                page-break-inside: avoid;
             }
 
             .print-btn {
@@ -1678,7 +1712,7 @@
         </div>
     </div>
 
-    <div class="page2">
+    {{-- <div class="page2">
         <div class="header">
             <h1>Mughal Estate Developers</h1>
             <h2>{{ $bookingApplicationData->project->name_en }}</h2>
@@ -1755,8 +1789,7 @@
             text-align: center;">
                             {{ $booking->calculated_total_amount }}</td>
                     </tr>
-                @endforeach --}}
-
+                @endforeach 
                 @php
                     $balanceAmount = 0;
                 @endphp
@@ -1790,7 +1823,89 @@
                 Client
             </div>
         </div>
-    </div>
+    </div> --}}
+
+    @foreach ($expandedSchedules->chunk(38) as $pageSchedules)
+        <div class="page2">
+
+            @if ($loop->first)
+                <div class="header">
+                    <h1>Mughal Estate Developers</h1>
+                    <h2>{{ $bookingApplicationData->project->name_en }}</h2>
+                </div>
+
+                <div class="info">
+                    <div>
+                        <strong>Name:</strong> {{ $bookingApplicationData->party->name_en }}<br>
+                        <strong>Booking Price:</strong> {{ $bookingApplicationData->total_amount }}
+                    </div>
+                    <div>
+                        <strong>Unit:</strong> {{ $bookingApplicationData->product->name_en }}<br>
+                        <strong>File #:</strong> {{ $bookingApplicationData->form_no }}
+                    </div>
+                </div>
+
+                <div class="schedule-title">Payment Schedule</div>
+            @else
+                <div class="schedule-title">
+                    Payment Schedule (Continued)
+                </div>
+            @endif
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Period</th>
+                        <th>Due Date</th>
+                        <th>No</th>
+                        <th>P/Amount</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @php
+                        $balanceAmount = 0;
+                    @endphp
+                    @foreach ($pageSchedules as $schedule)
+                        @php
+                            $balanceAmount += $schedule->pay_amount;
+                        @endphp
+                        <tr>
+                            <td>{{ $schedule->type }}</td>
+                            <td>{{ $schedule->period }}</td>
+                            <td>{{ \Carbon\Carbon::parse($schedule->due_date)->format('d M Y') }}</td>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ number_format($schedule->pay_amount) }}</td>
+                            <td>{{ number_format($balanceAmount, 2) }}</td>
+                        </tr>
+                    @endforeach
+
+
+                </tbody>
+            </table>
+
+            @if ($loop->last)
+                <div class="grand-total">
+                    Grand Total = {{ $grandTotal }}
+                </div>
+
+                <div class="signatures2">
+                    <div class="sign-box2">
+                        <div class="line"></div>
+                        Verified By
+                    </div>
+
+                    <div class="sign-box2">
+                        <div class="line"></div>
+                        Client
+                    </div>
+                </div>
+            @endif
+
+        </div>
+    @endforeach
 
 
 </body>
