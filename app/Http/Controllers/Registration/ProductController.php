@@ -30,7 +30,7 @@ class ProductController extends Controller
     private function getMasterData()
     {
         return [
-             'projects' => Cache::remember('projects_data', 3600, fn() =>
+            'projects' => Cache::remember('projects_data', 3600, fn() =>
             Project::select('id', 'name_en', 'name_ur')->get()),
 
             'mainHeads' => Cache::remember('main_heads_data', 3600, fn() =>
@@ -80,7 +80,7 @@ class ProductController extends Controller
         )->with('project', 'mainHead', 'controlHead', 'subHead', 'subSubHead', 'subSubSubHead')->search($search)->latest()->paginate(10)->appends(request()->input());
 
 
-        return view('registration.products.index' , array_merge([ 'products' => $products, 'search' => $search, ], $this->getMasterData()));
+        return view('registration.products.index', array_merge(['products' => $products, 'search' => $search,], $this->getMasterData()));
     }
 
     /**

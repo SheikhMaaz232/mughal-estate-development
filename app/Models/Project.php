@@ -27,6 +27,7 @@ class Project extends Model implements Auditable
         'roads_area',
         'public_buildings_area',
         'park_area',
+        'residential_rate',
         'cemetery_area',
         'mosque_area',
         'social_waste_area',

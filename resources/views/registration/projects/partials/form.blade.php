@@ -119,9 +119,20 @@
     <div class="col-md-6">
         <div class="form-group mb-3">
             <label for="square_feet">@lang('messages.marla_in_square_feet')</label>
-            <input type="number" step="any" min="0" class="form-control" id="square_feet" name="square_feet"
-                value="{{ old('square_feet', $project->square_feet ?? '') }}">
+            <input type="number" step="any" min="0" class="form-control" id="square_feet"
+                name="square_feet" value="{{ old('square_feet', $project->square_feet ?? '0') }}">
             @error('square_feet')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
+
+    <div class="col-md-6">
+         <div class="form-group mb-3">
+            <label for="residential_rate">@lang('messages.residential_rate')</label>
+            <input tytype="number" step="any" min="0" class="form-control" id="residential_rate"
+                name="residential_rate" value="{{ old('residential_rate', $project->residential_rate ?? '') }}" onwheel="this.blur()">
+            @error('residential_rate')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
@@ -141,8 +152,8 @@
     <div class="col-md-3">
         <div class="form-group mb-3">
             <label for="roads_area">@lang('messages.roads_area')</label>
-            <input type="number" step="any" min="0" class="form-control" id="roads_area" name="roads_area"
-                value="{{ old('roads_area', $project->roads_area ?? '') }}" onwheel="this.blur()">
+            <input type="number" step="any" min="0" class="form-control" id="roads_area"
+                name="roads_area" value="{{ old('roads_area', $project->roads_area ?? '') }}" onwheel="this.blur()">
             @error('roads_area')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -151,8 +162,8 @@
     <div class="col-md-3">
         <div class="form-group mb-3">
             <label for="park_area">@lang('messages.park_area')</label>
-            <input tytype="number" step="any" min="0" class="form-control" id="park_area" name="park_area"
-                value="{{ old('park_area', $project->park_area ?? '') }}" onwheel="this.blur()">
+            <input tytype="number" step="any" min="0" class="form-control" id="park_area"
+                name="park_area" value="{{ old('park_area', $project->park_area ?? '') }}" onwheel="this.blur()">
             @error('park_area')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -161,8 +172,9 @@
     <div class="col-md-3">
         <div class="form-group mb-3">
             <label for="mosque_area">@lang('messages.mosque_area')</label>
-            <input type="number" step="any" min="0" class="form-control" id="mosque_area" name="mosque_area"
-                value="{{ old('mosque_area', $project->mosque_area ?? '') }}" onwheel="this.blur()">
+            <input type="number" step="any" min="0" class="form-control" id="mosque_area"
+                name="mosque_area" value="{{ old('mosque_area', $project->mosque_area ?? '') }}"
+                onwheel="this.blur()">
             @error('mosque_area')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -171,8 +183,9 @@
     <div class="col-md-3">
         <div class="form-group mb-3">
             <label for="cemetery_area">@lang('messages.cemetery_area')</label>
-            <input type="number" step="any" min="0" class="form-control" id="cemetery_area" name="cemetery_area"
-                value="{{ old('cemetery_area', $project->cemetery_area ?? '') }}" onwheel="this.blur()">
+            <input type="number" step="any" min="0" class="form-control" id="cemetery_area"
+                name="cemetery_area" value="{{ old('cemetery_area', $project->cemetery_area ?? '') }}"
+                onwheel="this.blur()">
             @error('cemetery_area')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -184,8 +197,9 @@
     <div class="col-md-3">
         <div class="form-group mb-3">
             <label for="social_waste_area">@lang('messages.social_waste_area')</label>
-            <input type="number" step="any" min="0" class="form-control" id="social_waste_area" name="social_waste_area"
-                 value="{{ old('social_waste_area', $project->social_waste_area ?? '') }}" onwheel="this.blur()">
+            <input type="number" step="any" min="0" class="form-control" id="social_waste_area"
+                name="social_waste_area" value="{{ old('social_waste_area', $project->social_waste_area ?? '') }}"
+                onwheel="this.blur()">
             @error('social_waste_area')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -194,8 +208,9 @@
     <div class="col-md-3">
         <div class="form-group mb-3">
             <label for="disposal_area">@lang('messages.disposable_area')</label>
-            <input type="number" step="any" min="0" class="form-control" id="disposable_area" name="disposal_area"
-                value="{{ old('disposal_area', $project->disposal_area ?? '') }}" onwheel="this.blur()">
+            <input type="number" step="any" min="0" class="form-control" id="disposable_area"
+                name="disposal_area" value="{{ old('disposal_area', $project->disposal_area ?? '') }}"
+                onwheel="this.blur()">
             @error('disposal_area')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -204,8 +219,10 @@
     <div class="col-md-3">
         <div class="form-group mb-3">
             <label for="commercial_plots_area">@lang('messages.commercial_area')</label>
-            <input type="number" step="any" min="0" class="form-control" id="commercial_area" name="commercial_plots_area"
-                 value="{{ old('commercial_plots_area', $project->commercial_plots_area ?? '') }}" onwheel="this.blur()">
+            <input type="number" step="any" min="0" class="form-control" id="commercial_area"
+                name="commercial_plots_area"
+                value="{{ old('commercial_plots_area', $project->commercial_plots_area ?? '') }}"
+                onwheel="this.blur()">
             @error('commercial_plots_area')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -214,8 +231,10 @@
     <div class="col-md-3">
         <div class="form-group mb-3">
             <label for="residential_plots_area">@lang('messages.residential_area')</label>
-            <input type="number" step="any" min="0" class="form-control" id="residential_area" name="residential_plots_area"
-                 value="{{ old('residential_plots_area', $project->residential_plots_area ?? '') }}" onwheel="this.blur()">
+            <input type="number" step="any" min="0" class="form-control" id="residential_area"
+                name="residential_plots_area"
+                value="{{ old('residential_plots_area', $project->residential_plots_area ?? '') }}"
+                onwheel="this.blur()">
             @error('residential_plots_area')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -226,8 +245,10 @@
     <div class="col-md-3">
         <div class="form-group mb-3">
             <label for="public_buildings_area">@lang('messages.public_buildings_area')</label>
-            <input type="number" step="any" min="0" class="form-control" id="public_buildings_area" name="public_buildings_area"
-                 value="{{ old('public_buildings_area', $project->public_buildings_area ?? '') }}" onwheel="this.blur()">
+            <input type="number" step="any" min="0" class="form-control" id="public_buildings_area"
+                name="public_buildings_area"
+                value="{{ old('public_buildings_area', $project->public_buildings_area ?? '') }}"
+                onwheel="this.blur()">
             @error('public_buildings_area')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -236,8 +257,9 @@
     <div class="col-md-3">
         <div class="form-group mb-3">
             <label for="miscellaneous_area">@lang('messages.miscellaneous_area')</label>
-            <input type="number" step="any" min="0" class="form-control" id="miscellaneous_area" name="miscellaneous_area"
-                 value="{{ old('miscellaneous_area', $project->miscellaneous_area ?? '') }}" onwheel="this.blur()">
+            <input type="number" step="any" min="0" class="form-control" id="miscellaneous_area"
+                name="miscellaneous_area" value="{{ old('miscellaneous_area', $project->miscellaneous_area ?? '') }}"
+                onwheel="this.blur()">
             @error('miscellaneous_area')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -246,8 +268,8 @@
     <div class="col-md-3">
         <div class="form-group mb-3">
             <label for="total_area">@lang('messages.total_area')</label>
-            <input type="number" step="any" min="0" class="form-control" id="total_area" name="total_area"
-                value="{{ old('total_area', $project->total_area ?? '') }}" readonly>
+            <input type="number" step="any" min="0" class="form-control" id="total_area"
+                name="total_area" value="{{ old('total_area', $project->total_area ?? '') }}" readonly>
             @error('total_area')
                 <div class="text-danger">{{ $message }}</div>
             @enderror

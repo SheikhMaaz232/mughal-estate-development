@@ -734,7 +734,7 @@
 
                                         {{-- @can('register.project') --}}
                                         <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('projects.index') ? ' active' : '' }}"
+                                            <a class="nav-main-link{{ request()->routeIs('projects.*') ? ' active' : '' }}"
                                                 href="{{ route('projects.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.projects')</span>
                                             </a>

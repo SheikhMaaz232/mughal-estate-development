@@ -39,6 +39,7 @@ class StoreProjectRequest extends FormRequest
             'commercial_plots_area' => 'required|numeric|min:0',
             'residential_plots_area' => 'required|numeric|min:0',
             'total_area' => 'required|numeric|min:0',
+            'residential_rate' => 'required|numeric|min:0',
         ];
     }
 

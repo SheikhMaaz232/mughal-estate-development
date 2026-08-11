@@ -254,7 +254,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let projectSquareFeet = 0;
     let warningShown = false;
 
-    // 🔹 Facing percentage mapping
+    //  Facing percentage mapping
     const facingPercentages = {
         1: 15,
         2: 25,
@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", function () {
         25: 25
     };
 
-    // 🔹 Totals calculation (marla + sq.ft.)
+    //  Totals calculation (marla + sq.ft.)
     function calculateTotals() {
         const kanal = parseFloat(kanalInput.value) || 0;
         const marla = parseFloat(marlaInput.value) || 0;
@@ -325,7 +325,7 @@ document.addEventListener("DOMContentLoaded", function () {
         totalSquareFeetInput.value = totalSqFt > 0 ? totalSqFt.toFixed(2) : "0";
     }
 
-    // 🔹 Total amount calculation
+    // Total amount calculation
     function calculateTotalAmount() {
         const totalSqFt = parseFloat(totalSquareFeetInput.value) || 0;
         const rate = parseFloat(amountInput.value) || 0;
@@ -345,7 +345,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // 🔹 AJAX project squareFeet fetch
+    // AJAX project squareFeet fetch
     $('#project').on('change', function () {
         const projectId = this.value;
 
@@ -373,7 +373,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // 🔹 Event bindings
+    //  Event bindings
     squareFeetInput.addEventListener('input', function () {
         calculateTotals();
         calculateTotalAmount();

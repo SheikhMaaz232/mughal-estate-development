@@ -1399,5 +1399,6 @@ return [
     'expand-all' => 'سب کو پھیلائیں',
     'collapse-all' => 'سب کو بند کریں',
     'hide-Level-6' => 'لیول 6 چھپائیں',
-    'show-Level-6' => 'لیول 6 دکھائیں'
+    'show-Level-6' => 'لیول 6 دکھائیں',
+    'residential_rate' => 'رہائشی پلاٹ کی رقم',
 ];
