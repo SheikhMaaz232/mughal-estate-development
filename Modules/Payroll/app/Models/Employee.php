@@ -21,7 +21,7 @@ class Employee extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['first_name_en', 'last_name_en', 'first_name_ur','profile_picture', 'last_name_ur', 'department_id', 'designation_id', 'joining_date', 'father_name_en', 'father_name_ur', 'cnic', 'dob', 'basic_salary', 'device_id', 'shift_id', 'gender', 'marital_status'];
+    protected $fillable = ['first_name_en', 'last_name_en', 'first_name_ur','profile_picture', 'last_name_ur', 'department_id', 'designation_id', 'joining_date', 'father_name_en', 'father_name_ur', 'cnic', 'dob', 'basic_salary', 'device_id', 'shift_id','device_user_id' , 'gender', 'marital_status'];
 
     /**
      * The attributes that aren't mass assignable.

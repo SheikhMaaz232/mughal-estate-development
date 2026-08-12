@@ -598,13 +598,15 @@
                                     <span class="nav-main-link-name">@lang('menu.dashboard')</span>
                                 </a>
                             </li>
-                            <li class="nav-main-item">
-                                <a class="nav-main-link{{ request()->is('/payroll') ? ' active' : '' }}"
-                                    href="/payroll">
-                                    <i class="nav-main-link-icon si si-wallet"></i>
-                                    <span class="nav-main-link-name">@lang('menu.payroll')</span>
-                                </a>
-                            </li>
+                            @can('payroll.view')
+                                <li class="nav-main-item">
+                                    <a class="nav-main-link{{ request()->is('/payroll') ? ' active' : '' }}"
+                                        href="/payroll">
+                                        <i class="nav-main-link-icon si si-wallet"></i>
+                                        <span class="nav-main-link-name">@lang('menu.payroll')</span>
+                                    </a>
+                                </li>
+                            @endcan
                             {{--  <li class="nav-main-heading">Various</li>  --}}
                             <li
                                 class="nav-main-item{{ request()->is('users*') ||
@@ -1348,12 +1350,12 @@
                                             </a>
                                         </li>
 
-                                         <li class="nav-main-item">
-                                                    <a class="nav-main-link{{ request()->routeIs('generalJournal.ledger') ? ' active' : '' }}"
-                                                        href="{{ route('generalJournal.ledger') }}">
-                                                        <span class="nav-main-link-name">@lang('menu.general_journal_ledger')</span>
-                                                    </a>
-                                                </li>
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('generalJournal.ledger') ? ' active' : '' }}"
+                                                href="{{ route('generalJournal.ledger') }}">
+                                                <span class="nav-main-link-name">@lang('menu.general_journal_ledger')</span>
+                                            </a>
+                                        </li>
 
                                         <li
                                             class="nav-main-item{{ request()->routeIs('reports.stock-report.filter') ? ' open' : '' }}">

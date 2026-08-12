@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('employees', function (Blueprint $table) {
             $table->unsignedBigInteger('shift_id')->nullable()->after('id');
             $table->unsignedBigInteger('device_id')->nullable()->after('shift_id');
+            $table->string('device_user_id')->nullable()->after('device_id');
 
             $table->foreign('shift_id')
                 ->references('id')
@@ -24,6 +25,8 @@ return new class extends Migration
                 ->references('id')
                 ->on('attendance_devices')
                 ->onDelete('set null');
+
+            $table->unique(['device_id', 'device_user_id']);
         });
     }
 
