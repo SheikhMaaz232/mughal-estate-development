@@ -923,140 +923,149 @@
                                         <i class="nav-main-link-icon si si-calculator"></i>
                                         <span class="nav-main-link-name">@lang('menu.account_module')</span>
                                     </a>
-                                    <ul class="nav-main-submenu">
+                                @endcan
+                                <ul class="nav-main-submenu">
 
-                                        {{-- @can('user.list') --}}
-                                        <li
-                                            class="nav-main-item{{ request()->routeIs('main-heads.*') || request()->routeIs('control-heads.*') || request()->routeIs('sub-heads.*') || request()->routeIs('sub-sub-heads.*') || request()->routeIs('sub-sub-sub-heads.*') || request()->routeIs('detail-accounts.*') || request()->routeIs('detail-accounts.tree') || request()->routeIs('products.*') ? ' open' : '' }}">
-                                            @can('chart_of_account.view')
-                                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                                    aria-haspopup="true" aria-expanded="true" href="#">
+                                    {{-- @can('user.list') --}}
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('main-heads.*') || request()->routeIs('control-heads.*') || request()->routeIs('sub-heads.*') || request()->routeIs('sub-sub-heads.*') || request()->routeIs('sub-sub-sub-heads.*') || request()->routeIs('detail-accounts.*') || request()->routeIs('detail-accounts.tree') || request()->routeIs('products.*') ? ' open' : '' }}">
+                                        @can('chart_of_account.view')
+                                            <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                                aria-haspopup="true" aria-expanded="true" href="#">
 
-                                                    <span class="nav-main-link-name">@lang('menu.chart_of_account')</span>
-                                                </a>
-                                                <ul class="nav-main-submenu">
-                                                    @can('main_head.list')
-                                                        <li class="nav-main-item">
-                                                            <a class="nav-main-link{{ request()->routeIs('main-heads.index') ? ' active' : '' }}"
-                                                                href="{{ route('main-heads.index') }}">
-                                                                <span class="nav-main-link-name">@lang('menu.main-heads')</span>
-                                                            </a>
-                                                        </li>
-                                                    @endcan
-                                                    @can('control_head.list')
-                                                        <li class="nav-main-item">
-                                                            <a class="nav-main-link{{ request()->routeIs('control-heads.index') ? ' active' : '' }}"
-                                                                href="{{ route('control-heads.index') }}">
-                                                                <span class="nav-main-link-name">@lang('menu.control-heads')</span>
-                                                            </a>
-                                                        </li>
-                                                    @endcan
-                                                    @can('sub_head.list')
-                                                        <li class="nav-main-item">
-                                                            <a class="nav-main-link{{ request()->routeIs('sub-heads.index') ? ' active' : '' }}"
-                                                                href="{{ route('sub-heads.index') }}">
-                                                                <span class="nav-main-link-name">@lang('menu.sub-heads')</span>
-                                                            </a>
-                                                        </li>
-                                                    @endcan
-                                                    @can('sub_sub_head.list')
-                                                        <li class="nav-main-item">
-                                                            <a class="nav-main-link{{ request()->routeIs('sub-sub-heads.index') ? ' active' : '' }}"
-                                                                href="{{ route('sub-sub-heads.index') }}">
-                                                                <span class="nav-main-link-name">@lang('menu.sub-sub-heads')</span>
-                                                            </a>
-                                                        </li>
-                                                    @endcan
-                                                    @can('sub_sub_sub_head.list')
-                                                        <li class="nav-main-item">
-                                                            <a class="nav-main-link{{ request()->routeIs('sub-sub-sub-heads.index') ? ' active' : '' }}"
-                                                                href="{{ route('sub-sub-sub-heads.index') }}">
-                                                                <span class="nav-main-link-name">@lang('menu.sub-sub-sub-heads')</span>
-                                                            </a>
-                                                        </li>
-                                                    @endcan
-                                                    @can('products.list')
-                                                        <li class="nav-main-item">
-                                                            <a class="nav-main-link{{ request()->routeIs('products.index') ? ' active' : '' }}"
-                                                                href="{{ route('products.index') }}">
-                                                                <span class="nav-main-link-name">@lang('menu.products')</span>
-                                                            </a>
-                                                        </li>
-                                                    @endcan
-                                                    @can('detailAccounts.list')
-                                                        <li class="nav-main-item">
-                                                            <a class="nav-main-link{{ request()->routeIs('detail-accounts.index') ? ' active' : '' }}"
-                                                                href="{{ route('detail-accounts.index') }}">
-                                                                <span class="nav-main-link-name">@lang('menu.detail-accounts')</span>
-                                                            </a>
-                                                        </li>
-                                                    @endcan
-                                                    @can('TreeView.list')
-                                                        <li class="nav-main-item">
-                                                            <a class="nav-main-link{{ request()->routeIs('detail-accounts.tree') ? ' active' : '' }}"
-                                                                href="{{ route('detail-accounts.tree') }}">
-                                                                <span class="nav-main-link-name">@lang('menu.accounts_tree')</span>
-                                                            </a>
-                                                        </li>
-                                                    @endcan
-                                                </ul>
-                                            @endcan
-                                        </li>
+                                                <span class="nav-main-link-name">@lang('menu.chart_of_account')</span>
+                                            </a>
+                                            <ul class="nav-main-submenu">
+                                                @can('main_head.list')
+                                                    <li class="nav-main-item">
+                                                        <a class="nav-main-link{{ request()->routeIs('main-heads.index') ? ' active' : '' }}"
+                                                            href="{{ route('main-heads.index') }}">
+                                                            <span class="nav-main-link-name">@lang('menu.main-heads')</span>
+                                                        </a>
+                                                    </li>
+                                                @endcan
+                                                @can('control_head.list')
+                                                    <li class="nav-main-item">
+                                                        <a class="nav-main-link{{ request()->routeIs('control-heads.index') ? ' active' : '' }}"
+                                                            href="{{ route('control-heads.index') }}">
+                                                            <span class="nav-main-link-name">@lang('menu.control-heads')</span>
+                                                        </a>
+                                                    </li>
+                                                @endcan
+                                                @can('sub_head.list')
+                                                    <li class="nav-main-item">
+                                                        <a class="nav-main-link{{ request()->routeIs('sub-heads.index') ? ' active' : '' }}"
+                                                            href="{{ route('sub-heads.index') }}">
+                                                            <span class="nav-main-link-name">@lang('menu.sub-heads')</span>
+                                                        </a>
+                                                    </li>
+                                                @endcan
+                                                @can('sub_sub_head.list')
+                                                    <li class="nav-main-item">
+                                                        <a class="nav-main-link{{ request()->routeIs('sub-sub-heads.index') ? ' active' : '' }}"
+                                                            href="{{ route('sub-sub-heads.index') }}">
+                                                            <span class="nav-main-link-name">@lang('menu.sub-sub-heads')</span>
+                                                        </a>
+                                                    </li>
+                                                @endcan
+                                                @can('sub_sub_sub_head.list')
+                                                    <li class="nav-main-item">
+                                                        <a class="nav-main-link{{ request()->routeIs('sub-sub-sub-heads.index') ? ' active' : '' }}"
+                                                            href="{{ route('sub-sub-sub-heads.index') }}">
+                                                            <span class="nav-main-link-name">@lang('menu.sub-sub-sub-heads')</span>
+                                                        </a>
+                                                    </li>
+                                                @endcan
+                                                @can('products.list')
+                                                    <li class="nav-main-item">
+                                                        <a class="nav-main-link{{ request()->routeIs('products.index') ? ' active' : '' }}"
+                                                            href="{{ route('products.index') }}">
+                                                            <span class="nav-main-link-name">@lang('menu.products')</span>
+                                                        </a>
+                                                    </li>
+                                                @endcan
+                                                @can('detailAccounts.list')
+                                                    <li class="nav-main-item">
+                                                        <a class="nav-main-link{{ request()->routeIs('detail-accounts.index') ? ' active' : '' }}"
+                                                            href="{{ route('detail-accounts.index') }}">
+                                                            <span class="nav-main-link-name">@lang('menu.detail-accounts')</span>
+                                                        </a>
+                                                    </li>
+                                                @endcan
+                                                @can('TreeView.list')
+                                                    <li class="nav-main-item">
+                                                        <a class="nav-main-link{{ request()->routeIs('detail-accounts.tree') ? ' active' : '' }}"
+                                                            href="{{ route('detail-accounts.tree') }}">
+                                                            <span class="nav-main-link-name">@lang('menu.accounts_tree')</span>
+                                                        </a>
+                                                    </li>
+                                                @endcan
+                                            </ul>
+                                        @endcan
+                                    </li>
 
-                                        <li
-                                            class="nav-main-item{{ request()->routeIs('bank-payment-voucher.*') || request()->routeIs('bank-receipt-voucher.*') || request()->routeIs('cash-payment-voucher.*') || request()->routeIs('cash-receipt-voucher.*') || request()->routeIs('jv-voucher.*') ? ' open' : '' }}">
-                                            @can('vouchers.view')
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('bank-payment-voucher.*') || request()->routeIs('bank-receipt-voucher.*') || request()->routeIs('bank-receipt-voucher.approval-list') || request()->routeIs('cash-payment-voucher.*') || request()->routeIs('cash-receipt-voucher.*') || request()->routeIs('jv-voucher.*') ? ' open' : '' }}">
+                                        @can('vouchers.view')
                                             <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                                 aria-haspopup="true" aria-expanded="true" href="#">
                                                 <span class="nav-main-link-name">@lang('menu.vouchers')</span>
                                             </a>
-                                            
-                                            <ul class="nav-main-submenu">
-                                                @can('bpv.list')
+                                        @endcan
+                                        <ul class="nav-main-submenu">
+                                            @can('bpv.list')
                                                 <li class="nav-main-item">
                                                     <a class="nav-main-link{{ request()->routeIs('bank-payment-voucher.*') ? ' active' : '' }}"
                                                         href="{{ route('bank-payment-voucher.index') }}">
                                                         <span class="nav-main-link-name">@lang('menu.bpv')</span>
                                                     </a>
                                                 </li>
-                                                @endcan
-                                                @can('brv.list')
+                                            @endcan
+                                            @can('brv.list')
                                                 <li class="nav-main-item">
                                                     <a class="nav-main-link{{ request()->routeIs('bank-receipt-voucher.*') ? ' active' : '' }}"
                                                         href="{{ route('bank-receipt-voucher.index') }}">
                                                         <span class="nav-main-link-name">@lang('menu.brv')</span>
                                                     </a>
                                                 </li>
-                                                @endcan
-                                                @can('cpv.list')
+                                            @endcan
+                                            @can('brv-approval.list')
+                                                <li class="nav-main-item">
+                                                    <a class="nav-main-link{{ request()->routeIs('bank-receipt-voucher.approval-list') ? ' active' : '' }}"
+                                                        href="{{ route('bank-receipt-voucher.approval-list') }}">
+                                                        <span class="nav-main-link-name">@lang('menu.brv_approval')</span>
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                            @can('cpv.list')
                                                 <li class="nav-main-item">
                                                     <a class="nav-main-link{{ request()->routeIs('cash-payment-voucher.*') ? ' active' : '' }}"
                                                         href="{{ route('cash-payment-voucher.index') }}">
                                                         <span class="nav-main-link-name">@lang('menu.cpv')</span>
                                                     </a>
                                                 </li>
-                                                @endcan
-                                                @can('crv.list')
+                                            @endcan
+                                            @can('crv.list')
                                                 <li class="nav-main-item">
                                                     <a class="nav-main-link{{ request()->routeIs('cash-receipt-voucher.*') ? ' active' : '' }}"
                                                         href="{{ route('cash-receipt-voucher.index') }}">
                                                         <span class="nav-main-link-name">@lang('menu.crv')</span>
                                                     </a>
                                                 </li>
-                                                @endcan
-                                                @can('jv.list')
+                                            @endcan
+                                            @can('jv.list')
                                                 <li class="nav-main-item">
                                                     <a class="nav-main-link{{ request()->routeIs('jv-voucher.*') ? ' active' : '' }}"
                                                         href="{{ route('jv-voucher.index') }}">
                                                         <span class="nav-main-link-name">@lang('menu.journal_voucher')</span>
                                                     </a>
                                                 </li>
-                                                @endcan
-                                            </ul>
                                             @endcan
-                                        </li>
+                                        </ul>
 
-                                        {{-- <li
+                                    </li>
+
+                                    {{-- <li
                                             class="nav-main-item{{ request()->routeIs('client-invoices.*') || request()->routeIs('receipts.*') ? ' open' : '' }}">
                                             <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                                 aria-haspopup="true" aria-expanded="true" href="#">
@@ -1084,9 +1093,9 @@
                                             </ul>
                                         </li> --}}
 
-                                        <li
-                                            class="nav-main-item{{ request()->routeIs('partyAccount.*') ? ' open' : '' }}">
-                                            @can('partyLedger.view')
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('partyAccount.*') ? ' open' : '' }}">
+                                        @can('partyLedger.view')
                                             <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                                 aria-haspopup="true" aria-expanded="true" href="#">
                                                 <span class="nav-main-link-name">@lang('menu.ledgers')</span>
@@ -1100,10 +1109,10 @@
                                                 </li>
 
                                             </ul>
-                                            @endcan
-                                        </li>
-                                    </ul>
-                                @endcan
+                                        @endcan
+                                    </li>
+                                </ul>
+
                             </li>
 
 

@@ -92,6 +92,7 @@ return [
     'available-plots-report' => 'Available Plots Report',
     'direct-products-report' => 'Projects Plots Summary',
     'bank_book' => 'Bank Book',
-    'executive-reports' => 'Executive Reports'
+    'executive-reports' => 'Executive Reports',
+    'brv_approval' => 'BRV Approval'
 
 ];

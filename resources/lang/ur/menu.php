@@ -94,5 +94,6 @@ return [
     'client-invoices' => 'کلائنٹ انوائسز',
     'outstanding-receivables' => 'بقایا جات',
     'receipt-history' => 'رسیدوں کی تاریخ',
-    'executive-reports' => 'ایگزیکٹو رپورٹس'
+    'executive-reports' => 'ایگزیکٹو رپورٹس',
+    'brv_approval' => 'بی آر وی کی منظوری'
 ];

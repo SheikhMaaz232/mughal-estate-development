@@ -41,17 +41,65 @@ class BankReceiptVoucherController extends Controller
     /**
      * Display a listing of bankReceiptVouchers.
      */
-    public function index(Request $request)
+    public function approvalList(Request $request)
     {
         $filters = $request->all();
-        $bankReceiptVouchers = BankReceiptVoucher::with('project', 'detailAccount', 'bank')->search($filters)->latest()->paginate(10)->withQueryString();
 
-        return view('registration.vouchers.brv.index', array_merge(
+        $bankReceiptVouchers = BankReceiptVoucher::with([
+            'project',
+            'detailAccount',
+            'bank'
+        ])
+            ->search($filters)
+            ->orderByRaw("CASE WHEN status = 'Unverified' THEN 0 ELSE 1 END")
+            ->orderByDesc('id')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('registration.vouchers.brv.approvallist', array_merge(
             [
                 'bankReceiptVouchers' => $bankReceiptVouchers,
             ],
             $this->getMasterData()
         ));
+    }
+
+    public function index(Request $request)
+    {
+        $filters = $request->all();
+
+        $hasFilters =
+            $request->filled('voucher_no') ||
+            $request->filled('project_id') ||
+            $request->filled('detail_account_id') ||
+            $request->filled('bank_id');
+
+        if ($hasFilters) {
+            $bankReceiptVouchers = BankReceiptVoucher::where('status', 'verified')->with([
+                'project',
+                'detailAccount',
+                'bank'
+            ])
+                ->search($filters)
+                ->latest()
+                ->paginate(10)
+                ->withQueryString();
+        } else {
+            // Empty paginator so nothing is shown initially
+            $bankReceiptVouchers = BankReceiptVoucher::whereRaw('1 = 0')
+                ->paginate(10);
+        }
+
+        return view(
+            'registration.vouchers.brv.index',
+            array_merge(
+                [
+                    'bankReceiptVouchers' => $bankReceiptVouchers,
+                    'hasFilters' => $hasFilters,
+                ],
+                $this->getMasterData()
+            )
+        );
     }
 
     /**
@@ -74,8 +122,9 @@ class BankReceiptVoucherController extends Controller
      */
     public function store(BankReceiptVoucherRequest $request)
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
+
             $data = $request->all();
 
             $bRVoucherData = app(bankReceiptVoucherService::class)->create($data);
@@ -141,6 +190,63 @@ class BankReceiptVoucherController extends Controller
     public function show(BankReceiptVoucher $bankReceiptVoucher)
     {
         return view('registration.vouchers.brv.show', compact('bankReceiptVoucher'));
+    }
+
+    public function approve($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $bankReceiptVoucher = BankReceiptVoucher::findOrFail($id);
+
+            if ($bankReceiptVoucher->status === 'verified') {
+                throw new \Exception('Voucher is already verified.');
+            }
+
+            $documentNo = 'BRV-' . $bankReceiptVoucher->id;
+
+            $ledgerExists = AccountLedger::where('document_number', $documentNo)
+                ->where('invoice_id', $bankReceiptVoucher->id)
+                ->exists();
+
+            if ($ledgerExists) {
+                throw new \Exception('Ledger entries already exist for this voucher.');
+            }
+
+            /*
+         * Create AccountLedger entries.
+         *
+         * These methods should create the debit and credit
+         * ledger entries for this BRV.
+         */
+            $this->bankReceiptVoucherService->prepareAccountDebitData(
+                $bankReceiptVoucher,
+                $bankReceiptVoucher->id
+            );
+
+            $this->bankReceiptVoucherService->prepareAccountCreditData(
+                $bankReceiptVoucher,
+                $bankReceiptVoucher->id
+            );
+
+            // Mark BRV as verified
+            $bankReceiptVoucher->update([
+                'status' => 'verified',
+            ]);
+
+            DB::commit();
+
+            return redirect()
+                ->back()
+                ->with('success', __('messages.voucher-approved'));
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**

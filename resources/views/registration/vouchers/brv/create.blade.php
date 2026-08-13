@@ -106,6 +106,11 @@
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
+                        <select name="status" id="status"
+                            class="form-control form-select @error('status') is-invalid @enderror" hidden>
+                            <option value="Unverified" {{ old('status') == 'Unverified' ? 'selected' : '' }}>Unverified
+                            </option>
+                        </select>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -146,8 +151,7 @@
                                     @lang('messages.proceeding_fees')
                                 </option>
 
-                                <option value="gst"
-                                    {{ old('transaction_type') == 'gst' ? 'selected' : '' }}>
+                                <option value="gst" {{ old('transaction_type') == 'gst' ? 'selected' : '' }}>
                                     @lang('messages.gst')
                                 </option>
 
@@ -156,8 +160,7 @@
                                     @lang('messages.registry_fees')
                                 </option>
 
-                                <option value="null"
-                                    {{ old('transaction_type') == 'null' ? 'selected' : '' }}>
+                                <option value="null" {{ old('transaction_type') == 'null' ? 'selected' : '' }}>
                                     @lang('messages.others')
                                 </option>
 

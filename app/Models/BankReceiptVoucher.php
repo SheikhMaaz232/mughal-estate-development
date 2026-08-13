@@ -18,7 +18,8 @@ class BankReceiptVoucher extends Model implements Auditable
         'description_ur',
         'total_amount',
         'attachment',
-        'transaction_type'
+        'transaction_type',
+        'status'
     ];
 
     public function project()
@@ -36,23 +37,46 @@ class BankReceiptVoucher extends Model implements Auditable
         return $this->belongsTo(DetailAccount::class, 'bank_id');
     }
 
-    public function scopeSearch($query,  $request = null)
+    public function scopeSearch($query, $filters)
     {
-        return $query
-            ->when(!empty($request['voucher_no']), function ($q) use ($request) {
-                $q->where('id', $request['voucher_no']);
-            })
+        if (!empty($filters['detail_account_id'])) {
 
-            ->when(isset($request['detail_account_id']) && is_array($request['detail_account_id']), function ($q) use ($request) {
-                $q->whereIn('detail_account_id', $request['detail_account_id']);
-            })
-            ->when(isset($request['bank_id']) && is_array($request['bank_id']), function ($q) use ($request) {
-                $q->whereIn('bank_id', $request['bank_id']);
-            })
-            ->when(!empty($request['project_id']), function ($q) use ($request) {
-                $q->whereHas('detailAccount.subSubSubHead', function ($query) use ($request) {
-                    $query->where('project_id', $request['project_id']);
-                });
-            });
+            $detailAccountIds = (array) $filters['detail_account_id'];
+
+            $query->whereIn(
+                'detail_account_id',
+                $detailAccountIds
+            );
+        }
+
+        if (!empty($filters['bank_id'])) {
+
+            $bankIds = (array) $filters['bank_id'];
+
+            $query->whereIn(
+                'bank_id',
+                $bankIds
+            );
+        }
+
+        if (!empty($filters['project_id'])) {
+
+            $projectIds = (array) $filters['project_id'];
+
+            $query->whereIn(
+                'project_id',
+                $projectIds
+            );
+        }
+
+        if (!empty($filters['voucher_no'])) {
+
+            $query->where(
+                'id',
+                $filters['voucher_no']
+            );
+        }
+
+        return $query;
     }
 }

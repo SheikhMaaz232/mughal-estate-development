@@ -7,9 +7,7 @@
                 <div class="flex-grow-1">
                     <h2 class="fs-base lh-base fw-medium text-muted mb-0">@lang('messages.list-of-brv')</h2>
                 </div>
-                @can('brv.create')
-                    <a href="{{ route('bank-receipt-voucher.create') }}" class="btn btn-sm btn-primary">@lang('messages.add-voucher')</a>
-                @endcan
+                <a href="{{ route('bank-receipt-voucher.create') }}" class="btn btn-sm btn-primary">@lang('messages.add-voucher')</a>
             </div>
         </div>
     </div>
@@ -30,7 +28,7 @@
             </div>
         @endif
 
-        <form method="GET" action="{{ route('bank-receipt-voucher.index') }}">
+        <form method="GET" action="{{ route('bank-receipt-voucher.approval-list') }}">
             <div class="row">
                 <div class="col-lg-6 mb-3">
                     <label for="detail_account_id">@lang('messages.detail_account')</label>
@@ -82,7 +80,7 @@
                     <button class="btn btn-primary" type="submit">@lang('messages.search')</button>
 
                     @if (request()->hasAny(['detail_account_id', 'bank_id']))
-                        <a href="{{ route('bank-receipt-voucher.index') }}" class="btn btn-secondary">@lang('messages.clear')</a>
+                        <a href="{{ route('bank-receipt-voucher.approval-list') }}" class="btn btn-secondary">@lang('messages.clear')</a>
                     @endif
                 </div>
             </div>
@@ -130,61 +128,54 @@
 
                                 <td class="text-center">
                                     <div class="btn-group">
-                                        @can('brv.edit')
-                                            <a href="{{ route('bank-receipt-voucher.edit', $bankReceiptVoucher->id) }}"
-                                                class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                                data-bs-toggle="tooltip" aria-label="Edit sub Head"
-                                                data-bs-original-title="Edit sub Head"> <i
-                                                    class="fa fa-fw fa-pencil-alt"></i></a>
-                                        @endcan
+
+                                        <a href="{{ route('bank-receipt-voucher.edit', $bankReceiptVoucher->id) }}"
+                                            class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                            data-bs-toggle="tooltip" aria-label="Edit sub Head"
+                                            data-bs-original-title="Edit sub Head"> <i
+                                                class="fa fa-fw fa-pencil-alt"></i></a>
 
                                         @if ($bankReceiptVoucher->status === 'Unverified')
-                                            @can('brv.approve')
-                                                <form method="POST"
-                                                    action="{{ route('bank-receipt-voucher.approve', $bankReceiptVoucher->id) }}"
-                                                    class="d-inline-block"
-                                                    onsubmit="return confirm('Are you sure you want to approve this voucher?');">
+                                            <form method="POST"
+                                                action="{{ route('bank-receipt-voucher.approve', $bankReceiptVoucher->id) }}"
+                                                class="d-inline-block"
+                                                onsubmit="return confirm('Are you sure you want to approve this voucher?');">
 
-                                                    @csrf
+                                                @csrf
 
-                                                    <button type="submit" class="btn btn-sm btn-alt-success"
-                                                        data-bs-toggle="tooltip" title="Approve">
+                                                <button type="submit" class="btn btn-sm btn-alt-success"
+                                                    data-bs-toggle="tooltip" title="Approve">
 
-                                                        <i class="fa fa-fw fa-check"></i>
-                                                    </button>
+                                                    <i class="fa fa-fw fa-check"></i>
+                                                </button>
 
-                                                </form>
-                                            @endcan
+                                            </form>
                                         @endif
                                         @if ($bankReceiptVoucher->status === 'verified')
-                                            @can('brv.delete')
-                                                <form method="POST"
-                                                    action="{{ route('bank-receipt-voucher.destroy', $bankReceiptVoucher->id) }}"
-                                                    class="d-inline-block delete-form">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-alt-danger js-bs-tooltip-enabled btn-delete"
-                                                        data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                                                        <i class="fa fa-fw fa-times text-danger"></i>
-                                                    </button>
+                                            <form method="POST"
+                                                action="{{ route('bank-receipt-voucher.destroy', $bankReceiptVoucher->id) }}"
+                                                class="d-inline-block delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button"
+                                                    class="btn btn-sm btn-alt-danger js-bs-tooltip-enabled btn-delete"
+                                                    data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                                    <i class="fa fa-fw fa-times text-danger"></i>
+                                                </button>
 
-                                                </form>
-                                            @endcan
-                                            @can('brv.show')
-                                                <a href="{{ route('bank-receipt-voucher.show', $bankReceiptVoucher->id) }}"
-                                                    class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                                    data-bs-toggle="tooltip" aria-label="View bankReceiptVoucher"
-                                                    data-bs-original-title="View bankReceiptVoucher">
-                                                    <i class="fa fa-fw fa-eye"></i>
-                                                </a>
-                                            @endcan
-                                            @can('brv.print')
-                                                <a href="{{ route('bank-receipt-voucher.print', $bankReceiptVoucher->id) }}"
-                                                    class="btn btn-sm btn-alt-success" target="_blank" title="Print">
-                                                    <i class="fa fa-fw fa-print"></i>
-                                                </a>
-                                            @endcan
+                                            </form>
+
+                                            <a href="{{ route('bank-receipt-voucher.show', $bankReceiptVoucher->id) }}"
+                                                class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                data-bs-toggle="tooltip" aria-label="View bankReceiptVoucher"
+                                                data-bs-original-title="View bankReceiptVoucher">
+                                                <i class="fa fa-fw fa-eye"></i>
+                                            </a>
+
+                                            <a href="{{ route('bank-receipt-voucher.print', $bankReceiptVoucher->id) }}"
+                                                class="btn btn-sm btn-alt-success" target="_blank" title="Print">
+                                                <i class="fa fa-fw fa-print"></i>
+                                            </a>
                                         @endif
                                     </div>
                                 </td>

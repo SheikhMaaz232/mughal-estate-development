@@ -311,6 +311,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/bookings/transfer', [BookingApplicationController::class, 'transfer'])->name('bookings.transfer');
     Route::resource('parties', RegisteredPartiesController::class);
     Route::resource('bank-payment-voucher', BankPaymentVoucherController::class);
+    Route::get('bank-receipt-voucher/approval-list', [BankReceiptVoucherController::class, 'approvalList'])->name('bank-receipt-voucher.approval-list');
+    Route::post('bank-receipt-voucher/{id}/approve', [BankReceiptVoucherController::class, 'approve'])->name('bank-receipt-voucher.approve');
     Route::get('bank-payment-voucher/{id}/print', [BankPaymentVoucherController::class, 'print'])->name('bank-payment-voucher.print');
     Route::get('bank-receipt-voucher/{id}/print', [BankReceiptVoucherController::class, 'print'])->name('bank-receipt-voucher.print');
     Route::get('bank-payment-voucher/get-bank-detail-account/{projectId}', [BankPaymentVoucherController::class, 'getBankAndDetailAccount'])->name('get.bank.detail.account');
