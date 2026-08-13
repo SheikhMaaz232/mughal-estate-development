@@ -128,8 +128,6 @@ class BankReceiptVoucherController extends Controller
             $data = $request->all();
 
             $bRVoucherData = app(bankReceiptVoucherService::class)->create($data);
-            $this->bankReceiptVoucherService->prepareAccountDebitData($request, $bRVoucherData->id);
-            $this->bankReceiptVoucherService->prepareAccountCreditData($request, $bRVoucherData->id);
 
             DB::commit();
             return redirect()->route('bank-receipt-voucher.index')->with('success', __('messages.record-saved'));
