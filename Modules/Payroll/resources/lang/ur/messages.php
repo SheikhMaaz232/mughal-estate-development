@@ -543,4 +543,5 @@ return [
     'attendance-processed-for-date' => 'حاضری پر عملدرآمد',
     'manual-attendance-saved' => 'مینول حاضری کامیابی سے محفوظ ہو گئی۔',
     'designations-management' => 'عہدوں کا انتظام',
+    'device_user_id' => 'ملازم ڈیوائس آئی ڈی'
 ];

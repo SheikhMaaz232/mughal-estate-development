@@ -533,6 +533,7 @@ return [
     'used-days' => 'Used Days',
     'attendance-processed-for-date' => 'Attendance has been processed for this date.',
     'manual-attendance-saved' => 'Manual attendance saved successfully.',
-    'designations-management' => 'Designations Management'
+    'designations-management' => 'Designations Management',
+    'device_user_id' => 'Device User ID',
 
 ];

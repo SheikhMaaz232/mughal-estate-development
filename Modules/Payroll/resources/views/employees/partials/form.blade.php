@@ -139,6 +139,15 @@
 
                                     <div class="row">
                                         <div class="col-md-4 mb-3">
+                                            <label for="device_user_id" class="form-label">@lang('payroll::messages.device_user_id')</label>
+                                            <input type="number" step="0.01" name="device_user_id"
+                                                class="form-control @error('device_user_id') is-invalid @enderror"
+                                                value="{{ old('device_user_id', $employee->device_user_id ?? 0) }}">
+                                            @error('device_user_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-4 mb-3">
                                             <label for="cnic" class="required-field">@lang('payroll::messages.cnic')</label>
                                             <input type="text" name="cnic" id="cnic" maxlength="15"
                                                 class="form-control" placeholder="XXXXX-XXXXXXX-X"
@@ -156,7 +165,9 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
+                                    </div>
 
+                                    <div class="row">
                                         <div class="col-md-4 mb-3">
                                             <label for="gender" class="required-field">@lang('payroll::messages.gender')</label>
                                             <select name="gender" class="form-select" id="gender">
@@ -172,9 +183,7 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div>
 
-                                    <div class="row">
                                         <div class="col-md-4 mb-3">
                                             <label for="marital_status">@lang('payroll::messages.marital-status')</label>
                                             <select name="marital_status" class="form-select" id="marital_status">

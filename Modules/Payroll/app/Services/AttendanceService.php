@@ -32,10 +32,10 @@ class AttendanceService
                 continue;
             }
 
-            $logs = AttendanceLog::where('device_user_id', $employee->device_id)
-                ->whereDate('punch_time', $date)
-                ->orderBy('punch_time')
-                ->get();
+
+            $logs = AttendanceLog::where('device_id', $employee->device_id)
+                ->where('device_user_id', $employee->device_user_id)
+                ->whereDate('punch_time', $date)->orderBy('punch_time')->get();
 
             $holiday = Holiday::whereDate('date', $date)->first();
 

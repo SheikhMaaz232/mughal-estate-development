@@ -38,7 +38,7 @@
                             @foreach ($employees as $employee)
                                 <option value="{{ $employee->id }}"
                                     {{ request('employee_id') == $employee->id ? 'selected' : '' }}>
-                                    {{ $employee->{'first_name_' . app()->getLocale()} }}{{ $employee->{'last_name_' . app()->getLocale()} }}
+                                    {{ $employee->{'first_name_' . app()->getLocale()} }} {{ $employee->{'last_name_' . app()->getLocale()} }}
                                     @if ($employee->designation)
                                         <br><small
                                             class="text-muted">({{ $employee->designation->{'title_' . app()->getLocale()} }})</small>
