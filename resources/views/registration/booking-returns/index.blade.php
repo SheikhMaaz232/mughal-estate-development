@@ -26,10 +26,10 @@
             </div>
         @endif
 
-        {{-- <form method="GET" action="{{ route('bookings.index') }}">
+        <form method="GET" action="{{ route('bookingReturns.index') }}">
             <div class="row">
                 <div class="col-lg-6 mb-3">
-                    <label for="main_head_id">@lang('messages.booking_date')</label>
+                    <label for="main_head_id">@lang('messages.date')</label>
                     <input type="text" value="{{ request('date') }}" name="date" id="date" class="form-control"
                         placeholder="@lang('messages.booking_date')">
                 </div>
@@ -45,93 +45,51 @@
                         @endforeach
                     </select>
                 </div>
+
             </div>
 
             <div class="row">
                 <div class="col-lg-6 mb-3">
-                    <label for="control_head_id">@lang('messages.control-heads')</label>
-                    <select name="control_head_id[]" id="control_head_id"
-                        class="form-control form-select select2 @error('control_head_id') is-invalid @enderror" multiple>
-                        @foreach ($searchControlHeads as $controlHead)
-                            <option value="{{ $controlHead->id }}"
-                                {{ collect(request('control_head_id'))->contains($controlHead->id) ? 'selected' : '' }}>
-                                {{ App::getLocale() === 'ur' ? $controlHead->name_ur ?? '-' : $controlHead->name_en ?? '-' }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-lg-6 mb-3">
-                    <label for="sub_head_id">@lang('messages.sub-heads')</label>
-                    <select name="sub_head_id[]" id="sub_head_id"
-                        class="form-control form-select select2 @error('sub_head_id') is-invalid @enderror" multiple>
-                        @foreach ($searchSubHeads as $subHead)
-                            <option value="{{ $subHead->id }}"
-                                {{ collect(request('sub_head_id'))->contains($subHead->id) ? 'selected' : '' }}>
-                                {{ App::getLocale() === 'ur' ? $subHead->name_ur ?? '-' : $subHead->name_en ?? '-' }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-6 mb-3">
-                    <label for="sub_sub_head_id">@lang('messages.sub-sub-heads')</label>
-                    <select name="sub_sub_head_id[]" id="sub_sub_head_id"
-                        class="form-control form-select select2 @error('sub_sub_head_id') is-invalid @enderror" multiple>
-                        @foreach ($searchSubSubHeads as $subSubHead)
-                            <option value="{{ $subSubHead->id }}"
-                                {{ collect(request('sub_sub_head_id'))->contains($subSubHead->id) ? 'selected' : '' }}>
-                                {{ App::getLocale() === 'ur' ? $subSubHead->name_ur ?? '-' : $subSubHead->name_en ?? '-' }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-
-                <div class="col-lg-6 mb-3">
-                    <label for="sub_sub_sub_head_id">@lang('messages.sub-sub-sub-heads')</label>
-                    <select name="sub_sub_sub_head_id[]" id="sub_sub_sub_head_id"
-                        class="form-control form-select select2 @error('sub_sub_sub_head_id') is-invalid @enderror"
-                        multiple>
-                        @foreach ($searchSubSubSubHeads as $subSubSubHead)
-                            <option value="{{ $subSubSubHead->id }}"
-                                {{ collect(request('sub_sub_head_id'))->contains($subSubSubHead->id) ? 'selected' : '' }}>
-                                {{ App::getLocale() === 'ur' ? $subSubSubHead->name_ur ?? '-' : $subSubSubHead->name_en ?? '-' }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-6 mb-3">
-                    <label for="party_id">@lang('messages.main_party')</label>
-                    <select name="party_id[]" id="party_id"
-                        class="form-control form-select select2 @error('party_id') is-invalid @enderror" multiple>
+                    <label for="party_id">@lang('messages.party')</label>
+                    <select name="party_id" id="party_id"
+                        class="form-control form-select select2 @error('party_id') is-invalid @enderror">
+                        <option value="">@lang('messages.select-an-option')</option>
                         @foreach ($searchParties as $searchParty)
                             <option value="{{ $searchParty->id }}"
                                 {{ collect(request('party_id'))->contains($searchParty->id) ? 'selected' : '' }}>
                                 {{ App::getLocale() === 'ur' ? $searchParty->name_ur ?? '-' : $searchParty->name_en ?? '-' }}
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $searchParty->cnic_no ?? 'N/A' }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                - {{ $searchParty->contact_number_1 ?? 'N/A' }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -
+                                {{ App::getLocale() === 'ur' ? $searchParty->cast->title_ur ?? '-' : $searchParty->cast->title_en ?? '-' }}
                             </option>
                         @endforeach
                     </select>
                 </div>
 
                 <div class="col-lg-6 mb-3">
-                    <label for="search">@lang('messages.name')</label>
-                    <input type="text" class="form-control" name="search" placeholder="@lang('messages.search')"
-                        value="{{ request('search') }}">
+                    <label for="search">@lang('messages.unit_no')</label>
+                    <input type="text" class="form-control" name="unit_no" placeholder="@lang('messages.unit_no')"
+                        value="{{ request('unit_no') }}">
+                </div>
+            </div>
+            <div class="row mb-3">
+                 <div class="col-lg-6">
+                    <label for="search">@lang('messages.booking_application_no')</label>
+                    <input type="number" step="any" min="0" onwheel="this.blur()" class="form-control"
+                        name="booking_application_no" placeholder="@lang('messages.booking_application_no')"
+                        value="{{ request('booking_application_no') }}">
                 </div>
 
                 <div class="col-lg-6">
                     <button class="btn btn-primary" type="submit">@lang('messages.search')</button>
 
-                    @if (request()->hasAny(['search', 'main_head_id', 'control_head_id', 'sub_head_id', 'sub_sub_head_id']))
-                        <a href="{{ route('detail-accounts.index') }}" class="btn btn-secondary">@lang('messages.clear')</a>
-                    @endif
+                    {{-- @if (request()->hasAny(['search'])) --}}
+                        <a href="{{ route('bookingReturns.index') }}" class="btn btn-secondary">@lang('messages.clear')</a>
+                    {{-- @endif --}}
                 </div>
             </div>
-        </form> --}}
+        </form>
 
         <div class="block block-rounded">
             <div class="block-content block-content-full">

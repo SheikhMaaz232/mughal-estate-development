@@ -13,8 +13,16 @@ class BookingReturn extends Model implements Auditable
     protected $table = 'booking_returns';
 
     protected $fillable = [
-        'booking_id','detail_account_id','receivable_detail_account_id',
-        'cancellation_charges_account_id', 'percentage_value','cash_bank_account','status', 'date', 'project_id', 'remarks'
+        'booking_id',
+        'detail_account_id',
+        'receivable_detail_account_id',
+        'cancellation_charges_account_id',
+        'percentage_value',
+        'cash_bank_account',
+        'status',
+        'date',
+        'project_id',
+        'remarks'
     ];
 
     /**
@@ -45,9 +53,44 @@ class BookingReturn extends Model implements Auditable
         return $this->belongsTo(DetailAccount::class, 'cash_bank_account');
     }
 
-     public function project()
+    public function project()
     {
         return $this->belongsTo(Project::class, 'project_id');
     }
 
+    public function scopeSearch($query, $filters = [])
+    {
+        return $query
+
+            ->when(!empty($filters['unit_no']), function ($q) use ($filters) {
+                $q->whereHas('bookingApplication.product', function ($q2) use ($filters) {
+                    $q2->where('unit_no', $filters['unit_no']);
+                });
+            })
+
+            ->when(!empty($filters['booking_application_no']), function ($q) use ($filters) {
+                $q->where('booking_id', $filters['booking_application_no']);
+            })
+
+            ->when(!empty($filters['date']), function ($q) use ($filters) {
+                $q->where('date', $filters['date']);
+            })
+
+            ->when(!empty($filters['party_id']), function ($q) use ($filters) {
+                $ids = is_array($filters['party_id'])
+                    ? $filters['party_id']
+                    : [$filters['party_id']];
+
+                $q->whereHas('bookingApplication', function ($q2) use ($ids) {
+                    $q2->whereIn('party_id', $ids);
+                });
+            })
+
+            ->when(!empty($filters['project_id']), function ($q) use ($filters) {
+                $ids = is_array($filters['project_id'])
+                    ? $filters['project_id']
+                    : [$filters['project_id']];
+                $q->whereIn('project_id', $ids);
+            });
+    }
 }

@@ -36,7 +36,7 @@ class PossessionLetterController extends Controller
     public function index(Request $request)
     {
         $search = $request->all();
-        $possessionLettersListing = PossessionLetter::with('project', 'product', 'party')->latest()->paginate(10);
+        $possessionLettersListing = PossessionLetter::with('project', 'product', 'party')->search($search)->latest()->paginate(10)->appends(request()->input());
 
         return view('registration.possession-letter.index', array_merge(
             [

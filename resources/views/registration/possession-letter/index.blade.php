@@ -28,65 +28,70 @@
             </div>
         @endif
 
-        {{-- <form method="GET" action="{{ route('possession-letter.index') }}">
+        <form method="GET" action="{{ route('possession-letter.index') }}">
             <div class="row">
                 <div class="col-lg-6 mb-3">
-                    <label for="cast_id">@lang('messages.cast')</label>
-                    <select name="cast_id[]" id="cast_id"
-                        class="form-control form-select select2 @error('cast_id') is-invalid @enderror" multiple>
-                        @foreach ($casts as $cast)
-                            <option value="{{ $cast->id }}"
-                                {{ collect(request('cast_id'))->contains($cast->id) ? 'selected' : '' }}>
-                                {{ App::getLocale() === 'ur' ? $cast->title_ur ?? '-' : $cast->title_en ?? '-' }}
+                    <label for="main_head_id">@lang('messages.date')</label>
+                    <input type="text" value="{{ request('date') }}" name="date" id="date" class="form-control"
+                        placeholder="@lang('messages.booking_date')">
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <label for="project_id">@lang('messages.projects')</label>
+                    <select name="project_id[]" id="project_id"
+                        class="form-control form-select select2 @error('project_id') is-invalid @enderror" multiple>
+                        @foreach ($projects as $projects)
+                            <option value="{{ $projects->id }}"
+                                {{ collect(request('project_id'))->contains($projects->id) ? 'selected' : '' }}>
+                                {{ App::getLocale() === 'ur' ? $projects->name_ur ?? '-' : $projects->name_en ?? '-' }}
                             </option>
                         @endforeach
                     </select>
                 </div>
 
-                <div class="col-lg-6 mb-3">
-                    <label for="occupation_id">@lang('messages.occupation')</label>
-                    <select name="occupation_id[]" id="occupation_id"
-                        class="form-control form-select select2 @error('occupation_id') is-invalid @enderror" multiple>
-                        @foreach ($occupations as $occupation)
-                            <option value="{{ $occupation->id }}"
-                                {{ collect(request('occupation_id'))->contains($occupation->id) ? 'selected' : '' }}>
-                                {{ App::getLocale() === 'ur' ? $occupation->title_ur ?? '-' : $occupation->title_en ?? '-' }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
             </div>
 
             <div class="row">
                 <div class="col-lg-6 mb-3">
-                    <label for="residential_status">@lang('messages.residential-Status')</label>
-                    <select name="residential_status[]" id="residential_status"
-                        class="form-control form-select select2 @error('residential_status') is-invalid @enderror" multiple>
-                        @foreach ($residentialStatus as $residential)
-                            <option value="{{ $residential->id }}"
-                                {{ collect(request('residential_status'))->contains($residential->id) ? 'selected' : '' }}>
-                                {{ App::getLocale() === 'ur' ? $residential->title_ur ?? '-' : $residential->title_en ?? '-' }}
+                    <label for="party_id">@lang('messages.party')</label>
+                    <select name="party_id" id="party_id"
+                        class="form-control form-select select2 @error('party_id') is-invalid @enderror">
+                        <option value="">@lang('messages.select-an-option')</option>
+                        @foreach ($searchParties as $searchParty)
+                            <option value="{{ $searchParty->id }}"
+                                {{ collect(request('party_id'))->contains($searchParty->id) ? 'selected' : '' }}>
+                                {{ App::getLocale() === 'ur' ? $searchParty->name_ur ?? '-' : $searchParty->name_en ?? '-' }}
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $searchParty->cnic_no ?? 'N/A' }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                - {{ $searchParty->contact_number_1 ?? 'N/A' }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -
+                                {{ App::getLocale() === 'ur' ? $searchParty->cast->title_ur ?? '-' : $searchParty->cast->title_en ?? '-' }}
                             </option>
                         @endforeach
                     </select>
                 </div>
+
                 <div class="col-lg-6 mb-3">
-                    <label for="search">@lang('messages.name')</label>
-                    <input type="text" class="form-control" name="search" placeholder="@lang('messages.search')"
-                        value="{{ request('search') }}">
+                    <label for="search">@lang('messages.unit_no')</label>
+                    <input type="text" class="form-control" name="unit_no" placeholder="@lang('messages.unit_no')"
+                        value="{{ request('unit_no') }}">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-lg-6">
+                    <label for="search">@lang('messages.booking_application_no')</label>
+                    <input type="number" step="any" min="0" onwheel="this.blur()" class="form-control"
+                        name="booking_application_no" placeholder="@lang('messages.booking_application_no')"
+                        value="{{ request('booking_application_no') }}">
                 </div>
 
-            </div>
-            <div class="row">
                 <div class="col-lg-6">
                     <button class="btn btn-primary" type="submit">@lang('messages.search')</button>
 
-                    @if (request()->hasAny(['search', 'cast_id', 'occupation_id', 'sub_head_id', 'sub_sub_head_id']))
-                        <a href="{{ route('possession-letter.index') }}" class="btn btn-secondary">@lang('messages.clear')</a>
-                    @endif
+                    {{-- @if (request()->hasAny(['search'])) --}}
+                    <a href="{{ route('possession-letter.index') }}" class="btn btn-secondary">@lang('messages.clear')</a>
+                    {{-- @endif --}}
                 </div>
             </div>
-        </form> --}}
+        </form>
 
         <div class="block block-rounded">
             <div class="block-content block-content-full">
@@ -135,7 +140,8 @@
                                             data-bs-original-title="Edit sub Head"> <i
                                                 class="fa fa-fw fa-pencil-alt"></i></a>
 
-                                        <form method="POST" action="{{ route('possession-letter.destroy', $possessionLetter->id) }}"
+                                        <form method="POST"
+                                            action="{{ route('possession-letter.destroy', $possessionLetter->id) }}"
                                             class="d-inline-block delete-form">
                                             @csrf
                                             @method('DELETE')
