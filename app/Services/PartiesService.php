@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Party;
 use App\Models\PartyBank;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class PartiesService
@@ -44,6 +45,8 @@ class PartiesService
 
         // Create the party
         $party = Party::create($data);
+
+        Cache::forget('parties_data');
 
         // Prepare and insert bank details if any
         if (!empty($data['bank_id'])) {
@@ -104,6 +107,8 @@ class PartiesService
         }
         $party->update($data);
 
+        Cache::forget('parties_data');
+
         // If bank data is passed, update bank records
         if (!empty($data['bank_id'])) {
             // Delete old details not in the incoming request (optional)
@@ -137,6 +142,8 @@ class PartiesService
 
         // Delete related bank details first
         $party->banks()->delete();
+
+        Cache::forget('parties_data');
 
         // Then delete the party
         return $party->delete();

@@ -4,6 +4,7 @@ namespace App\Services;
 use App\Models\SubHead;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
 
 class SubHeadService
 {
@@ -15,20 +16,27 @@ class SubHeadService
 
     public function create(array $data)
     {
-        return SubHead::create($data);
+        $subHead= SubHead::create($data);
+        Cache::forget('sub_heads_data');
+
+        return $subHead;
     }
 
     public function update($id, array $data)
     {
         $subHead = SubHead::findOrFail($id);
         $subHead->update($data);
+        Cache::forget('sub_heads_data');
         return $subHead;
     }
 
     public function delete($id)
     {
         $subHead = SubHead::findOrFail($id);
-        return $subHead->delete();
+        $deleted= $subHead->delete();
+        Cache::forget('sub_heads_data');
+
+        return $deleted;
     }
 
     public function getSubHeadsForControlHead($controlHead)

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\DetailAccount;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
 
 class DetailAccountService
 {
@@ -19,20 +20,28 @@ class DetailAccountService
 
     public function create(array $data)
     {
-        return DetailAccount::create($data);
+        $detailAccount = DetailAccount::create($data);
+
+        Cache::forget('detail_accounts_data');
+
+        return $detailAccount;
     }
 
     public function update($id, array $data)
     {
         $detailAccount = DetailAccount::findOrFail($id);
         $detailAccount->update($data);
+        Cache::forget('detail_accounts_data');
         return $detailAccount;
     }
 
     public function delete($id)
     {
         $detailAccount = DetailAccount::findOrFail($id);
-        return $detailAccount->delete();
+        $deleted = $detailAccount->delete();
+        Cache::forget('detail_accounts_data');
+
+        return $deleted;
     }
 
     public function getSubSubSubHeadsForSubSubHead($subSubHead)

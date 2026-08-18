@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\SubSubSubHead;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
 
 class SubSubSubHeadService
 {
@@ -19,20 +20,27 @@ class SubSubSubHeadService
 
     public function create(array $data)
     {
-        return SubSubSubHead::create($data);
+        $subSubSubHead= SubSubSubHead::create($data);
+        Cache::forget('sub_sub_sub_heads_data');
+
+        return $subSubSubHead;
     }
 
     public function update($id, array $data)
     {
         $subSubSubHead = SubSubSubHead::findOrFail($id);
         $subSubSubHead->update($data);
+        Cache::forget('sub_sub_sub_heads_data');
         return $subSubSubHead;
     }
 
     public function delete($id)
     {
         $subSubSubHead = SubSubSubHead::findOrFail($id);
-        return $subSubSubHead->delete();
+        $deleted= $subSubSubHead->delete();
+        Cache::forget('sub_sub_sub_heads_data');
+
+        return $deleted;
     }
 
     public function getSubSubSubHeadsForSubSubHead($subSubHead)

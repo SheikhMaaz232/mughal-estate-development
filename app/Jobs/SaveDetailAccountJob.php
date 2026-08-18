@@ -30,13 +30,7 @@ class SaveDetailAccountJob implements ShouldQueue
     public function handle(DetailAccountService $detailAccountService)
     {
         // Save using the service
-
-
-        $start = microtime(true);
         $detailAccountService->create($this->data);
-        $end = microtime(true);
-        $timeTaken = $end - $start;
 
-        Log::info("Job SaveDetailAccountJob executed in {$timeTaken} seconds");
     }
 }

@@ -65,7 +65,8 @@
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label for="detail_account_id">@lang('messages.detail_account')</label>
-                    <select name="detail_account_id[]" id="detail_account_id"
+                    <select name="detail_account_id[]" id="ledger_detail_account_id" class="form-control form-select" multiple></select>
+                    {{-- <select name="detail_account_id[]" id="detail_account_id"
                         class="form-control form-select select2 @error('detail_account_id') is-invalid @enderror" multiple>
                         @foreach ($detailAccounts as $detailAccount)
                             <option value="{{ $detailAccount->id }}"
@@ -73,7 +74,7 @@
                                 {{ App::getLocale() === 'ur' ? $detailAccount->name_ur ?? '-' : $detailAccount->name_en ?? '-' }}
                             </option>
                         @endforeach
-                    </select>
+                    </select> --}}
                 </div>
 
             </div>

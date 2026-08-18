@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\ControlHead;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
 
 class ControlHeadService
 {
@@ -20,20 +21,25 @@ class ControlHeadService
 
     public function create(array $data)
     {
-        return ControlHead::create($data);
+        $controlHead = ControlHead::create($data);
+        Cache::forget('control_heads_data');
+        return $controlHead;
     }
 
     public function update($id, array $data)
     {
         $controlHead = ControlHead::findOrFail($id);
         $controlHead->update($data);
+        Cache::forget('control_heads_data');
         return $controlHead;
     }
 
     public function delete($id)
     {
         $controlHead = ControlHead::findOrFail($id);
-        return $controlHead->delete();
+        $deleted= $controlHead->delete();
+        Cache::forget('control_heads_data');
+        return $deleted;
     }
 
     public function getControlHeadsForMainHead($mainHead)
