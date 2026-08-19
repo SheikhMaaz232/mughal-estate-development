@@ -447,4 +447,58 @@ class DetailAccountController extends Controller
             ],
         ]);
     }
+
+    public function select2(Request $request)
+    {
+        $search = $request->get('search', '');
+        $page = $request->get('page', 1);
+        $perPage = 20;
+
+        $accounts = DetailAccount::query()
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name_en', 'like', "%{$search}%")
+                        ->orWhere('name_ur', 'like', "%{$search}%")
+                        ->orWhere('id', 'like', "%{$search}%");
+                });
+            })
+            ->paginate($perPage, ['*'], 'page', $page);
+
+        return response()->json([
+            'results' => $accounts->map(function ($account) {
+                return [
+                    'id' => $account->id,
+                    'text' => app()->getLocale() === 'ur'
+                        ? $account->name_ur
+                        : $account->name_en,
+                ];
+            })->values(),
+
+            'pagination' => [
+                'more' => $accounts->hasMorePages(),
+            ],
+        ]);
+    }
+
+    public function select2Single($id)
+    {
+        $account = DetailAccount::find($id);
+
+        if (!$account) {
+            return response()->json([
+                'results' => []
+            ]);
+        }
+
+        return response()->json([
+            'results' => [
+                [
+                    'id' => $account->id,
+                    'text' => app()->getLocale() === 'ur'
+                        ? $account->name_ur
+                        : $account->name_en,
+                ]
+            ]
+        ]);
+    }
 }

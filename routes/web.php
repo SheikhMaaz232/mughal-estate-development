@@ -334,6 +334,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/clients/select2', [ClientInvoiceController::class, 'select2'])
         ->name('clients.select2');
 
+    Route::get(
+        '/detail-accounts/select2/{id}',
+        [DetailAccountController::class, 'select2Single']
+    )->name('detail-accounts.select2.single');
 
     // Client Invoice Receipt Tracking Routes
     Route::prefix('client-invoices/{invoice}/receipts')->name('client-invoices.receipts.')->group(function () {

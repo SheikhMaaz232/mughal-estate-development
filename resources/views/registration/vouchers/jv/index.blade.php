@@ -39,7 +39,8 @@
 
                 <div class="col-md-6">
                     <label class="form-label">@lang('messages.debit_account')</label>
-                    <select name="debit_account_id" class="form-select select2">
+                    <select name="debit_account_id[]" id="ledger_detail_account_id" class="form-control form-select debit_account_id" ></select>
+                    {{-- <select name="debit_account_id" class="form-select select2">
                         <option value="">@lang('messages.debit_account')</option>
 
                         @foreach ($detailAccounts as $account)
@@ -48,7 +49,7 @@
                                 {{ App::getLocale() === 'ur' ? $account->name_ur : $account->name_en }}
                             </option>
                         @endforeach
-                    </select>
+                    </select> --}}
                 </div>
 
             </div>
@@ -56,7 +57,8 @@
 
                 <div class="col-md-6">
                     <label class="form-label">@lang('messages.credit_account')</label>
-                    <select name="credit_account_id" class="form-select select2 ">
+                    <select name="credit_account_id[]" id="client_id" class="form-control form-select" ></select>
+                    {{-- <select name="credit_account_id" class="form-select select2 ">
                         <option value="">@lang('messages.credit_account')</option>
 
                         @foreach ($detailAccounts as $account)
@@ -65,7 +67,7 @@
                                 {{ App::getLocale() === 'ur' ? $account->name_ur : $account->name_en }}
                             </option>
                         @endforeach
-                    </select>
+                    </select> --}}
                 </div>
 
                 <div class="col-md-6 d-flex align-items-end">

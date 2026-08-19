@@ -88,16 +88,16 @@
 
                 {{-- <div class="invoice-detail-terms">
                     <div class="row"> --}}
-                        <div class="col-xl-12 ">
-                            <a href="{{ route('jv-voucher.index') }}" style="float: right;"
-                                class="btn btn-dark rounded bs-popover ml-2 mt-5  mb-4">@lang('messages.cancel')</a>
-                            <button type="submit" style="float: right"
-                                class="btn btn-success  rounded bs-popover me-1 mt-5 mb-4 mr-5" data-bs-container="body"
-                                data-bs-placement="right" data-bs-content="Tooltip on right">
-                                {{ isset($jv) ? __('messages.update') : __('messages.save') }}
-                            </button>
-                        </div>
-                    {{-- </div>
+                <div class="col-xl-12 ">
+                    <a href="{{ route('jv-voucher.index') }}" style="float: right;"
+                        class="btn btn-dark rounded bs-popover ml-2 mt-5  mb-4">@lang('messages.cancel')</a>
+                    <button type="submit" style="float: right"
+                        class="btn btn-success  rounded bs-popover me-1 mt-5 mb-4 mr-5" data-bs-container="body"
+                        data-bs-placement="right" data-bs-content="Tooltip on right">
+                        {{ isset($jv) ? __('messages.update') : __('messages.save') }}
+                    </button>
+                </div>
+                {{-- </div>
 
                 </div> --}}
             </form>
@@ -125,10 +125,42 @@
         });
     </script>
 
-
-
-
     <script>
+        function initializeDetailAccountSelect2(element) {
+            $(element).select2({
+                theme: 'bootstrap-5',
+                // width: '100%',
+                placeholder: "{{ __('messages.select-an-option') }}",
+                allowClear: true,
+                ajax: {
+                    url: "{{ route('clients.select2') }}",
+                    dataType: 'json',
+                    delay: 250,
+
+                    data: function(params) {
+                        return {
+                            search: params.term || '',
+                            page: params.page || 1
+                        };
+                    },
+
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more
+                            }
+                        };
+                    },
+
+                    cache: true
+                },
+
+                minimumInputLength: 1
+            });
+        }
         document.getElementsByClassName('additem')[0].addEventListener('click', function() {
 
             let getTableElement = document.querySelector('.item-table');
@@ -142,9 +174,18 @@
                 '</td>' +
                 '<td hidden><input type="text" name="row_id[]" class="row_id" value="' + currentIndex +
                 '" hidden></td>' +
-                '<td class="description"><select name="debit_detail_account_id[]" id="debit_account" class="form-control form-select @error('debit_detail_account_id') is-invalid @enderror select2"> <option value="">@lang('messages.select_debit')</option> @foreach ($detailAccounts as $detailAccount) <option value="{{ $detailAccount->id }}" {{ old('debit_detail_account_id') == $detailAccount->id ? 'selected' : '' }}> {{ App::getLocale() === 'ur' ? $detailAccount->name_ur ?? '-' : $detailAccount->name_en ?? '-' }} </option> @endforeach </select></td>' +
-                '<td class="description"><select name="credit_detail_account_id[]" id="credit_account" class="form-control form-select @error('credit_detail_account_id') is-invalid @enderror select2"> <option value="">@lang('messages.select_credit')</option> @foreach ($detailAccounts as $detailAccount) <option value="{{ $detailAccount->id }}" {{ old('credit_detail_account_id') == $detailAccount->id ? 'selected' : '' }}> {{ App::getLocale() === 'ur' ? $detailAccount->name_ur ?? '-' : $detailAccount->name_en ?? '-' }} </option> @endforeach </select></td>' +
-
+                '<td class="description">' +
+                '<select name="debit_detail_account_id[]" ' +
+                'class="form-control form-select debit-account select2">' +
+                '<option value=""></option>' +
+                '</select>' +
+                '</td>' +
+                '<td class="description">' +
+                '<select name="credit_detail_account_id[]" ' +
+                'class="form-control form-select credit-account select2">' +
+                '<option value=""></option>' +
+                '</select>' +
+                '</td>' +
                 '<td class="text-right qty"> <input id="debit" type="number" name="debit[]"  placeholder="@lang('messages.debit')" class="form-control form-control-sm debit"></td>' +
                 '<td class="text-right qty"> <input id="credit" type="number" name="credit[]" placeholder="@lang('messages.credit') " class="form-control form-control-sm credit"></td>' +
                 '</td>' +
@@ -164,8 +205,19 @@
                 '</tr>';
 
             $(".item-table tbody").append($html);
+
+            let $newRows = $($html);
+
+            initializeDetailAccountSelect2(
+                $(".item-table tbody .debit-account").last()
+            );
+
+            initializeDetailAccountSelect2(
+                $(".item-table tbody .credit-account").last()
+            );
+
             deleteItemRow();
-            $('.select2').select2();
+           
             $(document).on('click', 'body *', function() {
                 $('.debit').on("input", function() {
                     doAmountTotal();
