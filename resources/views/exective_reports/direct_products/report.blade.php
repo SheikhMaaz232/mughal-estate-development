@@ -50,14 +50,27 @@
 
     @foreach ($groupedProjects as $projectId => $projectProducts)
         @php
-            $projectName = $projectProducts->first()->project ? ($isUrdu ? $projectProducts->first()->project->name_ur : $projectProducts->first()->project->name_en) : 'N/A';
+            $projectName = $projectProducts->first()->project
+                ? ($isUrdu
+                    ? $projectProducts->first()->project->name_ur
+                    : $projectProducts->first()->project->name_en)
+                : 'N/A';
             $projectMarlaAll = $projectProducts->sum('total_marla');
             $projectAmountAll = $projectProducts->sum('total_amount');
-            $projectMarlaBooked = $projectProducts->filter(fn($product) => strtolower((string) $product->status) === 'booked')->sum('total_marla');
-            $projectAmountBooked = \App\Models\BookingApplication::whereIn('product_id', $projectProducts->pluck('id'))
+            $projectMarlaBooked = $projectProducts
+                ->filter(fn($product) => strtolower((string) $product->status) === 'booked')
+                ->sum('total_marla');
+            $projectAmountBooked = \App\Models\BookingApplication::whereIn(
+                'product_id',
+                $projectProducts->pluck('id'),
+            )->sum('total_amount');
+            $projectMarlaVerified = $projectProducts
+                ->filter(fn($product) => strtolower((string) $product->status) === 'verified')
+                ->sum('total_marla');
+            $projectAmountVerified = $projectProducts
+                ->filter(fn($product) => strtolower((string) $product->status) === 'verified')
                 ->sum('total_amount');
-            $projectMarlaVerified = $projectProducts->filter(fn($product) => strtolower((string) $product->status) === 'verified')->sum('total_marla');
-            $projectAmountVerified = $projectProducts->filter(fn($product) => strtolower((string) $product->status) === 'verified')->sum('total_amount');
+            $projectAmountReceived = $receivedAmountByProject[$projectId] ?? 0;
         @endphp
 
         <div class="project-header" style="display:flex;justify-content:space-between;align-items:center;">
@@ -67,13 +80,14 @@
         <table>
             <thead>
                 <tr>
-                    <th>@lang('messages.project')</th>
+                    <th>@lang('messages.project-name')</th>
                     <th>@lang('messages.total_marla')</th>
-                    <th>@lang('messages.total_amount')</th>
-                    <th>@lang('messages.booked') / @lang('messages.total_marla')</th>
-                    <th>@lang('messages.booked') / @lang('messages.total_amount')</th>
-                    <th>@lang('messages.verified') / @lang('messages.total_marla')</th>
-                    <th>@lang('messages.verified') / @lang('messages.total_amount')</th>
+                    <th>@lang('messages.total_marlas_amount')</th>
+                    <th>@lang('messages.total_saleable_marlas')</th>
+                    <th>@lang('messages.total_saleable_marlas_amount')</th>
+                    <th>@lang('messages.total_saleable_marlas_received_amount')</th>
+                    <th>@lang('messages.total_available_marlas')</th>
+                    <th>@lang('messages.total_available_marlas_value')</th>
                 </tr>
             </thead>
             <tbody>
@@ -83,6 +97,7 @@
                     <td>{{ number_format($projectAmountAll, 2) }}</td>
                     <td>{{ number_format($projectMarlaBooked, 2) }}</td>
                     <td>{{ number_format($projectAmountBooked, 2) }}</td>
+                    <td>{{ number_format($projectAmountReceived, 2) }}</td>
                     <td>{{ number_format($projectMarlaVerified, 2) }}</td>
                     <td>{{ number_format($projectAmountVerified, 2) }}</td>
                 </tr>
@@ -95,12 +110,13 @@
     <table>
         <thead>
             <tr>
-                <th>{{ $isUrdu ? 'کل مرلہ' : 'Total Marla' }}</th>
+                <th>{{ $isUrdu ? 'کل مرلے' : 'Total Marla' }}</th>
                 <th>{{ $isUrdu ? 'کل رقم' : 'Total Amount' }}</th>
-                <th>{{ $isUrdu ? 'بک شدہ کل مرلہ' : 'Booked Total Marla' }}</th>
-                <th>{{ $isUrdu ? 'بک شدہ کل رقم' : 'Booked Total Amount' }}</th>
-                <th>{{ $isUrdu ? 'تصدیق شدہ کل مرلہ' : 'Verified Total Marla' }}</th>
-                <th>{{ $isUrdu ? 'تصدیق شدہ کل رقم' : 'Verified Total Amount' }}</th>
+                <th>{{ $isUrdu ? 'سیل شدہ کل مرلے' : 'Booked Total Marla' }}</th>
+                <th>{{ $isUrdu ? 'سیل شدہ مرلوں کی کل رقم' : 'Booked Total Amount' }}</th>
+                <th>{{ $isUrdu ? ' سیل شدہ مرلوں سے وصول شدہ کل رقم' : 'Total Received Amount' }}</th>
+                <th>{{ $isUrdu ? 'کل دستیاب مرلے' : 'Verified Total Marla' }}</th>
+                <th>{{ $isUrdu ? 'کل دستیاب مرلوں کی رقم' : 'Verified Total Amount' }}</th>
             </tr>
         </thead>
         <tbody>
@@ -109,6 +125,9 @@
                 <td>{{ number_format($grandTotals['amount_all'], 2) }}</td>
                 <td>{{ number_format($grandTotals['marla_booked'], 2) }}</td>
                 <td>{{ number_format($grandTotals['amount_booked'], 2) }}</td>
+                <td>
+                    {{ number_format($grandTotals['amount_received'], 2) }}
+                </td>
                 <td>{{ number_format($grandTotals['marla_verified'], 2) }}</td>
                 <td>{{ number_format($grandTotals['amount_verified'], 2) }}</td>
             </tr>

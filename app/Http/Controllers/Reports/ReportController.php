@@ -684,7 +684,8 @@ class ReportController extends Controller
         $products = Product::where('type', 'item')->orderBy('name_en')->get();
 
         return view(
-            'reports.stock.stockReportFilter', array_merge(
+            'reports.stock.stockReportFilter',
+            array_merge(
                 $this->getMasterData(),
                 compact('products')
             )
@@ -759,7 +760,8 @@ class ReportController extends Controller
             ->get();
 
         return view(
-            'reports.availablePlots.filter', array_merge(
+            'reports.availablePlots.filter',
+            array_merge(
                 $this->getMasterData(),
                 compact('products')
             )
@@ -804,7 +806,8 @@ class ReportController extends Controller
         $grandTotalMarla = $products->sum('total_marla');
 
         return view(
-            'reports.availablePlots.report', compact('groupedProjects', 'grandTotalMarla')
+            'reports.availablePlots.report',
+            compact('groupedProjects', 'grandTotalMarla')
         );
     }
 
@@ -843,11 +846,67 @@ class ReportController extends Controller
                 return [$row->project_id => (float) $row->total_amount];
             });
 
+
+
+        $bookingApplications = BookingApplication::whereIn(
+            'product_id',
+            $bookedProductIds
+        )
+            ->whereNotNull('detail_account_id')
+            ->get([
+                'id',
+                'product_id',
+                'project_id',
+                'detail_account_id'
+            ]);
+
+
+        $detailAccountIds = $bookingApplications
+            ->pluck('detail_account_id')
+            ->filter()
+            ->unique()
+            ->values();
+
+        $receivedAmountByAccount = AccountLedger::whereIn(
+            'detail_account_id',
+            $detailAccountIds
+        )
+            ->where('transaction_type', 'booking_payment')
+            ->selectRaw('detail_account_id, SUM(credit) as received_amount')
+            ->groupBy('detail_account_id')
+            ->get()
+            ->mapWithKeys(function ($row) {
+                return [
+                    $row->detail_account_id => (float) $row->received_amount
+                ];
+            });
+
+        /*
+    |--------------------------------------------------------------------------
+    | Received Amount By Project
+    |--------------------------------------------------------------------------
+    */
+
+        $receivedAmountByProject = $bookingApplications
+            ->groupBy('project_id')
+            ->mapWithKeys(function ($applications, $projectId) use ($receivedAmountByAccount) {
+
+                $receivedAmount = $applications->sum(function ($application) use ($receivedAmountByAccount) {
+
+                    return $receivedAmountByAccount[$application->detail_account_id] ?? 0;
+                });
+
+                return [
+                    $projectId => (float) $receivedAmount
+                ];
+            });
+            
         $grandTotals = [
             'marla_all' => $products->sum('total_marla'),
             'amount_all' => $products->sum('total_amount'),
             'marla_booked' => $products->filter(fn($product) => strtolower((string) $product->status) === 'booked')->sum('total_marla'),
             'amount_booked' => $bookedAmountByProject->sum(),
+            'amount_received' => $receivedAmountByProject->sum(),
             'marla_verified' => $products->filter(fn($product) => strtolower((string) $product->status) === 'verified')->sum('total_marla'),
             'amount_verified' => $products->filter(fn($product) => strtolower((string) $product->status) === 'verified')->sum('total_amount'),
         ];
@@ -855,7 +914,8 @@ class ReportController extends Controller
         return view('exective_reports.direct_products.report', compact(
             'groupedProjects',
             'grandTotals',
-            'bookedAmountByProject'
+            'bookedAmountByProject',
+            'receivedAmountByProject'
         ));
     }
 

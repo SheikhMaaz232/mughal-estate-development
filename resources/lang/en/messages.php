@@ -1421,4 +1421,11 @@ return [
     'hide-Level-6' => 'Hide Level 6',
     'show-Level-6' => 'Show Level 6',
     'residential_rate' => 'Residential Plots Rate',
+    'project-name' => 'Project Name',
+    'total_marlas_amount' => 'Total Marlas Amount',
+    'total_saleable_marlas' => 'Total Saleable Marlas',
+    'total_saleable_marlas_amount' => 'Tot Saleable Marlas Amount',
+    'total_saleable_marlas_received_amount' => 'Total amount received from sold marlas',
+    'total_available_marlas' => 'Total available marlas',
+     'total_available_marlas_value' => 'Total available marlas Value',
 ];

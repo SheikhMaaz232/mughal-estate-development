@@ -687,6 +687,668 @@
                                 <span class="nav-main-link-name">@lang('payroll::menu.payrolls')</span>
                             </a>
                         </li>
+
+                        {{-- <li class="nav-main-item{{ request()->is('reports*') ? ' open' : '' }}">
+                            @can('reports.view')
+                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true"
+                                    aria-expanded="true" href="#">
+                                    <i class="nav-main-link-icon si si-chart"></i>
+                                    <span class="nav-main-link-name">@lang('menu.reports')</span>
+                                </a>
+
+                                <ul class="nav-main-submenu">
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('reports.recovery.sheet.view.*') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('reports.recovery.sheet.view*') ? ' active' : '' }}"
+                                            href="{{ route('reports.recovery.sheet.view') }}">
+                                            <span class="nav-main-link-name">@lang('menu.recovery-sheet')</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-main-item">
+                                        <a class="nav-main-link{{ request()->routeIs('bankBook.view') ? ' active' : '' }}"
+                                            href="{{ route('bankBook.view') }}">
+                                            <span class="nav-main-link-name">@lang('menu.bank_book')</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-main-item">
+                                        <a class="nav-main-link{{ request()->routeIs('generalJournal.ledger') ? ' active' : '' }}"
+                                            href="{{ route('generalJournal.ledger') }}">
+                                            <span class="nav-main-link-name">@lang('menu.general_journal_ledger')</span>
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('reports.stock-report.filter') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('reports.stock-report.filter') ? ' active' : '' }}"
+                                            href="{{ route('reports.stock-report.filter') }}">
+                                            <span class="nav-main-link-name">@lang('menu.stock-report')</span>
+                                        </a>
+                                    </li>
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('available-plots.filter') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('available-plots.filter') ? ' active' : '' }}"
+                                            href="{{ route('available-plots.filter') }}">
+                                            <span class="nav-main-link-name">@lang('menu.available-plots-report')</span>
+                                        </a>
+                                    </li>
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('reports.bill.aging.*') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('reports.bill.aging.*') ? ' active' : '' }}"
+                                            href="{{ route('reports.bill.aging.view') }}">
+                                            <span class="nav-main-link-name">@lang('menu.bill-aging')</span>
+                                        </a>
+                                    </li>
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('reports.trial.balance.*') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('reports.trial.balance.*') ? ' active' : '' }}"
+                                            href="{{ route('reports.trial.balance.view') }}">
+                                            <span class="nav-main-link-name">@lang('menu.trial-balance')</span>
+                                        </a>
+                                    </li>
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('reports.balance.sheet.*') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('reports.balance.sheet.*') ? ' active' : '' }}"
+                                            href="{{ route('reports.balance.sheet.view') }}">
+                                            <span class="nav-main-link-name">@lang('menu.balance-sheet')</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            @endcan
+                        </li> --}}
+
+
+                        {{-- <li
+                            class="nav-main-item{{ request()->is('reports*') || request()->routeIs('payroll.reports.*') ? ' open' : '' }}">
+
+                            @can('reports.view')
+                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true"
+                                    aria-expanded="{{ request()->is('reports*') || request()->routeIs('payroll.reports.*') ? 'true' : 'false' }}"
+                                    href="#">
+
+                                    <i class="nav-main-link-icon si si-chart"></i>
+
+                                    <span class="nav-main-link-name">
+                                        @lang('menu.reports')
+                                    </span>
+
+                                </a>
+
+
+                                <ul class="nav-main-submenu">
+
+                                    {{-- ========================================================= --}}
+                        {{-- EXISTING REPORTS --}}
+                        {{-- =====================
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('reports.recovery.sheet.view.*') ? ' open' : '' }}">
+
+                                        <a class="nav-main-link{{ request()->routeIs('reports.recovery.sheet.view*') ? ' active' : '' }}"
+                                            href="{{ route('reports.recovery.sheet.view') }}">
+
+                                            <span class="nav-main-link-name">
+                                                @lang('menu.recovery-sheet')
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+
+                                    <li class="nav-main-item">
+
+                                        <a class="nav-main-link{{ request()->routeIs('bankBook.view') ? ' active' : '' }}"
+                                            href="{{ route('bankBook.view') }}">
+
+                                            <span class="nav-main-link-name">
+                                                @lang('menu.bank_book')
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+
+                                    <li class="nav-main-item">
+
+                                        <a class="nav-main-link{{ request()->routeIs('generalJournal.ledger') ? ' active' : '' }}"
+                                            href="{{ route('generalJournal.ledger') }}">
+
+                                            <span class="nav-main-link-name">
+                                                @lang('menu.general_journal_ledger')
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('reports.stock-report.filter') ? ' open' : '' }}">
+
+                                        <a class="nav-main-link{{ request()->routeIs('reports.stock-report.filter') ? ' active' : '' }}"
+                                            href="{{ route('reports.stock-report.filter') }}">
+
+                                            <span class="nav-main-link-name">
+                                                @lang('menu.stock-report')
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('available-plots.filter') ? ' open' : '' }}">
+
+                                        <a class="nav-main-link{{ request()->routeIs('available-plots.filter') ? ' active' : '' }}"
+                                            href="{{ route('available-plots.filter') }}">
+
+                                            <span class="nav-main-link-name">
+                                                @lang('menu.available-plots-report')
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('reports.bill.aging.*') ? ' open' : '' }}">
+
+                                        <a class="nav-main-link{{ request()->routeIs('reports.bill.aging.*') ? ' active' : '' }}"
+                                            href="{{ route('reports.bill.aging.view') }}">
+
+                                            <span class="nav-main-link-name">
+                                                @lang('menu.bill-aging')
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('reports.trial.balance.*') ? ' open' : '' }}">
+
+                                        <a class="nav-main-link{{ request()->routeIs('reports.trial.balance.*') ? ' active' : '' }}"
+                                            href="{{ route('reports.trial.balance.view') }}">
+
+                                            <span class="nav-main-link-name">
+                                                @lang('menu.trial-balance')
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('reports.balance.sheet.*') ? ' open' : '' }}">
+
+                                        <a class="nav-main-link{{ request()->routeIs('reports.balance.sheet.*') ? ' active' : '' }}"
+                                            href="{{ route('reports.balance.sheet.view') }}">
+
+                                            <span class="nav-main-link-name">
+                                                @lang('menu.balance-sheet')
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+
+                                    {{-- ========================================================= --}}
+                        {{-- PAYROLL REPORTS --}}
+                        {{-- ==============================
+
+                                    <li class="nav-main-item nav-main-item-submenu">
+
+                                        <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                            aria-haspopup="true"
+                                            aria-expanded="{{ request()->routeIs('payroll.reports.*') ? 'true' : 'false' }}"
+                                            href="#">
+
+                                            <i class="nav-main-link-icon si si-users"></i>
+
+                                            <span class="nav-main-link-name">
+                                                @lang('menu.payroll_reports')
+                                            </span>
+
+                                        </a>
+
+
+                                        <ul class="nav-main-submenu">
+
+                                            {{-- Daily Attendance 
+                                            <li
+                                                class="nav-main-item{{ request()->routeIs('payroll.reports.daily-attendance') ? ' open' : '' }}">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.daily-attendance') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.daily-attendance') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.daily-attendance-report')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+
+                                            {{-- Monthly Attendance 
+                                            <li
+                                                class="nav-main-item{{ request()->routeIs('payroll.reports.monthly-attendance') ? ' open' : '' }}">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.monthly-attendance') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.monthly-attendance') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.monthly-attendance-report')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+
+                                            {{-- Employee Attendance 
+                                            <li
+                                                class="nav-main-item{{ request()->routeIs('payroll.reports.employee-attendance') ? ' open' : '' }}">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.employee-attendance') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.employee-attendance') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.employee-attendance-report')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+
+                                            {{-- Late Coming 
+                                            <li
+                                                class="nav-main-item{{ request()->routeIs('payroll.reports.late-coming') ? ' open' : '' }}">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.late-coming') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.late-coming') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.late-coming-report')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+
+                                            {{-- Early Leaving 
+                                            <li
+                                                class="nav-main-item{{ request()->routeIs('payroll.reports.early-leaving') ? ' open' : '' }}">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.early-leaving') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.early-leaving') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.early-leaving-report')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+
+                                            {{-- Missing Punch 
+                                            <li
+                                                class="nav-main-item{{ request()->routeIs('payroll.reports.missing-punch') ? ' open' : '' }}">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.missing-punch') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.missing-punch') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.missing-punch-report')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+
+                                            {{-- Absent 
+                                            <li
+                                                class="nav-main-item{{ request()->routeIs('payroll.reports.absent') ? ' open' : '' }}">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.absent') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.absent') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.absent-report')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+
+                                            {{-- Overtime 
+                                            <li
+                                                class="nav-main-item{{ request()->routeIs('payroll.reports.overtime') ? ' open' : '' }}">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.overtime') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.overtime') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.overtime-report')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+
+                                            {{-- Leave & Attendance 
+                                            <li
+                                                class="nav-main-item{{ request()->routeIs('payroll.reports.leave-attendance') ? ' open' : '' }}">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.leave-attendance') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.leave-attendance') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.leave-attendance-report')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+                                        </ul>
+
+                                    </li>
+
+
+                                    {{-- ========================================================= --}}
+                        {{-- PAYROLL / SALARY REPORTS 
+                                    {{-- ========================================================= 
+
+                                    <li class="nav-main-item nav-main-item-submenu">
+
+                                        <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                            aria-haspopup="true"
+                                            aria-expanded="{{ request()->routeIs('payroll.reports.payroll-*') ? 'true' : 'false' }}"
+                                            href="#">
+
+                                            <i class="nav-main-link-icon si si-wallet"></i>
+
+                                            <span class="nav-main-link-name">
+                                                @lang('menu.payroll_reports')
+                                            </span>
+
+                                        </a>
+
+
+                                        <ul class="nav-main-submenu">
+
+                                            {{-- Monthly Payroll 
+                                            <li class="nav-main-item">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.payroll-register') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.payroll-register') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.monthly-payroll-register')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+
+                                            {{-- Salary Slip 
+                                            <li class="nav-main-item">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.salary-slip') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.salary-slip') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.salary-slip')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+
+                                            {{-- Payroll Deductions 
+                                            <li class="nav-main-item">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.payroll-deductions') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.payroll-deductions') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.payroll-deductions')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+
+                                            {{-- Overtime Payment 
+                                            <li class="nav-main-item">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.overtime-payment') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.overtime-payment') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.overtime-payment-report')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+
+                                            {{-- Department Payroll 
+                                            <li class="nav-main-item">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.department-payroll') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.department-payroll') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.department-payroll-report')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+                                        </ul>
+
+                                    </li>
+
+
+                                    {{-- ========================================================= --}}
+                        {{-- ZKTECO REPORTS --}}
+                        {{-- =======================================================
+
+                                    <li class="nav-main-item nav-main-item-submenu">
+
+                                        <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                            aria-haspopup="true"
+                                            aria-expanded="{{ request()->routeIs('payroll.reports.zkteco-*') ? 'true' : 'false' }}"
+                                            href="#">
+
+                                            <i class="nav-main-link-icon si si-screen-desktop"></i>
+
+                                            <span class="nav-main-link-name">
+                                                @lang('menu.zkteco_reports')
+                                            </span>
+
+                                        </a>
+
+
+                                        <ul class="nav-main-submenu">
+
+                                            {{-- Raw Punches 
+                                            <li class="nav-main-item">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.zkteco-raw-punches') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.zkteco-raw-punches') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.zkteco-raw-punches')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+
+                                            {{-- Device Attendance 
+                                            <li class="nav-main-item">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.zkteco-attendance') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.zkteco-attendance') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.zkteco-attendance')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+
+                                            {{-- Device Sync
+                                            <li class="nav-main-item">
+
+                                                <a class="nav-main-link{{ request()->routeIs('payroll.reports.zkteco-sync') ? ' active' : '' }}"
+                                                    href="{{ route('payroll.reports.zkteco-sync') }}">
+
+                                                    <span class="nav-main-link-name">
+                                                        @lang('menu.zkteco-sync-report')
+                                                    </span>
+
+                                                </a>
+
+                                            </li>
+
+                                        </ul>
+
+                                    </li>
+
+                                </ul>
+                            @endcan
+
+                        </li> --}}
+
+
+                        <li class="nav-main-item{{ request()->routeIs('payroll.reports.*') ? ' open' : '' }}">
+
+                            @can('reports.view')
+                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true"
+                                    aria-expanded="{{ request()->routeIs('payroll.reports.*') ? 'true' : 'false' }}"
+                                    href="#">
+
+                                    <i class="nav-main-link-icon si si-chart"></i>
+
+                                    <span class="nav-main-link-name">
+                                        @lang('menu.reports')
+                                    </span>
+
+                                </a>
+
+
+                                <ul class="nav-main-submenu">
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.daily-attendance') ? ' open' : '' }}">
+
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.daily-attendance') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.daily-attendance') }}">
+
+                                            <span class="nav-main-link-name">
+                                                @lang('payroll::menu.daily-attendance-report')
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.monthly-attendance') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.monthly-attendance') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.monthly-attendance') }}">
+
+                                            <span class="nav-main-link-name">
+                                                @lang('payroll::menu.monthly-attendance-report')
+                                            </span>
+
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.attendance-detail') ? ' open' : '' }}">
+
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.attendance-detail') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.attendance-detail') }}">
+
+                                            <span class="nav-main-link-name">
+                                                @lang('payroll::menu.attendance-detail-report')
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.employee-attendance-card') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.employee-attendance-card') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.employee-attendance-card') }}">
+
+                                            <span class="nav-main-link-name">
+                                                @lang('payroll::menu.employee-attendance-card')
+                                            </span>
+
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.salary-register') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.salary-register') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.salary-register') }}">
+
+                                            <span class="nav-main-link-name">
+
+                                                @lang('payroll::menu.payroll-salary-register')
+
+                                            </span>
+
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.employee-payslip') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.employee-payslip') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.employee-payslip') }}">
+
+                                            <span class="nav-main-link-name">
+
+                                                @lang('payroll::menu.employee-payslip')
+
+                                            </span>
+
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            @endcan
+
+                        </li>
                     </ul>
                 </div>
                 <!-- END Side Navigation -->
@@ -755,7 +1417,8 @@
                             <div class="p-3 text-center bg-body-light border-bottom rounded-top">
                                 <img class="img-avatar img-avatar48 img-avatar-thumb"
                                     src="{{ asset('storage/' . \Auth::user()->avatar) }}" alt="">
-                                <p class="mt-2 mb-0 fw-medium">{{ \Auth::user()->{'name_' . app()->getLocale()} }}</p>
+                                <p class="mt-2 mb-0 fw-medium">{{ \Auth::user()->{'name_' . app()->getLocale()} }}
+                                </p>
                                 {{--  <p class="mb-0 text-muted fs-sm fw-medium">Web Developer</p>  --}}
                             </div>
                             {{--  <div class="p-2">

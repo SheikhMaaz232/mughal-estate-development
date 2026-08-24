@@ -3,17 +3,23 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Payroll\App\Http\Controllers\AllowanceController;
 use Modules\Payroll\App\Http\Controllers\AttendanceController;
+use Modules\Payroll\App\Http\Controllers\AttendanceDetailReportController;
 use Modules\Payroll\App\Http\Controllers\AttendanceDeviceController;
 use Modules\Payroll\App\Http\Controllers\ContractController;
+use Modules\Payroll\app\Http\Controllers\DailyAttendanceReportController;
 use Modules\Payroll\App\Http\Controllers\DeductionController;
 use Modules\Payroll\App\Http\Controllers\DesignationController;
+use Modules\Payroll\App\Http\Controllers\EmployeeAttendanceCardController;
 use Modules\Payroll\App\Http\Controllers\EmployeeController;
+use Modules\Payroll\App\Http\Controllers\EmployeePayslipController;
 use Modules\Payroll\App\Http\Controllers\GradeController;
 use Modules\Payroll\App\Http\Controllers\HolidayController;
 use Modules\Payroll\App\Http\Controllers\HolidayTypeController;
 use Modules\Payroll\App\Http\Controllers\LeaveRequestController;
 use Modules\Payroll\App\Http\Controllers\LeaveTypeController;
+use Modules\Payroll\App\Http\Controllers\MonthlyAttendanceReportController;
 use Modules\Payroll\App\Http\Controllers\PayrollController;
+use Modules\Payroll\App\Http\Controllers\PayrollSalaryRegisterController;
 use Modules\Payroll\App\Http\Controllers\PayrollTypeController;
 use Modules\Payroll\App\Http\Controllers\QualificationController;
 use Modules\Payroll\App\Http\Controllers\ShiftController;
@@ -36,6 +42,36 @@ Route::middleware(['auth', 'verified', 'web'])->group(function () {
             Route::resource('designations', DesignationController::class)->names('designations');
             Route::resource('leave-types', LeaveTypeController::class)->names('leave-types');
             Route::resource('leave-requests', LeaveRequestController::class)->names('leave-requests');
+
+            Route::get(
+                'reports/daily-attendance',
+                [DailyAttendanceReportController::class, 'index']
+            )->name('reports.daily-attendance');
+
+            Route::get(
+                '/reports/monthly-attendance',
+                [MonthlyAttendanceReportController::class, 'index']
+            )->name('reports.monthly-attendance');
+
+            Route::get(
+                '/reports/attendance-detail',
+                [AttendanceDetailReportController::class, 'index']
+            )->name('reports.attendance-detail');
+
+            Route::get(
+                '/reports/employee-attendance-card',
+                [EmployeeAttendanceCardController::class, 'index']
+            )->name('reports.employee-attendance-card');
+
+            Route::get(
+                '/reports/payroll-salary-register',
+                [PayrollSalaryRegisterController::class, 'index']
+            )->name('reports.salary-register');
+
+            Route::get(
+                '/reports/employee-payslip',
+                [EmployeePayslipController::class, 'index']
+            )->name('reports.employee-payslip');
 
             // Leave Request approval routes
             Route::post('/leave-requests/{leaveRequest}/approve', [LeaveRequestController::class, 'approve'])->name('leave-requests.approve');
