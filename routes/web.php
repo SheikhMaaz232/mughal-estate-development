@@ -334,6 +334,29 @@ Route::middleware('auth')->group(function () {
     Route::get('/clients/select2', [ClientInvoiceController::class, 'select2'])
         ->name('clients.select2');
 
+
+    Route::get(
+        '/exective-reports/booking-report',
+        [
+            ReportController::class,
+            'bookingPaymentReportFilter'
+        ]
+    )->name('exective.reports.booking.report.filter');
+
+
+    Route::get('/exective-reports/booking-report/report', [
+        ReportController::class,
+        'bookingPaymentReport'
+    ])->name('exective.reports.booking.report');
+
+    Route::get(
+        '/exective-reports/booking-payment/products',
+        [
+            ReportController::class,
+            'bookingPaymentProducts'
+        ]
+    )->name('exective-reports.booking-payment.products');
+
     Route::get(
         '/detail-accounts/select2/{id}',
         [DetailAccountController::class, 'select2Single']

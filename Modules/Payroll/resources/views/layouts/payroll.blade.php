@@ -1345,6 +1345,54 @@
                                         </a>
                                     </li>
 
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.late-early-leave') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.late-early-leave') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.late-early-leave') }}">
+                                            <span class="nav-main-link-name">
+                                                @lang('payroll::menu.late-early-leave-report')
+                                            </span>
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.overtime') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.overtime') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.overtime') }}">
+                                            <span class="nav-main-link-name">
+                                                @lang('payroll::menu.overtime-report')
+                                            </span>
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.absentee') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.absentee') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.absentee') }}">
+
+                                            <span class="nav-main-link-name">
+
+                                                @lang('payroll::menu.absentee-report')
+
+                                            </span>
+
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.leave') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.leave') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.leave') }}">
+
+                                            <span class="nav-main-link-name">
+
+                                                @lang('payroll::menu.leave-report')
+
+                                            </span>
+
+                                        </a>
+                                    </li>
+
                                 </ul>
                             @endcan
 

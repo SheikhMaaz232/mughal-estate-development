@@ -289,17 +289,101 @@ class BankReceiptVoucherController extends Controller
             ], 500);
         }
     }
+    // public function print($id)
+    // {
+    //     $bankReceiptVoucher = BankReceiptVoucher::with([
+    //         'detailAccount',
+    //         'project',
+    //         'bank', // if you have detail rows
+    //     ])->findOrFail($id);
+
+    //     $bookingData = BookingApplication::where('detail_account_id', $bankReceiptVoucher->detail_account_id)->with('product', 'project')->first();
+
+
+    //     return view('registration.vouchers.brv.print', compact('bankReceiptVoucher', 'bookingData'));
+    // }
+
     public function print($id)
     {
         $bankReceiptVoucher = BankReceiptVoucher::with([
             'detailAccount',
             'project',
-            'bank', // if you have detail rows
+            'bank',
         ])->findOrFail($id);
 
-        $bookingData = BookingApplication::where('detail_account_id', $bankReceiptVoucher->detail_account_id)->with('product', 'project')->first();
+
+        /*
+    |--------------------------------------------------------------------------
+    | CHECK ALREADY PRINTED
+    |--------------------------------------------------------------------------
+    */
+
+        if ($bankReceiptVoucher->printed_at !== null) {
+
+            $message = app()->getLocale() === 'ur'
+                ? 'یہ بینک رسید واؤچر پہلے ہی پرنٹ ہو چکا ہے۔'
+                : 'This Bank Receipt Voucher has already been printed.';
+
+            return redirect()
+                ->back()
+                ->with('error', $message);
+        }
 
 
-        return view('registration.vouchers.brv.print', compact('bankReceiptVoucher', 'bookingData'));
+        /*
+    |--------------------------------------------------------------------------
+    | MARK AS PRINTED
+    |--------------------------------------------------------------------------
+    */
+
+        DB::transaction(function () use ($bankReceiptVoucher) {
+
+            $voucher = BankReceiptVoucher::where(
+                'id',
+                $bankReceiptVoucher->id
+            )
+                ->lockForUpdate()
+                ->firstOrFail();
+
+
+            // Check again after locking
+            if ($voucher->printed_at !== null) {
+                abort(403);
+            }
+
+
+            $voucher->update([
+                'printed_at' => now(),
+            ]);
+        });
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | BOOKING DATA
+    |--------------------------------------------------------------------------
+    */
+
+        $bookingData = BookingApplication::where(
+            'detail_account_id',
+            $bankReceiptVoucher->detail_account_id
+        )
+            ->with('product', 'project')
+            ->first();
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | PRINT VIEW
+    |--------------------------------------------------------------------------
+    */
+
+        return view(
+            'registration.vouchers.brv.print',
+            compact(
+                'bankReceiptVoucher',
+                'bookingData'
+            )
+        );
     }
 }

@@ -40,5 +40,7 @@ return [
     'payroll_reports' => 'پے رول رپورٹس',
     'payroll-salary-register' => 'تنخواہ رجسٹر',
     'employee-payslip' => 'ملازم کی تنخواہ سلپ',
-
+    'late-early-leave-report' => 'دیر سے آنے اور جلد جانے کی رپورٹ',
+    'absentee-report' => 'غیر حاضری رپورٹ',
+    'leave-report' => 'چھٹیوں کی رپورٹ',
 ];

@@ -19,7 +19,8 @@ class BankReceiptVoucher extends Model implements Auditable
         'total_amount',
         'attachment',
         'transaction_type',
-        'status'
+        'status',
+        'printed_at'
     ];
 
     public function project()

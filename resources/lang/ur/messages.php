@@ -1408,4 +1408,5 @@ return [
     'total_saleable_marlas_received_amount' => 'کل سیل شدہ مرلوں سے وصول رقم',
     'total_available_marlas' => 'کل دستیاب مرلے',
     'total_available_marlas_value' => 'کل دستیاب مرلوں کی رقم',
+    'generate-booking-report' => 'بکنگ رپورٹ'
 ];

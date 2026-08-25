@@ -36,7 +36,6 @@ class BankReceiptVoucherService
 
         // Create the bankReceiptVoucher
         $bankReceiptVoucher = BankReceiptVoucher::create($data);
-
         return $bankReceiptVoucher;
     }
 

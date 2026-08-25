@@ -1456,6 +1456,32 @@
                                             </a>
                                         </li>
 
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('exective.reports.booking.report.filter.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('exective.reports.booking.report.filter.*') ? ' active' : '' }}"
+                                                href="{{ route('exective.reports.booking.report.filter') }}">
+                                                <span class="nav-main-link-name">@lang('menu.booking-report')</span>
+                                            </a>
+                                        </li>
+
+
+                                        {{-- <li class="nav-item">
+
+                                            <a href="{{ route('exective.reports.booking.report.filter') }}"
+                                                class="nav-link">
+
+                                                <i class="nav-icon fas fa-money-bill-wave"></i>
+
+                                                <p>
+
+                                                    {{ app()->getLocale() == 'ur' ? 'بکنگ پیمنٹ رپورٹ' : 'Booking Payment Report' }}
+
+                                                </p>
+
+                                            </a>
+
+                                        </li> --}}
+
                                     </ul>
                                 @endcan
                             </li>

@@ -88,12 +88,13 @@ return [
     'payroll' => 'پے رول ماڈیول',
     'contractor-bill' => 'ٹھیکیدار بل',
     'stock-report' => 'اسٹاک رپورٹ',
-    'available-plots-report' => 'دستیاب پلاٹ کی رپورٹ',
+    'available-plots-report' => 'دستیاب پلاٹوں کی رپورٹ',
     'direct-products-report' => 'پروجیکٹ پلاٹس سمری',
     'bank_book' => 'بینک بک',
     'client-invoices' => 'کلائنٹ انوائسز',
     'outstanding-receivables' => 'بقایا جات',
     'receipt-history' => 'رسیدوں کی تاریخ',
     'executive-reports' => 'ایگزیکٹو رپورٹس',
-    'brv_approval' => 'بی آر وی کی منظوری'
+    'brv_approval' => 'بی آر وی کی منظوری',
+    'booking-report' => 'بکنگ رپورٹ'
 ];

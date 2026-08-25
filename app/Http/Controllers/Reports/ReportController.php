@@ -900,7 +900,7 @@ class ReportController extends Controller
                     $projectId => (float) $receivedAmount
                 ];
             });
-            
+
         $grandTotals = [
             'marla_all' => $products->sum('total_marla'),
             'amount_all' => $products->sum('total_amount'),
@@ -1035,5 +1035,476 @@ class ReportController extends Controller
     {
         $parts = explode('-', $date);
         return count($parts) === 3 ? "{$parts[2]}-{$parts[1]}-{$parts[0]}" : $date;
+    }
+
+    public function bookingPaymentProducts(Request $request)
+    {
+        $projectIds = (array) $request->project_id;
+
+        /*
+    |--------------------------------------------------------------------------
+    | Remove "all"
+    |--------------------------------------------------------------------------
+    */
+
+        $projectIds = array_filter(
+            $projectIds,
+            function ($id) {
+                return $id !== 'all'
+                    && $id !== null
+                    && $id !== '';
+            }
+        );
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Product Query
+    |--------------------------------------------------------------------------
+    */
+
+        $query = Product::query();
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | If specific projects selected
+    |--------------------------------------------------------------------------
+    */
+
+        if (!empty($projectIds)) {
+
+            $query->where('type', 'Direct')->whereIn(
+                'project_id',
+                $projectIds
+            );
+        }
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Get Products
+    |--------------------------------------------------------------------------
+    */
+
+        $products = $query
+            ->orderBy('project_id')
+            ->orderBy('unit_no')
+            ->get([
+                'id',
+                'project_id',
+                'unit_no',
+                'name_en',
+                'name_ur'
+            ]);
+
+
+        return response()->json([
+            'products' => $products
+        ]);
+    }
+
+    public function bookingPaymentReportFilter()
+    {
+        return view(
+            'exective_reports.booking_report.filterFile',
+            $this->getMasterData()
+        );
+    }
+
+    public function bookingPaymentReport(Request $request)
+    {
+        $query = BookingApplication::with([
+            'project',
+            'party',
+            'product',
+        ]);
+
+        /*
+    |--------------------------------------------------------------------------
+    | ACTIVE BOOKINGS
+    |--------------------------------------------------------------------------
+    */
+
+        $query->where(function ($q) {
+            $q->whereNull('case')
+                ->orWhereNotIn('case', [
+                    'transfer',
+                    'ownership_changed',
+                ]);
+        });
+
+        $query->where(function ($q) {
+            $q->whereNull('status')
+                ->orWhereRaw('LOWER(status) != ?', ['cancelled']);
+        });
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | PROJECT FILTER
+    |--------------------------------------------------------------------------
+    */
+
+        if (
+            $request->filled('project_id') &&
+            !in_array('all', (array) $request->project_id)
+        ) {
+            $query->whereIn(
+                'project_id',
+                (array) $request->project_id
+            );
+        }
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | PRODUCT FILTER
+    |--------------------------------------------------------------------------
+    */
+
+        if (
+            $request->filled('product_id') &&
+            !in_array('all', (array) $request->product_id)
+        ) {
+            $query->whereIn(
+                'product_id',
+                (array) $request->product_id
+            );
+        }
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | GET BOOKINGS
+    |--------------------------------------------------------------------------
+    */
+
+        $bookings = $query
+            ->orderBy('project_id')
+            ->orderBy('product_id')
+            ->orderBy('date')
+            ->get();
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | GROUP BY PROJECT
+    |--------------------------------------------------------------------------
+    */
+
+        $groupedBookings = $bookings->groupBy('project_id');
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | RECEIVED AMOUNT
+    |--------------------------------------------------------------------------
+    |
+    | BookingApplication.detail_account_id
+    |              ↓
+    | AccountLedger.detail_account_id
+    |              ↓
+    | transaction_type = booking_payment
+    |              ↓
+    | SUM(credit)
+    |
+    */
+
+        $detailAccountIds = $bookings
+            ->whereNotNull('detail_account_id')
+            ->pluck('detail_account_id')
+            ->unique()
+            ->values();
+
+
+        $receivedAmountByAccount = AccountLedger::whereIn(
+            'detail_account_id',
+            $detailAccountIds
+        )
+            ->where('transaction_type', 'booking_payment')
+            ->selectRaw(
+                'detail_account_id, SUM(credit) as received_amount'
+            )
+            ->groupBy('detail_account_id')
+            ->get()
+            ->mapWithKeys(function ($row) {
+
+                return [
+                    $row->detail_account_id =>
+                    (float) $row->received_amount
+                ];
+            });
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | GRAND TOTALS
+    |--------------------------------------------------------------------------
+    */
+
+        $totalBookingAmount = $bookings->sum('total_amount');
+
+        $totalReceivedAmount = $bookings->sum(function ($booking) use (
+            $receivedAmountByAccount
+        ) {
+
+            return $receivedAmountByAccount[$booking->detail_account_id] ?? 0;
+        });
+
+
+        $grandTotals = [
+
+            'bookings' => $bookings->count(),
+
+            'booking_amount' => $totalBookingAmount,
+
+            'received_amount' => $totalReceivedAmount,
+
+            'remaining_amount' =>
+            $totalBookingAmount - $totalReceivedAmount,
+
+        ];
+
+
+        return view(
+            'exective_reports.booking_report.report',
+            compact(
+                'groupedBookings',
+                'receivedAmountByAccount',
+                'grandTotals'
+            )
+        );
+    }
+
+    public function bookingPaymentReport2(Request $request)
+    {
+        /*
+    |--------------------------------------------------------------------------
+    | Booking Application Query
+    |--------------------------------------------------------------------------
+    */
+
+        $query = BookingApplication::with([
+            'project',
+            'product',
+            'party',
+            'detailAccount'
+        ]);
+
+        /*
+    |--------------------------------------------------------------------------
+    | ACTIVE BOOKINGS ONLY
+    |--------------------------------------------------------------------------
+    |
+    | Case should NOT be transfer
+    | Status should NOT be Cancelled
+    |
+    | NULL is also treated as active.
+    |
+    */
+
+        $query->where(function ($q) {
+            $q->whereNull('case')
+                ->orWhere(function ($q) {
+                    $q->where('case', '!=', 'transfer')
+                        ->where('case', '!=', 'ownership_changed');
+                });
+        });
+
+        $query->where(function ($q) {
+            $q->whereNull('status')
+                ->orWhereRaw('LOWER(status) != ?', ['cancelled']);
+        });
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | PROJECT FILTER
+    |--------------------------------------------------------------------------
+    |
+    | Supports:
+    | all
+    | single project
+    | multiple projects
+    |
+    */
+
+        if ($request->filled('project_id')) {
+
+            $projectIds = (array) $request->project_id;
+
+            if (!in_array('all', $projectIds)) {
+
+                $projectIds = array_filter(
+                    $projectIds,
+                    fn($id) => $id !== 'all' && $id !== null && $id !== ''
+                );
+
+                if (!empty($projectIds)) {
+                    $query->whereIn('project_id', $projectIds);
+                }
+            }
+        }
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | PRODUCT FILTER
+    |--------------------------------------------------------------------------
+    |
+    | Supports:
+    | all
+    | single product
+    | multiple products
+    |
+    */
+
+        if ($request->filled('product_id')) {
+
+            $productIds = (array) $request->product_id;
+
+            if (!in_array('all', $productIds)) {
+
+                $productIds = array_filter(
+                    $productIds,
+                    fn($id) => $id !== 'all' && $id !== null && $id !== ''
+                );
+
+                if (!empty($productIds)) {
+                    $query->whereIn('product_id', $productIds);
+                }
+            }
+        }
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Get Active Bookings
+    |--------------------------------------------------------------------------
+    */
+
+        $bookings = $query
+            ->orderBy('project_id')
+            ->orderBy('product_id')
+            ->orderBy('id')
+            ->get();
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Detail Account IDs
+    |--------------------------------------------------------------------------
+    */
+
+        $detailAccountIds = $bookings
+            ->pluck('detail_account_id')
+            ->filter()
+            ->unique()
+            ->values();
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Booking Payment
+    |--------------------------------------------------------------------------
+    |
+    | AccountLedger:
+    |
+    | detail_account_id = BookingApplication.detail_account_id
+    | transaction_type = booking_payment
+    | received amount = credit
+    |
+    */
+
+        $paymentByAccount = AccountLedger::whereIn(
+            'detail_account_id',
+            $detailAccountIds
+        )
+            ->where('transaction_type', 'booking_payment')
+            ->selectRaw(
+                'detail_account_id, SUM(credit) as received_amount'
+            )
+            ->groupBy('detail_account_id')
+            ->get()
+            ->mapWithKeys(function ($row) {
+
+                return [
+                    $row->detail_account_id => (float) $row->received_amount
+                ];
+            });
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Add Received Amount To Every Booking
+    |--------------------------------------------------------------------------
+    */
+
+        $bookings->each(function ($booking) use ($paymentByAccount) {
+
+            $booking->received_amount =
+                $paymentByAccount[$booking->detail_account_id] ?? 0;
+
+            /*
+        | Outstanding Amount
+        */
+
+            $booking->remaining_amount =
+                max(
+                    0,
+                    (float) $booking->total_amount
+                        - (float) $booking->received_amount
+                );
+        });
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Group By Project
+    |--------------------------------------------------------------------------
+    */
+
+        $groupedProjects = $bookings->groupBy('project_id');
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Grand Totals
+    |--------------------------------------------------------------------------
+    */
+
+        $grandTotals = [
+
+            'total_bookings' => $bookings->count(),
+
+            'total_amount' => $bookings->sum(function ($booking) {
+                return (float) $booking->total_amount;
+            }),
+
+            'total_received' => $bookings->sum(function ($booking) {
+                return (float) $booking->received_amount;
+            }),
+
+            'total_remaining' => $bookings->sum(function ($booking) {
+                return (float) $booking->remaining_amount;
+            }),
+
+        ];
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Return View
+    |--------------------------------------------------------------------------
+    */
+
+        return view(
+            'exective_reports.booking_report.report',
+            compact(
+                'groupedProjects',
+                'grandTotals'
+            )
+        );
     }
 }

@@ -1,12 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Payroll\App\Http\Controllers\AbsenteeReportController;
 use Modules\Payroll\App\Http\Controllers\AllowanceController;
 use Modules\Payroll\App\Http\Controllers\AttendanceController;
 use Modules\Payroll\App\Http\Controllers\AttendanceDetailReportController;
 use Modules\Payroll\App\Http\Controllers\AttendanceDeviceController;
 use Modules\Payroll\App\Http\Controllers\ContractController;
-use Modules\Payroll\app\Http\Controllers\DailyAttendanceReportController;
+use Modules\Payroll\App\Http\Controllers\DailyAttendanceReportController;
 use Modules\Payroll\App\Http\Controllers\DeductionController;
 use Modules\Payroll\App\Http\Controllers\DesignationController;
 use Modules\Payroll\App\Http\Controllers\EmployeeAttendanceCardController;
@@ -15,9 +16,12 @@ use Modules\Payroll\App\Http\Controllers\EmployeePayslipController;
 use Modules\Payroll\App\Http\Controllers\GradeController;
 use Modules\Payroll\App\Http\Controllers\HolidayController;
 use Modules\Payroll\App\Http\Controllers\HolidayTypeController;
+use Modules\Payroll\App\Http\Controllers\LateEarlyLeaveReportController;
+use Modules\Payroll\App\Http\Controllers\LeaveReportController;
 use Modules\Payroll\App\Http\Controllers\LeaveRequestController;
 use Modules\Payroll\App\Http\Controllers\LeaveTypeController;
 use Modules\Payroll\App\Http\Controllers\MonthlyAttendanceReportController;
+use Modules\Payroll\App\Http\Controllers\OvertimeReportController;
 use Modules\Payroll\App\Http\Controllers\PayrollController;
 use Modules\Payroll\App\Http\Controllers\PayrollSalaryRegisterController;
 use Modules\Payroll\App\Http\Controllers\PayrollTypeController;
@@ -72,6 +76,27 @@ Route::middleware(['auth', 'verified', 'web'])->group(function () {
                 '/reports/employee-payslip',
                 [EmployeePayslipController::class, 'index']
             )->name('reports.employee-payslip');
+
+            Route::get(
+                '/reports/late-early-leave',
+                [LateEarlyLeaveReportController::class, 'index']
+            )->name('reports.late-early-leave');
+
+            Route::get(
+                '/reports/overtime',
+                [OvertimeReportController::class, 'index']
+            )->name('reports.overtime');
+
+            Route::get(
+                '/reports/absentee',
+                [AbsenteeReportController::class, 'index']
+            )->name('reports.absentee');
+
+            Route::get(
+                '/reports/leave',
+                [LeaveReportController::class, 'index']
+            )->name('reports.leave');
+
 
             // Leave Request approval routes
             Route::post('/leave-requests/{leaveRequest}/approve', [LeaveRequestController::class, 'approve'])->name('leave-requests.approve');

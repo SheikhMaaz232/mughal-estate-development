@@ -40,4 +40,7 @@ return [
     'payroll_reports' => 'Payroll Reports',
     'payroll-salary-register' => 'Salary Register',
     'employee-payslip' => 'Employee Payslip',
+    'late-early-leave-report' => 'Late & Early Leave Report',
+    'absentee-report' => 'Absentee Report',
+    'leave-report' => 'Leave Report',
 ];

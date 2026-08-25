@@ -1427,5 +1427,6 @@ return [
     'total_saleable_marlas_amount' => 'Tot Saleable Marlas Amount',
     'total_saleable_marlas_received_amount' => 'Total amount received from sold marlas',
     'total_available_marlas' => 'Total available marlas',
-     'total_available_marlas_value' => 'Total available marlas Value',
+    'total_available_marlas_value' => 'Total available marlas Value',
+    'generate-booking-report' => 'Generate Booking Report'
 ];
