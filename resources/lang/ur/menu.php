@@ -96,5 +96,6 @@ return [
     'receipt-history' => 'رسیدوں کی تاریخ',
     'executive-reports' => 'ایگزیکٹو رپورٹس',
     'brv_approval' => 'بی آر وی کی منظوری',
-    'booking-report' => 'بکنگ رپورٹ'
+    'booking-report' => 'بکنگ رپورٹ',
+    'account-statement' => 'اکاؤنٹ اسٹیٹمنٹ'
 ];

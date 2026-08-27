@@ -1420,6 +1420,13 @@
                                                 <span class="nav-main-link-name">@lang('menu.bill-aging')</span>
                                             </a>
                                         </li>
+                                        {{-- <li
+                                            class="nav-main-item{{ request()->routeIs('reports.account-statement.index') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('reports.account-statement.index') ? ' active' : '' }}"
+                                                href="{{ route('reports.account-statement.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.account-statement')</span>
+                                            </a>
+                                        </li> --}}
                                         <li
                                             class="nav-main-item{{ request()->routeIs('reports.trial.balance.*') ? ' open' : '' }}">
                                             <a class="nav-main-link{{ request()->routeIs('reports.trial.balance.*') ? ' active' : '' }}"

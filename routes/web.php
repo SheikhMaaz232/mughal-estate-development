@@ -71,6 +71,7 @@ use App\Http\Controllers\SaleModule\SaleInvoiceController;
 use Illuminate\Support\Facades\Route;
 use Modules\Payroll\App\Http\Controllers\DashboardController;
 use Modules\Payroll\App\Http\Controllers\QualificationController;
+use App\Http\Controllers\Reports\AccountStatementController;
 
 Route::post('/locale', LocaleController::class)->name('locale.change');
 
@@ -491,6 +492,16 @@ Route::middleware(['auth'])->prefix('reports')->group(function () {
 
     Route::get('/balance-sheet/report', [ReportController::class, 'getBalanceSheet'])
         ->name('reports.balance.sheet.report');
+        
+    Route::get(
+        '/account-statement',
+        [AccountStatementController::class, 'index']
+    )->name('reports.account-statement.index');
+
+    Route::get(
+        '/account-statement/report',
+        [AccountStatementController::class, 'report']
+    )->name('reports.account-statement.report');
 });
 
 Route::resource('lands', LandController::class);

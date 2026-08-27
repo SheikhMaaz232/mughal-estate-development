@@ -94,6 +94,7 @@ return [
     'bank_book' => 'Bank Book',
     'executive-reports' => 'Executive Reports',
     'brv_approval' => 'BRV Approval',
-    'booking-report' => 'Plot Booking Report'
+    'booking-report' => 'Plot Booking Report',
+    'account-statement' => 'Account Statement'
 
 ];
