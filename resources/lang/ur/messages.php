@@ -1561,8 +1561,6 @@ return [
     'executive_overview' => 'انتظامی جائزہ',
     'dashboard_subtitle' => 'اپنے پورٹ فولیو، نقد رقم اور تعمیراتی منصوبوں کی واضح صورتحال۔',
     'dashboard' => 'ڈیش بورڈ',
-    'projects' => 'پروجیکٹس',
-    'bookings' => 'بکنگز',
     'client_invoices' => 'کلائنٹ انوائسز',
     'construction_sites' => 'تعمیراتی سائٹس',
     'invoice_value' => 'انوائس کی مالیت',
@@ -1595,8 +1593,6 @@ return [
     'recent_ledger_entries' => 'حالیہ لیجر اندراجات',
     'account_summary' => 'اکاؤنٹ خلاصہ',
     'document_no' => 'دستاویز نمبر',
-    'debit' => 'ڈیبٹ',
-    'credit' => 'کریڈٹ',
     'no_access' => 'رسائی نہیں',
     'account_access_required' => 'اس ڈیش بورڈ کو دیکھنے کے لیے اکاؤنٹس ماڈیول کی اجازت درکار ہے۔'
     , 'operational_overview' => 'آپریشنل جائزہ'
