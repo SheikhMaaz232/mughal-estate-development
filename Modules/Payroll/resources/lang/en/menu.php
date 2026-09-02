@@ -43,4 +43,10 @@ return [
     'late-early-leave-report' => 'Late & Early Leave Report',
     'absentee-report' => 'Absentee Report',
     'leave-report' => 'Leave Report',
+    'employee-attendance-summary' => 'Employee Attendance Summary',
+    'department-attendance-summary' => 'Department Attendance Summary',
+    'attendance-exception' => 'Attendance Exception Report',
+    'employee-leave-balance' => 'Employee Leave Balance',
+    'department-payroll-summary' => 'Department Payroll Summary',
+    'department-salary-summary' => 'Department Salary Summary',
 ];

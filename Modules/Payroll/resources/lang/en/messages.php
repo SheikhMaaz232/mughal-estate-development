@@ -536,4 +536,54 @@ return [
     'designations-management' => 'Designations Management',
     'device_user_id' => 'Device User ID',
 
+
+
+
+
+
+    'department-wise-payroll-summary-report' => 'Department-wise Payroll Summary Report',
+    'filters' => 'Report Filters',
+    'all_employees' => 'All Employees',
+    'all_departments' => 'All Departments',
+    'all_designations' => 'All Designations',
+    'shift' => 'Shift',
+    'all_shifts' => 'All Shifts',
+    'generate_report' => 'Generate Report',
+    'print' => 'Print',
+    'period' => 'Payroll Period',
+    'generated_on' => 'Generated On',
+    'total_employees' => 'Total Employees',
+    'worked_days' => 'Worked Days',
+    'absent_days' => 'Absent Days',
+    'leave_days' => 'Leave Days',
+    'holiday_days' => 'Holiday Days',
+    'late_minutes' => 'Late Minutes',
+    'early_leave_minutes' => 'Early Leave Minutes',
+    'employees' => 'Employees',
+    'basic_salary' => 'Basic Salary',
+    'gross_salary' => 'Gross Salary',
+    'net_salary' => 'Net Salary',
+    'department_summary' => 'Department-wise Summary',
+    'salary_summary' => 'Salary Summary',
+    'absence_deduction' => 'Absence Deduction',
+    'late_early_deduction' => 'Late / Early Leave Deduction',
+    'overtime_amount' => 'Overtime Amount',
+    'allowance_adjustment' => 'Allowance Adjustment',
+    'deduction_adjustment' => 'Deduction Adjustment',
+    'total' => 'Total',
+    'no_department' => 'No Department',
+    'no_records' => 'No payroll records found.',
+
+
+
+    'department_salary_summary' => 'Department-wise Salary Summary Report',
+    'year' => 'Year',
+    'payroll_status' => 'Payroll Status',
+    'all' => 'All',
+    'unfinalized' => 'Unfinalized',
+    'employee_payroll_details' => 'Employee Payroll Details',
+    'deduction_adjustment_summary' => 'Deduction & Adjustment Summary',
+    'not_assigned' => 'Not Assigned',
+    'no_records_found' => 'No records found.',
+
 ];

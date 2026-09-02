@@ -43,4 +43,10 @@ return [
     'late-early-leave-report' => 'دیر سے آنے اور جلد جانے کی رپورٹ',
     'absentee-report' => 'غیر حاضری رپورٹ',
     'leave-report' => 'چھٹیوں کی رپورٹ',
+    'employee-attendance-summary' => 'ملازمین کی حاضری کا خلاصہ',
+    'department-attendance-summary' => 'شعبہ وار حاضری کا خلاصہ',
+    'attendance-exception' => 'حاضری کی استثنائی رپورٹ',
+    'employee-leave-balance' => 'ملازم کی چھٹی کا بیلنس',
+    'department-payroll-summary' => 'ڈیپارٹمینٹ پے رول خلاصہ',
+    'department-salary-summary' => 'محکمہ وار تنخواہ خلاصہ',
 ];

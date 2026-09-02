@@ -922,7 +922,7 @@
 
                                         <ul class="nav-main-submenu">
 
-                                            {{-- Daily Attendance 
+                                            {{-- Daily Attendance
                                             <li
                                                 class="nav-main-item{{ request()->routeIs('payroll.reports.daily-attendance') ? ' open' : '' }}">
 
@@ -938,7 +938,7 @@
                                             </li>
 
 
-                                            {{-- Monthly Attendance 
+                                            {{-- Monthly Attendance
                                             <li
                                                 class="nav-main-item{{ request()->routeIs('payroll.reports.monthly-attendance') ? ' open' : '' }}">
 
@@ -954,7 +954,7 @@
                                             </li>
 
 
-                                            {{-- Employee Attendance 
+                                            {{-- Employee Attendance
                                             <li
                                                 class="nav-main-item{{ request()->routeIs('payroll.reports.employee-attendance') ? ' open' : '' }}">
 
@@ -970,7 +970,7 @@
                                             </li>
 
 
-                                            {{-- Late Coming 
+                                            {{-- Late Coming
                                             <li
                                                 class="nav-main-item{{ request()->routeIs('payroll.reports.late-coming') ? ' open' : '' }}">
 
@@ -986,7 +986,7 @@
                                             </li>
 
 
-                                            {{-- Early Leaving 
+                                            {{-- Early Leaving
                                             <li
                                                 class="nav-main-item{{ request()->routeIs('payroll.reports.early-leaving') ? ' open' : '' }}">
 
@@ -1002,7 +1002,7 @@
                                             </li>
 
 
-                                            {{-- Missing Punch 
+                                            {{-- Missing Punch
                                             <li
                                                 class="nav-main-item{{ request()->routeIs('payroll.reports.missing-punch') ? ' open' : '' }}">
 
@@ -1018,7 +1018,7 @@
                                             </li>
 
 
-                                            {{-- Absent 
+                                            {{-- Absent
                                             <li
                                                 class="nav-main-item{{ request()->routeIs('payroll.reports.absent') ? ' open' : '' }}">
 
@@ -1034,7 +1034,7 @@
                                             </li>
 
 
-                                            {{-- Overtime 
+                                            {{-- Overtime
                                             <li
                                                 class="nav-main-item{{ request()->routeIs('payroll.reports.overtime') ? ' open' : '' }}">
 
@@ -1050,7 +1050,7 @@
                                             </li>
 
 
-                                            {{-- Leave & Attendance 
+                                            {{-- Leave & Attendance
                                             <li
                                                 class="nav-main-item{{ request()->routeIs('payroll.reports.leave-attendance') ? ' open' : '' }}">
 
@@ -1071,8 +1071,8 @@
 
 
                                     {{-- ========================================================= --}}
-                        {{-- PAYROLL / SALARY REPORTS 
-                                    {{-- ========================================================= 
+                        {{-- PAYROLL / SALARY REPORTS
+                                    {{-- =========================================================
 
                                     <li class="nav-main-item nav-main-item-submenu">
 
@@ -1092,7 +1092,7 @@
 
                                         <ul class="nav-main-submenu">
 
-                                            {{-- Monthly Payroll 
+                                            {{-- Monthly Payroll
                                             <li class="nav-main-item">
 
                                                 <a class="nav-main-link{{ request()->routeIs('payroll.reports.payroll-register') ? ' active' : '' }}"
@@ -1107,7 +1107,7 @@
                                             </li>
 
 
-                                            {{-- Salary Slip 
+                                            {{-- Salary Slip
                                             <li class="nav-main-item">
 
                                                 <a class="nav-main-link{{ request()->routeIs('payroll.reports.salary-slip') ? ' active' : '' }}"
@@ -1122,7 +1122,7 @@
                                             </li>
 
 
-                                            {{-- Payroll Deductions 
+                                            {{-- Payroll Deductions
                                             <li class="nav-main-item">
 
                                                 <a class="nav-main-link{{ request()->routeIs('payroll.reports.payroll-deductions') ? ' active' : '' }}"
@@ -1137,7 +1137,7 @@
                                             </li>
 
 
-                                            {{-- Overtime Payment 
+                                            {{-- Overtime Payment
                                             <li class="nav-main-item">
 
                                                 <a class="nav-main-link{{ request()->routeIs('payroll.reports.overtime-payment') ? ' active' : '' }}"
@@ -1152,7 +1152,7 @@
                                             </li>
 
 
-                                            {{-- Department Payroll 
+                                            {{-- Department Payroll
                                             <li class="nav-main-item">
 
                                                 <a class="nav-main-link{{ request()->routeIs('payroll.reports.department-payroll') ? ' active' : '' }}"
@@ -1193,7 +1193,7 @@
 
                                         <ul class="nav-main-submenu">
 
-                                            {{-- Raw Punches 
+                                            {{-- Raw Punches
                                             <li class="nav-main-item">
 
                                                 <a class="nav-main-link{{ request()->routeIs('payroll.reports.zkteco-raw-punches') ? ' active' : '' }}"
@@ -1208,7 +1208,7 @@
                                             </li>
 
 
-                                            {{-- Device Attendance 
+                                            {{-- Device Attendance
                                             <li class="nav-main-item">
 
                                                 <a class="nav-main-link{{ request()->routeIs('payroll.reports.zkteco-attendance') ? ' active' : '' }}"
@@ -1388,6 +1388,107 @@
 
                                                 @lang('payroll::menu.leave-report')
 
+                                            </span>
+
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.employee-attendance-summary') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.employee-attendance-summary') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.employee-attendance-summary') }}">
+
+                                            <span class="nav-main-link-name">
+
+                                                @lang('payroll::menu.employee-attendance-summary')
+
+                                            </span>
+
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.department-attendance-summary') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.department-attendance-summary') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.department-attendance-summary') }}">
+
+                                            <span class="nav-main-link-name">
+
+                                                @lang('payroll::menu.department-attendance-summary')
+
+                                            </span>
+
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.attendance-exception') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.attendance-exception') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.attendance-exception') }}">
+
+                                            <span class="nav-main-link-name">
+
+                                                @lang('payroll::menu.attendance-exception')
+
+                                            </span>
+
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.employee-leave-balance') ? ' open' : '' }}">
+
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.employee-leave-balance') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.employee-leave-balance') }}">
+
+                                            <span class="nav-main-link-name">
+
+                                                @lang('payroll::menu.employee-leave-balance')
+
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.department-payroll-summary') ? ' open' : '' }}">
+
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.department-payroll-summary') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.department-payroll-summary') }}">
+
+                                            <span class="nav-main-link-name">
+                                                @lang('payroll::menu.department-payroll-summary')
+
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.payroll-deduction') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.payroll-deduction') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.payroll-deduction') }}">
+
+                                            <span class="nav-main-link-name">
+                                                @if (app()->getLocale() == 'ur')
+                                                    تنخواہ کٹوتی رپورٹ
+                                                @else
+                                                    Payroll Deduction Report
+                                                @endif
+                                            </span>
+
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="nav-main-item{{ request()->routeIs('payroll.reports.department-salary-summary') ? ' open' : '' }}">
+                                        <a class="nav-main-link{{ request()->routeIs('payroll.reports.department-salary-summary') ? ' active' : '' }}"
+                                            href="{{ route('payroll.reports.department-salary-summary') }}">
+
+                                            <span class="nav-main-link-name">
+                                                @lang('payroll::menu.department-salary-summary')
                                             </span>
 
                                         </a>

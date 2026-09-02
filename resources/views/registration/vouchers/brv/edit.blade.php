@@ -87,6 +87,17 @@
                             <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <select name="status" id="status"
+                        class="form-control form-select @error('status') is-invalid @enderror" hidden>
+
+                        <option value="Unverified" {{ old('status', $bankReceiptVoucher->status) == 'Unverified' ? 'selected' : '' }}>
+                        </option>
+
+                        <option value="verified" {{ old('status', $bankReceiptVoucher->status) == 'verified' ? 'selected' : '' }}>
+                        </option>
+
+                    </select>
                 </div>
 
                 <div class="row">

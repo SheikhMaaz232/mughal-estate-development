@@ -6,12 +6,18 @@ use Modules\Payroll\App\Http\Controllers\AllowanceController;
 use Modules\Payroll\App\Http\Controllers\AttendanceController;
 use Modules\Payroll\App\Http\Controllers\AttendanceDetailReportController;
 use Modules\Payroll\App\Http\Controllers\AttendanceDeviceController;
+use Modules\Payroll\App\Http\Controllers\AttendanceExceptionReportController;
 use Modules\Payroll\App\Http\Controllers\ContractController;
 use Modules\Payroll\App\Http\Controllers\DailyAttendanceReportController;
 use Modules\Payroll\App\Http\Controllers\DeductionController;
+use Modules\Payroll\App\Http\Controllers\DepartmentAttendanceSummaryReportController;
+use Modules\Payroll\App\Http\Controllers\DepartmentPayrollSummaryReportController;
+use Modules\Payroll\App\Http\Controllers\DepartmentSalarySummaryReportController;
 use Modules\Payroll\App\Http\Controllers\DesignationController;
 use Modules\Payroll\App\Http\Controllers\EmployeeAttendanceCardController;
+use Modules\Payroll\App\Http\Controllers\EmployeeAttendanceSummaryReportController;
 use Modules\Payroll\App\Http\Controllers\EmployeeController;
+use Modules\Payroll\App\Http\Controllers\EmployeeLeaveBalanceReportController;
 use Modules\Payroll\App\Http\Controllers\EmployeePayslipController;
 use Modules\Payroll\App\Http\Controllers\GradeController;
 use Modules\Payroll\App\Http\Controllers\HolidayController;
@@ -23,11 +29,11 @@ use Modules\Payroll\App\Http\Controllers\LeaveTypeController;
 use Modules\Payroll\App\Http\Controllers\MonthlyAttendanceReportController;
 use Modules\Payroll\App\Http\Controllers\OvertimeReportController;
 use Modules\Payroll\App\Http\Controllers\PayrollController;
+use Modules\Payroll\App\Http\Controllers\PayrollDeductionReportController;
 use Modules\Payroll\App\Http\Controllers\PayrollSalaryRegisterController;
 use Modules\Payroll\App\Http\Controllers\PayrollTypeController;
 use Modules\Payroll\App\Http\Controllers\QualificationController;
 use Modules\Payroll\App\Http\Controllers\ShiftController;
-
 
 Route::get('/payroll', function () {
     return redirect()->route('login');
@@ -96,6 +102,53 @@ Route::middleware(['auth', 'verified', 'web'])->group(function () {
                 '/reports/leave',
                 [LeaveReportController::class, 'index']
             )->name('reports.leave');
+
+            Route::get(
+                '/reports/employee-attendance-summary',
+                [EmployeeAttendanceSummaryReportController::class, 'index']
+            )->name('reports.employee-attendance-summary');
+
+            Route::get(
+                '/reports/department-attendance-summary',
+                [DepartmentAttendanceSummaryReportController::class, 'index']
+            )->name('reports.department-attendance-summary');
+
+            Route::get(
+                '/reports/attendance-exception',
+                [AttendanceExceptionReportController::class, 'index']
+            )->name('reports.attendance-exception');
+
+            Route::get(
+                '/reports/employee-leave-balance',
+                [
+                    EmployeeLeaveBalanceReportController::class,
+                    'index'
+                ]
+            )->name(
+                'reports.employee-leave-balance'
+            );
+
+            Route::get(
+                '/reports/department-payroll-summary',
+                [
+                    DepartmentPayrollSummaryReportController::class,
+                    'index'
+                ]
+            )->name(
+                'reports.department-payroll-summary'
+            );
+
+            Route::get(
+                '/reports/payroll-deduction',
+                [PayrollDeductionReportController::class, 'index']
+            )->name('reports.payroll-deduction');
+
+            Route::get(
+                '/payroll/reports/department-salary-summary',
+                [DepartmentSalarySummaryReportController::class, 'index']
+            )->name(
+                'reports.department-salary-summary'
+            );
 
 
             // Leave Request approval routes

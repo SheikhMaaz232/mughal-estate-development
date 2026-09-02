@@ -166,12 +166,12 @@ class BankReceiptVoucherController extends Controller
             $data = $request->all();
             $bRVoucherUpdatedData = $this->bankReceiptVoucherService->update($id, $data, $request->file('attachment'));
 
-            $documentNo = 'BRV' . '-' . $id;
-            AccountLedger::where('document_number', $documentNo)->where('invoice_id', $id)->delete();
-
-            $this->bankReceiptVoucherService->prepareAccountDebitData($request, $bRVoucherUpdatedData->id);
-            $this->bankReceiptVoucherService->prepareAccountCreditData($request, $bRVoucherUpdatedData->id);
-
+            if ($request->status === 'verified') {
+                $documentNo = 'BRV' . '-' . $id;
+                AccountLedger::where('document_number', $documentNo)->where('invoice_id', $id)->delete();
+                $this->bankReceiptVoucherService->prepareAccountDebitData($request, $bRVoucherUpdatedData->id);
+                $this->bankReceiptVoucherService->prepareAccountCreditData($request, $bRVoucherUpdatedData->id);
+            }
             DB::commit();
             return redirect()->route('bank-receipt-voucher.index')->with('success', __('messages.record-updated'));
         } catch (\Exception $e) {
