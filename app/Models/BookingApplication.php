@@ -48,6 +48,11 @@ class BookingApplication extends Model implements Auditable
         'sevenE_chalan_receivable_account',
     ];
 
+    protected $casts = [
+        'date' => 'date',
+        'operating_start_date' => 'date',
+    ];
+
     // Relationships
     public function party()
     {

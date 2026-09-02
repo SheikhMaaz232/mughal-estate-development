@@ -8,6 +8,7 @@ use App\Http\Controllers\ConstructionModule\BOQMasterController;
 use App\Http\Controllers\ConstructionModule\ConstructionSiteController;
 use App\Http\Controllers\ConstructionModule\ContractorBillController;
 use App\Http\Controllers\ConstructionModule\ContractorPaymentController;
+use App\Http\Controllers\ConstructionModule\ConstructionReportController;
 use App\Http\Controllers\ConstructionModule\TenderController;
 use App\Http\Controllers\ConstructionModule\WorkOrderController;
 use App\Http\Controllers\ConstructionModule\WorkProgressController;
@@ -72,6 +73,13 @@ use Illuminate\Support\Facades\Route;
 use Modules\Payroll\App\Http\Controllers\DashboardController;
 use Modules\Payroll\App\Http\Controllers\QualificationController;
 use App\Http\Controllers\Reports\AccountStatementController;
+use App\Models\AccountLedger;
+use App\Models\BookingApplication;
+use App\Models\PurchaseMaster;
+use App\Models\PurchaseOrder;
+use App\Models\PurchaseReturnMaster;
+use App\Models\Project;
+use App\Models\SaleInvoice;
 
 Route::post('/locale', LocaleController::class)->name('locale.change');
 
@@ -154,10 +162,107 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'company.selected'])->group(function () {
-    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::get('/dashboard', function () {
+        $periodStart = now()->subMonths(5)->startOfMonth();
+        $months = collect(range(0, 5))->map(fn ($offset) => $periodStart->copy()->addMonths($offset));
+        $bookings = BookingApplication::whereDate('date', '>=', $periodStart)->get(['date', 'project_id', 'grand_total_amount', 'total_amount']);
+        $ledgerEntries = AccountLedger::with('detailAccount.mainHead')->whereDate('date', '>=', $periodStart)->get();
+        $income = $ledgerEntries->filter(fn ($entry) => $entry->detailAccount?->mainHead?->id === 3)->sum(fn ($entry) => $entry->credit - $entry->debit);
+        $expenses = $ledgerEntries->filter(fn ($entry) => $entry->detailAccount?->mainHead?->id === 4)->sum(fn ($entry) => $entry->debit - $entry->credit);
+
+        $purchases = PurchaseMaster::whereDate('date', '>=', $periodStart)->get(['project_id', 'net_amount']);
+        $purchaseOrders = PurchaseOrder::whereDate('date', '>=', $periodStart)->get(['project_id', 'total_amount']);
+        $purchaseReturns = PurchaseReturnMaster::whereDate('date', '>=', $periodStart)->get(['project_id', 'net_amount']);
+        $sales = SaleInvoice::whereDate('date', '>=', $periodStart)->get(['project_id', 'gross_bill']);
+
+        $projectStats = Project::select('id', 'name_en', 'name_ur')->get()->map(function ($project) use ($bookings, $purchases, $purchaseOrders, $purchaseReturns, $sales) {
+            $projectBookings = $bookings->where('project_id', $project->id);
+            $projectPurchases = $purchases->where('project_id', $project->id);
+            $projectPurchaseOrders = $purchaseOrders->where('project_id', $project->id);
+            $projectReturns = $purchaseReturns->where('project_id', $project->id);
+            $projectSales = $sales->where('project_id', $project->id);
+
+            return [
+                'id' => $project->id,
+                'name_en' => $project->name_en,
+                'name_ur' => $project->name_ur,
+                'bookings' => $projectBookings->count(),
+                'booking_value' => $projectBookings->sum(fn ($booking) => $booking->grand_total_amount ?: $booking->total_amount),
+                'purchases' => $projectPurchases->count(),
+                'purchase_value' => $projectPurchases->sum('net_amount'),
+                'purchase_orders' => $projectPurchaseOrders->count(),
+                'purchase_order_value' => $projectPurchaseOrders->sum('total_amount'),
+                'purchase_returns' => $projectReturns->sum('net_amount'),
+                'sales' => $projectSales->count(),
+                'sales_value' => $projectSales->sum('gross_bill'),
+            ];
+        })->filter(fn ($project) => $project['bookings'] || $project['purchases'] || $project['purchase_orders'] || $project['purchase_returns'] || $project['sales'])->values();
+
+        $accountStats = [
+            'total_debit' => $ledgerEntries->sum('debit'),
+            'total_credit' => $ledgerEntries->sum('credit'),
+            'net_cash_flow' => $ledgerEntries->sum('credit') - $ledgerEntries->sum('debit'),
+            'income' => $income,
+            'expenses' => $expenses,
+            'net_result' => $income - $expenses,
+        ];
+
+        $accountTrend = [
+            'labels' => $months->map(fn ($month) => $month->format('M Y'))->values(),
+            'debit' => $months->map(fn ($month) => (float) $ledgerEntries->filter(fn ($entry) => $entry->date && $entry->date->format('Y-m') === $month->format('Y-m'))->sum('debit'))->values(),
+            'credit' => $months->map(fn ($month) => (float) $ledgerEntries->filter(fn ($entry) => $entry->date && $entry->date->format('Y-m') === $month->format('Y-m'))->sum('credit'))->values(),
+        ];
+
+        $accountHeadSummary = $ledgerEntries
+            ->groupBy(fn ($entry) => $entry->detailAccount?->mainHead?->name_en ?? 'Unassigned')
+            ->map(fn ($entries, $head) => [
+                'head' => $head,
+                'debit' => $entries->sum('debit'),
+                'credit' => $entries->sum('credit'),
+                'balance' => $entries->sum('credit') - $entries->sum('debit'),
+            ])
+            ->sortByDesc('balance')
+            ->values();
+
+        $recentLedgerEntries = AccountLedger::with(['party', 'detailAccount.mainHead'])->latest('date')->take(8)->get();
+        $recentBookings = BookingApplication::with(['party', 'project'])
+            ->latest('date')
+            ->take(6)
+            ->get(['id', 'form_no', 'date', 'project_id', 'party_id', 'grand_total_amount', 'total_amount', 'status']);
+        $recentPurchases = PurchaseMaster::with(['party', 'project'])
+            ->latest('date')
+            ->take(6)
+            ->get(['id', 'grn_no', 'date', 'project_id', 'party_id', 'net_amount', 'status']);
+        $recentPurchaseOrders = PurchaseOrder::with(['party', 'project'])
+            ->latest('date')
+            ->take(6)
+            ->get(['id', 'date', 'project_id', 'party_id', 'total_amount', 'status']);
+
+        return view('dashboard', [
+            'accountStats' => $accountStats,
+            'accountTrend' => $accountTrend,
+            'accountHeadSummary' => $accountHeadSummary,
+            'recentLedgerEntries' => $recentLedgerEntries,
+            'recentBookings' => $recentBookings,
+            'recentPurchases' => $recentPurchases,
+            'recentPurchaseOrders' => $recentPurchaseOrders,
+            'operationalStats' => [
+                'bookings' => $bookings->count(),
+                'booking_value' => $bookings->sum(fn ($booking) => $booking->grand_total_amount ?: $booking->total_amount),
+                'purchases' => $purchases->count(),
+                'purchase_value' => $purchases->sum('net_amount'),
+                'purchase_orders' => $purchaseOrders->count(),
+                'purchase_order_value' => $purchaseOrders->sum('total_amount'),
+                'purchase_returns' => $purchaseReturns->sum('net_amount'),
+                'sales' => $sales->count(),
+                'sales_value' => $sales->sum('gross_bill'),
+            ],
+            'projectStats' => $projectStats,
+        ]);
+    })->name('dashboard');
 });
 
-Route::prefix('admin')->middleware(['auth', 'role:super-admin'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'role:super-admin', 'controller.permission'])->group(function () {
     Route::resource('permissions', PermissionController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('users-roles', UserRoleController::class)
@@ -190,7 +295,7 @@ Route::prefix('admin')->middleware(['auth', 'role:super-admin'])->group(function
 Route::get('/select-company', [CompanySelectionController::class, 'showForm'])->name('company.select.form');
 Route::post('/select-company', [CompanySelectionController::class, 'storeSelection'])->name('company.select.store');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'controller.permission'])->group(function () {
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -432,6 +537,9 @@ Route::middleware('auth')->group(function () {
 
     // Construction Module Routes
     Route::prefix('construction')->name('construction.')->group(function () {
+        Route::get('reports/profitability', [ConstructionReportController::class, 'profitability'])->name('reports.profitability');
+        Route::get('reports', [ConstructionReportController::class, 'index'])->name('reports.index');
+        Route::get('reports/export', [ConstructionReportController::class, 'export'])->name('reports.export');
         Route::resource('construction-sites', ConstructionSiteController::class);
         Route::resource('tenders', TenderController::class);
         Route::resource('boq-masters', BOQMasterController::class);
@@ -492,7 +600,25 @@ Route::middleware(['auth'])->prefix('reports')->group(function () {
 
     Route::get('/balance-sheet/report', [ReportController::class, 'getBalanceSheet'])
         ->name('reports.balance.sheet.report');
-        
+
+    Route::get('/financial-position', [ReportController::class, 'viewFinancialPosition'])
+        ->name('reports.financial.position.view');
+
+    Route::get('/financial-position/report', [ReportController::class, 'getFinancialPosition'])
+        ->name('reports.financial.position.report');
+
+    Route::get('/audit-control', [ReportController::class, 'viewAuditControl'])
+        ->name('reports.audit.control.view');
+
+    Route::get('/audit-control/report', [ReportController::class, 'getAuditControl'])
+        ->name('reports.audit.control.report');
+
+    Route::get('/profit-loss', [ReportController::class, 'viewProfitLoss'])
+        ->name('reports.profit.loss.view');
+
+    Route::get('/profit-loss/report', [ReportController::class, 'getProfitLoss'])
+        ->name('reports.profit.loss.report');
+
     Route::get(
         '/account-statement',
         [AccountStatementController::class, 'index']

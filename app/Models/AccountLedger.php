@@ -26,6 +26,10 @@ class AccountLedger extends Model
         'transaction_type',
     ];
 
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     // 🔗 Relationships
 
     public function project()

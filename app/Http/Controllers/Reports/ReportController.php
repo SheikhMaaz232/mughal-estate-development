@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use OwenIt\Auditing\Models\Audit;
 
 class ReportController extends Controller
 {
@@ -565,6 +566,205 @@ class ReportController extends Controller
         $projects = Project::orderBy('name_en')->get();
 
         return view('reports.balance-sheet.view', compact('projects', 'request'));
+    }
+
+    public function viewFinancialPosition(Request $request)
+    {
+        $projects = Project::orderBy('name_en')->get();
+
+        return view('reports.financial-position.view', compact('projects', 'request'));
+    }
+
+    public function viewAuditControl(Request $request)
+    {
+        $users = \App\Models\User::orderBy('name_en')->get(['id', 'name_en', 'name_ur']);
+        $models = Audit::query()->select('auditable_type')->distinct()->orderBy('auditable_type')->pluck('auditable_type');
+        $events = Audit::query()->select('event')->distinct()->orderBy('event')->pluck('event');
+
+        return view('reports.audit-control.view', compact('users', 'models', 'events', 'request'));
+    }
+
+    public function getAuditControl(Request $request)
+    {
+        $request->validate([
+            'from_date' => ['required', 'date'],
+            'to_date' => ['required', 'date', 'after_or_equal:from_date'],
+            'user_id' => ['nullable', 'integer'],
+            'model' => ['nullable', 'string'],
+            'event' => ['nullable', 'string'],
+        ]);
+
+        $fromDate = Carbon::parse($request->input('from_date'))->startOfDay();
+        $toDate = Carbon::parse($request->input('to_date'))->endOfDay();
+        $isUrdu = app()->getLocale() === 'ur';
+        $audits = Audit::with('user')
+            ->whereBetween('created_at', [$fromDate, $toDate])
+            ->when($request->filled('user_id'), fn ($query) => $query->where('user_id', $request->input('user_id')))
+            ->when($request->filled('model'), fn ($query) => $query->where('auditable_type', $request->input('model')))
+            ->when($request->filled('event'), fn ($query) => $query->where('event', $request->input('event')))
+            ->latest()
+            ->get();
+
+        $eventCounts = $audits->groupBy('event')->map->count();
+        $modelCounts = $audits->groupBy('auditable_type')->map->count()->sortDesc();
+        $userCounts = $audits->groupBy('user_id')->map->count()->sortDesc();
+
+        return view('reports.audit-control.report', compact(
+            'audits', 'eventCounts', 'modelCounts', 'userCounts', 'fromDate', 'toDate', 'isUrdu'
+        ));
+    }
+
+    public function getFinancialPosition(Request $request)
+    {
+        $request->validate([
+            'as_of_date' => ['required', 'date'],
+            'project_id' => ['nullable', 'array'],
+        ]);
+
+        $asOfDate = Carbon::parse($request->input('as_of_date'))->endOfDay();
+        $isUrdu = app()->getLocale() === 'ur';
+        $projectIds = array_values(array_filter((array) $request->input('project_id', []), fn ($id) => $id !== 'all' && $id !== ''));
+
+        $entries = AccountLedger::with(['project', 'detailAccount.mainHead'])
+            ->whereDate('date', '<=', $asOfDate)
+            ->when($projectIds, fn ($query) => $query->whereIn('project_id', $projectIds))
+            ->get()
+            ->filter(fn ($entry) => $entry->detailAccount !== null);
+
+        $projectWiseData = $entries->groupBy('project_id')->map(function ($projectEntries) {
+            $project = $projectEntries->first()->project;
+            $accounts = $projectEntries->groupBy('detail_account_id')->map(function ($accountEntries) {
+                $account = $accountEntries->first()->detailAccount;
+                return (object) [
+                    'name_en' => $account->name_en,
+                    'name_ur' => $account->name_ur,
+                    'main_head_id' => $account->mainHead?->id,
+                    'balance' => $accountEntries->sum('debit') - $accountEntries->sum('credit'),
+                ];
+            })->filter(fn ($account) => $account->balance != 0)->sortBy('name_en')->values();
+
+            $assets = $accounts->where('main_head_id', 1)->values();
+            $liabilities = $accounts->where('main_head_id', 2)->values();
+            $equity = $accounts->where('main_head_id', 5)->values();
+            $income = $accounts->where('main_head_id', 3)->values();
+            $expenses = $accounts->where('main_head_id', 4)->values();
+            $totalAssets = $assets->sum(fn ($account) => max(0, $account->balance));
+            $totalLiabilities = $liabilities->sum(fn ($account) => max(0, -$account->balance));
+            $ownerEquity = $equity->sum(fn ($account) => max(0, -$account->balance));
+            $retainedEarnings = $income->sum(fn ($account) => -$account->balance) - $expenses->sum(fn ($account) => $account->balance);
+            $totalEquity = $ownerEquity + $retainedEarnings;
+
+            return (object) [
+                'project_name_en' => $project?->name_en ?? __('messages.all_projects'),
+                'project_name_ur' => $project?->name_ur ?? __('messages.all_projects'),
+                'assets' => $assets,
+                'liabilities' => $liabilities,
+                'equity' => $equity,
+                'total_assets' => $totalAssets,
+                'total_liabilities' => $totalLiabilities,
+                'owner_equity' => $ownerEquity,
+                'retained_earnings' => $retainedEarnings,
+                'total_equity' => $totalEquity,
+                'liabilities_and_equity' => $totalLiabilities + $totalEquity,
+                'difference' => $totalAssets - ($totalLiabilities + $totalEquity),
+            ];
+        })->values();
+
+        $totalAssets = $projectWiseData->sum('total_assets');
+        $totalLiabilities = $projectWiseData->sum('total_liabilities');
+        $ownerEquity = $projectWiseData->sum('owner_equity');
+        $retainedEarnings = $projectWiseData->sum('retained_earnings');
+        $totalEquity = $projectWiseData->sum('total_equity');
+        $liabilitiesAndEquity = $projectWiseData->sum('liabilities_and_equity');
+        $difference = $totalAssets - $liabilitiesAndEquity;
+
+        return view('reports.financial-position.report', compact(
+            'projectWiseData', 'totalAssets', 'totalLiabilities', 'ownerEquity',
+            'retainedEarnings', 'totalEquity', 'liabilitiesAndEquity', 'difference',
+            'asOfDate', 'isUrdu'
+        ));
+    }
+
+    public function viewProfitLoss(Request $request)
+    {
+        $projects = Project::orderBy('name_en')->get();
+
+        return view('reports.profit-loss.view', compact('projects', 'request'));
+    }
+
+    public function getProfitLoss(Request $request)
+    {
+        $request->validate([
+            'from_date' => ['required', 'date'],
+            'to_date' => ['required', 'date', 'after_or_equal:from_date'],
+            'project_id' => ['nullable', 'array'],
+            'project_id.*' => ['nullable'],
+        ]);
+
+        $fromDate = $request->filled('from_date')
+            ? Carbon::parse($request->input('from_date'))->startOfDay()
+            : Carbon::now()->startOfYear()->startOfDay();
+        $toDate = $request->filled('to_date')
+            ? Carbon::parse($request->input('to_date'))->endOfDay()
+            : Carbon::now()->endOfDay();
+        $isUrdu = app()->getLocale() === 'ur';
+
+        $projectIds = (array) $request->input('project_id', []);
+        $projectIds = array_values(array_filter($projectIds, fn ($id) => $id !== 'all' && $id !== null && $id !== ''));
+
+        $entries = AccountLedger::with(['project', 'detailAccount.mainHead'])
+            ->whereBetween('date', [$fromDate, $toDate])
+            ->when($projectIds, fn ($query) => $query->whereIn('project_id', $projectIds))
+            ->get()
+            ->filter(fn ($entry) => in_array($entry->detailAccount?->main_head_id, [3, 4], true));
+
+        $projectWiseData = $entries->groupBy('project_id')->map(function ($projectEntries) {
+            $project = $projectEntries->first()->project;
+            $accounts = $projectEntries->groupBy('detail_account_id')->map(function ($accountEntries) {
+                $account = $accountEntries->first()->detailAccount;
+                $income = $account->main_head_id === 3;
+                $balance = $income
+                    ? $accountEntries->sum('credit') - $accountEntries->sum('debit')
+                    : $accountEntries->sum('debit') - $accountEntries->sum('credit');
+
+                return (object) [
+                    'name_en' => $account->name_en,
+                    'name_ur' => $account->name_ur,
+                    'main_head_id' => $account->main_head_id,
+                    'amount' => $balance,
+                ];
+            })->filter(fn ($account) => $account->amount != 0)->sortBy('name_en')->values();
+
+            $income = $accounts->where('main_head_id', 3)->values();
+            $expenses = $accounts->where('main_head_id', 4)->values();
+            $totalIncome = $income->sum('amount');
+            $totalExpenses = $expenses->sum('amount');
+
+            return (object) [
+                'project_id' => $project?->id,
+                'project_name_en' => $project?->name_en ?? __('messages.all_projects'),
+                'project_name_ur' => $project?->name_ur ?? __('messages.all_projects'),
+                'income' => $income,
+                'expenses' => $expenses,
+                'total_income' => $totalIncome,
+                'total_expenses' => $totalExpenses,
+                'gross_profit' => $totalIncome - $totalExpenses,
+            ];
+        })->values();
+
+        $totalIncome = $projectWiseData->sum('total_income');
+        $totalExpenses = $projectWiseData->sum('total_expenses');
+        $netProfit = $totalIncome - $totalExpenses;
+
+        return view('reports.profit-loss.report', compact(
+            'projectWiseData',
+            'totalIncome',
+            'totalExpenses',
+            'netProfit',
+            'fromDate',
+            'toDate',
+            'isUrdu'
+        ));
     }
 
     public function getBalanceSheet(Request $request)

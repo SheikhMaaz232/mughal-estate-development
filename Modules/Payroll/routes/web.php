@@ -39,7 +39,7 @@ Route::get('/payroll', function () {
     return redirect()->route('login');
 });
 
-Route::middleware(['auth', 'verified', 'web'])->group(function () {
+Route::middleware(['auth', 'verified', 'web', 'controller.permission'])->group(function () {
 
     Route::prefix('/payroll')
         ->name('payroll.')

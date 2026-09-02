@@ -30,6 +30,10 @@ class PurchaseMaster extends Model implements Auditable
         'remarks_ur'
     ];
 
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     public function details()
     {
         return $this->hasMany(PurchaseDetail::class, 'purchase_master_id');

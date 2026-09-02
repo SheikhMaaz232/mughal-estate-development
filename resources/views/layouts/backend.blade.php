@@ -1272,7 +1272,7 @@
                             </li>
 
                             <li
-                                class="nav-main-item{{ request()->is('construction-site*') || request()->is('tender*') || request()->is('boq-masters*') || request()->is('work-orders*') || request()->is('work-progress*') || request()->is('contractor-bills*') ? ' open' : '' }}">
+                                class="nav-main-item{{ request()->is('construction-site*') || request()->is('tender*') || request()->is('boq-masters*') || request()->is('work-orders*') || request()->is('work-progress*') || request()->is('contractor-bills*') || request()->is('construction/reports*') ? ' open' : '' }}">
                                 @can('construction-module.view')
                                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                         aria-haspopup="true" aria-expanded="true" href="#">
@@ -1281,6 +1281,20 @@
                                     </a>
 
                                     <ul class="nav-main-submenu">
+
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('construction.reports*') ? ' active' : '' }}"
+                                                href="{{ route('construction.reports.profitability') }}">
+                                                <span class="nav-main-link-name">@lang('menu.construction-profitability')</span>
+                                            </a>
+                                        </li>
+
+                                         <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('construction.reports*') ? ' active' : '' }}"
+                                                href="{{ route('construction.reports.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.construction-reports')</span>
+                                            </a>
+                                        </li>
 
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('construction-sites*') ? ' active' : '' }}"
@@ -1439,6 +1453,27 @@
                                             <a class="nav-main-link{{ request()->routeIs('reports.balance.sheet.*') ? ' active' : '' }}"
                                                 href="{{ route('reports.balance.sheet.view') }}">
                                                 <span class="nav-main-link-name">@lang('menu.balance-sheet')</span>
+                                            </a>
+                                        </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('reports.profit.loss.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('reports.profit.loss.*') ? ' active' : '' }}"
+                                                href="{{ route('reports.profit.loss.view') }}">
+                                                <span class="nav-main-link-name">@lang('menu.profit-loss')</span>
+                                            </a>
+                                        </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('reports.financial.position.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('reports.financial.position.*') ? ' active' : '' }}"
+                                                href="{{ route('reports.financial.position.view') }}">
+                                                <span class="nav-main-link-name">@lang('menu.financial-position')</span>
+                                            </a>
+                                        </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('reports.audit.control.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('reports.audit.control.*') ? ' active' : '' }}"
+                                                href="{{ route('reports.audit.control.view') }}">
+                                                <span class="nav-main-link-name">@lang('menu.audit-control')</span>
                                             </a>
                                         </li>
                                     </ul>

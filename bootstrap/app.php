@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'company.selected' => EnsureCompanyIsSelected::class,
             'module.permission' => \App\Http\Middleware\CheckModulePermission::class,
+            'controller.permission' => \App\Http\Middleware\CheckControllerPermission::class,
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,

@@ -17,9 +17,16 @@ class PermissionSeeder extends Seeder
         $modules = [
             'registration' => 'رجسٹریشن',
             'accounts'     => 'اکاؤنٹس',
+            'dashboard'    => 'ڈیش بورڈ',
             'procurement'  => 'پراکیورمنٹ',
             'inventory'    => 'انوینٹری',
             'payroll'      => 'پے رول',
+            'admin'        => 'ایڈمن',
+            'construction' => 'تعمیرات',
+            'sales'        => 'فروخت',
+            'reports'      => 'رپورٹس',
+            'land'         => 'زمین',
+            'general'      => 'عمومی',
         ];
 
         // Actions with Urdu translations (action comes second in Urdu)
@@ -96,6 +103,7 @@ class PermissionSeeder extends Seeder
         );
         $accountantRole->givePermissionTo([
             'accounts.view', 'accounts.create', 'accounts.edit', 'accounts.export',
+            'dashboard.view',
             'payroll.view', 'payroll.process', 'payroll.generate_payslips'
         ]);
 

@@ -25,6 +25,10 @@ class PurchaseOrder extends Model implements Auditable
         'total_amount',
     ];
 
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     public function project()
     {
         return $this->belongsTo(Project::class);

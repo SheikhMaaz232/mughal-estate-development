@@ -58,10 +58,15 @@ class Tender extends Model
         return $this->belongsTo(DetailAccount::class, 'expense_account_id');
     }
 
+    public function contractorBills()
+    {
+        return $this->hasMany(ContractorBill::class);
+    }
+
     /**
      * Scope to apply all filters at once
      */
- 
+
 
     public function scopeSearch($query, $filters = [])
     {
