@@ -100,6 +100,7 @@ return [
     'executive-reports' => 'Executive Reports',
     'brv_approval' => 'BRV Approval',
     'booking-report' => 'Plot Booking Report',
-    'account-statement' => 'Account Statement'
+    'account-statement' => 'Account Statement',
+    'sale_report' => 'Sale Report'
 
 ];

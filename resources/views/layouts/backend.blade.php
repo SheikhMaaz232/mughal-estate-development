@@ -1289,7 +1289,7 @@
                                             </a>
                                         </li>
 
-                                         <li class="nav-main-item">
+                                        <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('construction.reports*') ? ' active' : '' }}"
                                                 href="{{ route('construction.reports.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.construction-reports')</span>
@@ -1476,6 +1476,13 @@
                                                 <span class="nav-main-link-name">@lang('menu.audit-control')</span>
                                             </a>
                                         </li>
+
+                                          <li class="nav-main-item{{ request()->routeIs('reports.sale-report.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('reports.sale-report.*') ? ' active' : '' }}"
+                                            href="{{ route('reports.sale-report.filter') }}" >
+                                                <span class="nav-main-link-name">@lang('menu.sale_report')</span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 @endcan
                             </li>
@@ -1505,6 +1512,8 @@
                                                 <span class="nav-main-link-name">@lang('menu.booking-report')</span>
                                             </a>
                                         </li>
+
+                                      
 
 
                                         {{-- <li class="nav-item">

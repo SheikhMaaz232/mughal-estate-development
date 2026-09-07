@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use OwenIt\Auditing\Models\Audit;
 
 class ReportController extends Controller
@@ -599,9 +600,9 @@ class ReportController extends Controller
         $isUrdu = app()->getLocale() === 'ur';
         $audits = Audit::with('user')
             ->whereBetween('created_at', [$fromDate, $toDate])
-            ->when($request->filled('user_id'), fn ($query) => $query->where('user_id', $request->input('user_id')))
-            ->when($request->filled('model'), fn ($query) => $query->where('auditable_type', $request->input('model')))
-            ->when($request->filled('event'), fn ($query) => $query->where('event', $request->input('event')))
+            ->when($request->filled('user_id'), fn($query) => $query->where('user_id', $request->input('user_id')))
+            ->when($request->filled('model'), fn($query) => $query->where('auditable_type', $request->input('model')))
+            ->when($request->filled('event'), fn($query) => $query->where('event', $request->input('event')))
             ->latest()
             ->get();
 
@@ -610,7 +611,13 @@ class ReportController extends Controller
         $userCounts = $audits->groupBy('user_id')->map->count()->sortDesc();
 
         return view('reports.audit-control.report', compact(
-            'audits', 'eventCounts', 'modelCounts', 'userCounts', 'fromDate', 'toDate', 'isUrdu'
+            'audits',
+            'eventCounts',
+            'modelCounts',
+            'userCounts',
+            'fromDate',
+            'toDate',
+            'isUrdu'
         ));
     }
 
@@ -623,13 +630,13 @@ class ReportController extends Controller
 
         $asOfDate = Carbon::parse($request->input('as_of_date'))->endOfDay();
         $isUrdu = app()->getLocale() === 'ur';
-        $projectIds = array_values(array_filter((array) $request->input('project_id', []), fn ($id) => $id !== 'all' && $id !== ''));
+        $projectIds = array_values(array_filter((array) $request->input('project_id', []), fn($id) => $id !== 'all' && $id !== ''));
 
         $entries = AccountLedger::with(['project', 'detailAccount.mainHead'])
             ->whereDate('date', '<=', $asOfDate)
-            ->when($projectIds, fn ($query) => $query->whereIn('project_id', $projectIds))
+            ->when($projectIds, fn($query) => $query->whereIn('project_id', $projectIds))
             ->get()
-            ->filter(fn ($entry) => $entry->detailAccount !== null);
+            ->filter(fn($entry) => $entry->detailAccount !== null);
 
         $projectWiseData = $entries->groupBy('project_id')->map(function ($projectEntries) {
             $project = $projectEntries->first()->project;
@@ -641,17 +648,17 @@ class ReportController extends Controller
                     'main_head_id' => $account->mainHead?->id,
                     'balance' => $accountEntries->sum('debit') - $accountEntries->sum('credit'),
                 ];
-            })->filter(fn ($account) => $account->balance != 0)->sortBy('name_en')->values();
+            })->filter(fn($account) => $account->balance != 0)->sortBy('name_en')->values();
 
             $assets = $accounts->where('main_head_id', 1)->values();
             $liabilities = $accounts->where('main_head_id', 2)->values();
             $equity = $accounts->where('main_head_id', 5)->values();
             $income = $accounts->where('main_head_id', 3)->values();
             $expenses = $accounts->where('main_head_id', 4)->values();
-            $totalAssets = $assets->sum(fn ($account) => max(0, $account->balance));
-            $totalLiabilities = $liabilities->sum(fn ($account) => max(0, -$account->balance));
-            $ownerEquity = $equity->sum(fn ($account) => max(0, -$account->balance));
-            $retainedEarnings = $income->sum(fn ($account) => -$account->balance) - $expenses->sum(fn ($account) => $account->balance);
+            $totalAssets = $assets->sum(fn($account) => max(0, $account->balance));
+            $totalLiabilities = $liabilities->sum(fn($account) => max(0, -$account->balance));
+            $ownerEquity = $equity->sum(fn($account) => max(0, -$account->balance));
+            $retainedEarnings = $income->sum(fn($account) => -$account->balance) - $expenses->sum(fn($account) => $account->balance);
             $totalEquity = $ownerEquity + $retainedEarnings;
 
             return (object) [
@@ -679,9 +686,16 @@ class ReportController extends Controller
         $difference = $totalAssets - $liabilitiesAndEquity;
 
         return view('reports.financial-position.report', compact(
-            'projectWiseData', 'totalAssets', 'totalLiabilities', 'ownerEquity',
-            'retainedEarnings', 'totalEquity', 'liabilitiesAndEquity', 'difference',
-            'asOfDate', 'isUrdu'
+            'projectWiseData',
+            'totalAssets',
+            'totalLiabilities',
+            'ownerEquity',
+            'retainedEarnings',
+            'totalEquity',
+            'liabilitiesAndEquity',
+            'difference',
+            'asOfDate',
+            'isUrdu'
         ));
     }
 
@@ -710,13 +724,13 @@ class ReportController extends Controller
         $isUrdu = app()->getLocale() === 'ur';
 
         $projectIds = (array) $request->input('project_id', []);
-        $projectIds = array_values(array_filter($projectIds, fn ($id) => $id !== 'all' && $id !== null && $id !== ''));
+        $projectIds = array_values(array_filter($projectIds, fn($id) => $id !== 'all' && $id !== null && $id !== ''));
 
         $entries = AccountLedger::with(['project', 'detailAccount.mainHead'])
             ->whereBetween('date', [$fromDate, $toDate])
-            ->when($projectIds, fn ($query) => $query->whereIn('project_id', $projectIds))
+            ->when($projectIds, fn($query) => $query->whereIn('project_id', $projectIds))
             ->get()
-            ->filter(fn ($entry) => in_array($entry->detailAccount?->main_head_id, [3, 4], true));
+            ->filter(fn($entry) => in_array($entry->detailAccount?->main_head_id, [3, 4], true));
 
         $projectWiseData = $entries->groupBy('project_id')->map(function ($projectEntries) {
             $project = $projectEntries->first()->project;
@@ -733,7 +747,7 @@ class ReportController extends Controller
                     'main_head_id' => $account->main_head_id,
                     'amount' => $balance,
                 ];
-            })->filter(fn ($account) => $account->amount != 0)->sortBy('name_en')->values();
+            })->filter(fn($account) => $account->amount != 0)->sortBy('name_en')->values();
 
             $income = $accounts->where('main_head_id', 3)->values();
             $expenses = $accounts->where('main_head_id', 4)->values();
@@ -1704,6 +1718,328 @@ class ReportController extends Controller
             compact(
                 'groupedProjects',
                 'grandTotals'
+            )
+        );
+    }
+
+    public function saleReportFilter()
+    {
+        $projects = DB::table('projects')
+            ->select(
+                'id',
+                'name_en',
+                'name_ur'
+            )
+            ->orderBy('name_en')
+            ->get();
+
+        return view(
+            'reports.sale-report.filter',
+            compact('projects')
+        );
+    }
+
+    public function saleReport(Request $request)
+    {
+        $fromDate  = $request->input('from_date');
+        $toDate    = $request->input('to_date');
+        $projectId = $request->input('project_id');
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | DIRECT PRODUCTS
+    |--------------------------------------------------------------------------
+    */
+
+        $directBookings = DB::table('booking_applications as ba')
+
+            ->join(
+                'products as p',
+                'p.id',
+                '=',
+                'ba.product_id'
+            )
+
+            ->join(
+                'projects as pr',
+                'pr.id',
+                '=',
+                'ba.project_id'
+            )
+
+            ->join(
+                'parties as party',
+                'party.id',
+                '=',
+                'ba.party_id'
+            )
+
+            ->leftJoin(
+                'casts as cast',
+                'cast.id',
+                '=',
+                'party.cast_id'
+            )
+
+            // Soft deletes
+            ->whereNull('ba.deleted_at')
+            ->whereNull('p.deleted_at')
+            ->whereNull('pr.deleted_at')
+            ->whereNull('party.deleted_at')
+
+            // First Booking only
+            ->where('ba.case', 'First Booking')
+
+            // Verified only
+            ->where('ba.status', 'Verified')
+
+            // Direct products only
+            ->where('p.type', 'Direct')
+
+            // From date
+            ->when($fromDate, function ($query) use ($fromDate) {
+
+                $query->whereDate(
+                    'ba.date',
+                    '>=',
+                    $fromDate
+                );
+            })
+
+            // To date
+            ->when($toDate, function ($query) use ($toDate) {
+
+                $query->whereDate(
+                    'ba.date',
+                    '<=',
+                    $toDate
+                );
+            })
+
+            // Project
+            ->when($projectId, function ($query) use ($projectId) {
+
+                $query->where(
+                    'ba.project_id',
+                    $projectId
+                );
+            })
+
+            ->select(
+
+                'ba.id',
+                'ba.form_no',
+                'ba.date',
+
+                // Project
+                'pr.id as project_id',
+                'pr.name_en as project_name_en',
+                'pr.name_ur as project_name_ur',
+
+                // Product
+                'p.id as product_id',
+                'p.name_en as product_name_en',
+                'p.name_ur as product_name_ur',
+                'p.unit_no',
+                'p.block',
+                'p.total_marla',
+
+                // Purchaser
+                'party.id as party_id',
+                'party.name_en as purchaser_name_en',
+                'party.name_ur as purchaser_name_ur',
+                'party.cnic_no as purchaser_cnic_no',
+
+                // Cast
+                'cast.title_en as purchaser_cast_en',
+                'cast.title_ur as purchaser_cast_ur'
+
+            )
+
+            ->orderBy('ba.date')
+            ->orderBy('pr.name_en')
+            ->orderBy('p.unit_no')
+
+            ->get();
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | ITEM PRODUCTS
+    |--------------------------------------------------------------------------
+    */
+
+        $itemSales = DB::table('sale_invoice_details as sid')
+
+            ->join(
+                'sale_invoices as si',
+                'si.id',
+                '=',
+                'sid.sale_invoice_master_id'
+            )
+
+            ->join(
+                'products as p',
+                'p.id',
+                '=',
+                'sid.product_id'
+            )
+
+            ->join(
+                'projects as pr',
+                'pr.id',
+                '=',
+                'si.project_id'
+            )
+
+            ->join(
+                'parties as party',
+                'party.id',
+                '=',
+                'si.party_id'
+            )
+
+            ->leftJoin(
+                'casts as cast',
+                'cast.id',
+                '=',
+                'party.cast_id'
+            )
+
+            // Soft deletes
+            ->whereNull('sid.deleted_at')
+            ->whereNull('si.deleted_at')
+            ->whereNull('p.deleted_at')
+            ->whereNull('pr.deleted_at')
+            ->whereNull('party.deleted_at')
+
+            // Item products only
+            ->where('p.type', 'item')
+
+            // From date
+            ->when($fromDate, function ($query) use ($fromDate) {
+
+                $query->whereDate(
+                    'si.date',
+                    '>=',
+                    $fromDate
+                );
+            })
+
+            // To date
+            ->when($toDate, function ($query) use ($toDate) {
+
+                $query->whereDate(
+                    'si.date',
+                    '<=',
+                    $toDate
+                );
+            })
+
+            // Project
+            ->when($projectId, function ($query) use ($projectId) {
+
+                $query->where(
+                    'si.project_id',
+                    $projectId
+                );
+            })
+
+            ->select(
+
+                'sid.id as detail_id',
+
+                // Invoice
+                'si.id as invoice_id',
+                'si.sale_invoice_no',
+                'si.date',
+
+                // Project
+                'pr.id as project_id',
+                'pr.name_en as project_name_en',
+                'pr.name_ur as project_name_ur',
+
+                // Product
+                'p.id as product_id',
+                'p.name_en as product_name_en',
+                'p.name_ur as product_name_ur',
+
+                // Purchaser
+                'party.id as party_id',
+                'party.name_en as purchaser_name_en',
+                'party.name_ur as purchaser_name_ur',
+                'party.cnic_no as purchaser_cnic_no',
+
+                // Cast
+                'cast.title_en as purchaser_cast_en',
+                'cast.title_ur as purchaser_cast_ur',
+
+                // Sale details
+                'sid.quantity',
+                'sid.price',
+                'sid.amount'
+
+            )
+
+            ->orderBy('si.date')
+            ->orderBy('pr.name_en')
+            ->orderBy('p.name_en')
+
+            ->get();
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | TOTALS
+    |--------------------------------------------------------------------------
+    */
+
+        $totalDirectMarla = $directBookings->sum(function ($booking) {
+
+            return (float) (
+                $booking->total_marla ?? 0
+            );
+        });
+
+
+        $totalItemQuantity = $itemSales->sum(function ($sale) {
+
+            return (float) (
+                $sale->quantity ?? 0
+            );
+        });
+
+
+        $totalItemAmount = $itemSales->sum(function ($sale) {
+
+            return (float) (
+                $sale->amount ?? 0
+            );
+        });
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | REPORT VIEW
+    |--------------------------------------------------------------------------
+    */
+
+        return view(
+            'reports.sale-report.report',
+            compact(
+
+                'directBookings',
+                'itemSales',
+
+                'totalDirectMarla',
+                'totalItemQuantity',
+                'totalItemAmount',
+
+                'fromDate',
+                'toDate',
+                'projectId'
+
             )
         );
     }

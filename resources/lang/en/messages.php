@@ -1621,5 +1621,16 @@ return [
     'project_performance' => 'Project performance',
     'purchase_control' => 'Purchase control',
     'project_wise_statistics' => 'Project-wise statistics',
-    'no_project_activity' => 'No project activity found for the selected period.'
+    'no_project_activity' => 'No project activity found for the selected period.',
+    'sale_report' => 'Sale Report',
+    'all_projects' => 'All Projects',
+    'direct_products' => 'Plots Booking',
+    'item_products' => 'Item Products',
+    'project_name' => 'Project',
+    'quantity' => 'Quantity',
+    'total_direct_marla' => 'Total Plots Marlas',
+    'total_item_quantity' => 'Total Items Quantity',
+    'total_item_amount' => 'Total Items Amount',
+    'no_record_found' => 'No record found.',
+    'booking_no' => 'Booking No'
 ];

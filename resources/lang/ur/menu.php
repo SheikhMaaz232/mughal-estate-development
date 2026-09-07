@@ -102,5 +102,6 @@ return [
     'executive-reports' => 'ایگزیکٹو رپورٹس',
     'brv_approval' => 'بی آر وی کی منظوری',
     'booking-report' => 'بکنگ رپورٹ',
-    'account-statement' => 'اکاؤنٹ اسٹیٹمنٹ'
+    'account-statement' => 'اکاؤنٹ اسٹیٹمنٹ',
+    'sale_report' => 'سیل رپورٹ'
 ];

@@ -164,11 +164,11 @@ Route::get('/', function () {
 Route::middleware(['auth', 'company.selected'])->group(function () {
     Route::get('/dashboard', function () {
         $periodStart = now()->subMonths(5)->startOfMonth();
-        $months = collect(range(0, 5))->map(fn ($offset) => $periodStart->copy()->addMonths($offset));
+        $months = collect(range(0, 5))->map(fn($offset) => $periodStart->copy()->addMonths($offset));
         $bookings = BookingApplication::whereDate('date', '>=', $periodStart)->get(['date', 'project_id', 'grand_total_amount', 'total_amount']);
         $ledgerEntries = AccountLedger::with('detailAccount.mainHead')->whereDate('date', '>=', $periodStart)->get();
-        $income = $ledgerEntries->filter(fn ($entry) => $entry->detailAccount?->mainHead?->id === 3)->sum(fn ($entry) => $entry->credit - $entry->debit);
-        $expenses = $ledgerEntries->filter(fn ($entry) => $entry->detailAccount?->mainHead?->id === 4)->sum(fn ($entry) => $entry->debit - $entry->credit);
+        $income = $ledgerEntries->filter(fn($entry) => $entry->detailAccount?->mainHead?->id === 3)->sum(fn($entry) => $entry->credit - $entry->debit);
+        $expenses = $ledgerEntries->filter(fn($entry) => $entry->detailAccount?->mainHead?->id === 4)->sum(fn($entry) => $entry->debit - $entry->credit);
 
         $purchases = PurchaseMaster::whereDate('date', '>=', $periodStart)->get(['project_id', 'net_amount']);
         $purchaseOrders = PurchaseOrder::whereDate('date', '>=', $periodStart)->get(['project_id', 'total_amount']);
@@ -187,7 +187,7 @@ Route::middleware(['auth', 'company.selected'])->group(function () {
                 'name_en' => $project->name_en,
                 'name_ur' => $project->name_ur,
                 'bookings' => $projectBookings->count(),
-                'booking_value' => $projectBookings->sum(fn ($booking) => $booking->grand_total_amount ?: $booking->total_amount),
+                'booking_value' => $projectBookings->sum(fn($booking) => $booking->grand_total_amount ?: $booking->total_amount),
                 'purchases' => $projectPurchases->count(),
                 'purchase_value' => $projectPurchases->sum('net_amount'),
                 'purchase_orders' => $projectPurchaseOrders->count(),
@@ -196,7 +196,7 @@ Route::middleware(['auth', 'company.selected'])->group(function () {
                 'sales' => $projectSales->count(),
                 'sales_value' => $projectSales->sum('gross_bill'),
             ];
-        })->filter(fn ($project) => $project['bookings'] || $project['purchases'] || $project['purchase_orders'] || $project['purchase_returns'] || $project['sales'])->values();
+        })->filter(fn($project) => $project['bookings'] || $project['purchases'] || $project['purchase_orders'] || $project['purchase_returns'] || $project['sales'])->values();
 
         $accountStats = [
             'total_debit' => $ledgerEntries->sum('debit'),
@@ -208,14 +208,14 @@ Route::middleware(['auth', 'company.selected'])->group(function () {
         ];
 
         $accountTrend = [
-            'labels' => $months->map(fn ($month) => $month->format('M Y'))->values(),
-            'debit' => $months->map(fn ($month) => (float) $ledgerEntries->filter(fn ($entry) => $entry->date && $entry->date->format('Y-m') === $month->format('Y-m'))->sum('debit'))->values(),
-            'credit' => $months->map(fn ($month) => (float) $ledgerEntries->filter(fn ($entry) => $entry->date && $entry->date->format('Y-m') === $month->format('Y-m'))->sum('credit'))->values(),
+            'labels' => $months->map(fn($month) => $month->format('M Y'))->values(),
+            'debit' => $months->map(fn($month) => (float) $ledgerEntries->filter(fn($entry) => $entry->date && $entry->date->format('Y-m') === $month->format('Y-m'))->sum('debit'))->values(),
+            'credit' => $months->map(fn($month) => (float) $ledgerEntries->filter(fn($entry) => $entry->date && $entry->date->format('Y-m') === $month->format('Y-m'))->sum('credit'))->values(),
         ];
 
         $accountHeadSummary = $ledgerEntries
-            ->groupBy(fn ($entry) => $entry->detailAccount?->mainHead?->name_en ?? 'Unassigned')
-            ->map(fn ($entries, $head) => [
+            ->groupBy(fn($entry) => $entry->detailAccount?->mainHead?->name_en ?? 'Unassigned')
+            ->map(fn($entries, $head) => [
                 'head' => $head,
                 'debit' => $entries->sum('debit'),
                 'credit' => $entries->sum('credit'),
@@ -248,7 +248,7 @@ Route::middleware(['auth', 'company.selected'])->group(function () {
             'recentPurchaseOrders' => $recentPurchaseOrders,
             'operationalStats' => [
                 'bookings' => $bookings->count(),
-                'booking_value' => $bookings->sum(fn ($booking) => $booking->grand_total_amount ?: $booking->total_amount),
+                'booking_value' => $bookings->sum(fn($booking) => $booking->grand_total_amount ?: $booking->total_amount),
                 'purchases' => $purchases->count(),
                 'purchase_value' => $purchases->sum('net_amount'),
                 'purchase_orders' => $purchaseOrders->count(),
@@ -504,6 +504,16 @@ Route::middleware(['auth'])->group(function () {
         '/exective-reports/direct-products',
         [ReportController::class, 'directProductProjectReport']
     )->name('exective-reports.direct-products.report');
+
+    Route::get(
+        '/reports/sale-report/filter',
+        [ReportController::class, 'saleReportFilter']
+    )->name('reports.sale-report.filter');
+
+    Route::get(
+        '/reports/sale-report',
+        [ReportController::class, 'saleReport']
+    )->name('reports.sale-report');
 
     Route::get('/reports/stock-report/filter', [ReportController::class, 'stockReportFilter'])->name('reports.stock-report.filter');
 
