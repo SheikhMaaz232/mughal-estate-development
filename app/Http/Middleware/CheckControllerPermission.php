@@ -46,8 +46,40 @@ class CheckControllerPermission
         return ['', 'view'];
     }
 
+    // private function moduleFor(string $controller): ?string
+    // {
+    //     $modules = [
+    //         'App\\Http\\Controllers\\Admin\\' => 'admin',
+    //         'App\\Http\\Controllers\\ConstructionModule\\' => 'construction',
+    //         'App\\Http\\Controllers\\PurchaseModule\\' => 'procurement',
+    //         'App\\Http\\Controllers\\SaleModule\\' => 'sales',
+    //         'App\\Http\\Controllers\\Registration\\' => 'registration',
+    //         'App\\Http\\Controllers\\Reports\\' => 'reports',
+    //         'App\\Http\\Controllers\\LandPurchase\\' => 'land',
+    //         'App\\Http\\Controllers\\LandRegistration\\' => 'land',
+    //         'App\\Http\\Controllers\\' => 'general',
+    //         'Modules\\Payroll\\App\\Http\\Controllers\\' => 'payroll',
+    //     ];
+
+    //     foreach ($modules as $namespace => $module) {
+    //         if (Str::startsWith($controller, $namespace)) {
+    //             return $module;
+    //         }
+    //     }
+
+    //     return null;
+    // }
+
     private function moduleFor(string $controller): ?string
     {
+        $controllerModules = [
+            'App\\Http\\Controllers\\Registration\\BankReceiptVoucherController' => 'brv',
+        ];
+
+        if (isset($controllerModules[$controller])) {
+            return $controllerModules[$controller];
+        }
+
         $modules = [
             'App\\Http\\Controllers\\Admin\\' => 'admin',
             'App\\Http\\Controllers\\ConstructionModule\\' => 'construction',
@@ -70,16 +102,39 @@ class CheckControllerPermission
         return null;
     }
 
+    // private function actionFor(string $method): string
+    // {
+    //     return match (Str::lower($method)) {
+    //         'index', 'show', 'view', 'report', 'print', 'select2', 'editpermissions' => 'view',
+    //         'create' => 'create',
+    //         'store', 'initiatepayment', 'recordpayment' => 'create',
+    //         'edit', 'update', 'updatepermissions' => 'edit',
+    //         'destroy', 'delete', 'cancelpayment' => 'delete',
+    //         'approve', 'verify', 'reject', 'post', 'cancel' => 'approve',
+    //         'export', 'exportpayments' => 'export',
+    //         default => 'view',
+    //     };
+    // }
+
     private function actionFor(string $method): string
     {
         return match (Str::lower($method)) {
-            'index', 'show', 'view', 'report', 'print', 'select2', 'editpermissions' => 'view',
+            'index' => 'list',
+
+            'show', 'view', 'report', 'select2' => 'view',
+
             'create' => 'create',
+
             'store', 'initiatepayment', 'recordpayment' => 'create',
+
             'edit', 'update', 'updatepermissions' => 'edit',
+
             'destroy', 'delete', 'cancelpayment' => 'delete',
+
             'approve', 'verify', 'reject', 'post', 'cancel' => 'approve',
+
             'export', 'exportpayments' => 'export',
+
             default => 'view',
         };
     }

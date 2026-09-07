@@ -295,7 +295,7 @@ Route::prefix('admin')->middleware(['auth', 'role:super-admin', 'controller.perm
 Route::get('/select-company', [CompanySelectionController::class, 'showForm'])->name('company.select.form');
 Route::post('/select-company', [CompanySelectionController::class, 'storeSelection'])->name('company.select.store');
 
-Route::middleware(['auth', 'controller.permission'])->group(function () {
+Route::middleware(['auth'])->group(function () {
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
