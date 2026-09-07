@@ -35,7 +35,7 @@
                     <div class="col-md-6 mb-3">
                         <label class="form-label">@lang('messages.booking_date')</label>
                         <input type="date" class="form-control" name="date"
-                            value="{{ old('date', isset($booking->date) ? $booking->date : now()->format('Y-m-d')) }}">
+                            value="{{ old('date', $booking->date?->format('Y-m-d') ?? now()->format('Y-m-d')) }}">
                         @error('date')
                             <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
@@ -398,7 +398,7 @@
                                     <label for="operating_start_date" class="form-label">@lang('messages.operating_charges_start_date')</label>
 
                                     <input type="date" class="form-control" name="operating_start_date"
-                                        value="{{ old('operating_start_date', isset($booking->operating_start_date) ? $booking->operating_start_date : now()->format('Y-m-d')) }}">
+                                       value="{{ old('operating_start_date', $booking->operating_start_date?->format('Y-m-d') ?? now()->format('Y-m-d')) }}">
 
                                     @error('operating_start_date')
                                         <div class="text-danger mt-1">{{ $message }}</div>
