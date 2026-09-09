@@ -1609,7 +1609,7 @@ return [
     'no_project_activity' => 'منتخب مدت کے لیے کوئی پروجیکٹ سرگرمی نہیں ملی۔',
     'sale_report' => 'سیل رپورٹ',
     'all_projects' => 'تمام پروجیکٹس',
-    'direct_products' => 'ڈائریکٹ پراڈکٹس',
+    'direct_products' => 'سیل شدہ پلاٹس',
     'item_products' => 'آئٹم پراڈکٹس',
     'project_name' => 'پروجیکٹ',
     'total_direct_marla' => 'کل سیل شدہ مرلہ',

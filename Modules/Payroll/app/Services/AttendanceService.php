@@ -137,8 +137,10 @@ class AttendanceService
 
         $shift = $employee->shift;
 
-        $shiftStart = Carbon::parse($shift->start_time);
-        $shiftEnd   = Carbon::parse($shift->end_time);
+        $attendanceDate = Carbon::parse($attendance->date);
+
+        $shiftStart = $attendanceDate->copy()->setTimeFromTimeString($shift->start_time);
+        $shiftEnd   = $attendanceDate->copy()->setTimeFromTimeString($shift->end_time);
         $grace      = $shift->grace_minutes ?? 0;
 
         $checkIn  = Carbon::parse($attendance->check_in);
