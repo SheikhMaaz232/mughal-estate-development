@@ -204,6 +204,10 @@
                 */
 
                         $partyName = 'N/A';
+                        $partyFName = 'N/A';
+                        $partyCast = 'N/A';
+                        $partyCnic = 'N/A';
+                        $partyContact = 'N/A';
 
                         if ($booking->party) {
                             $partyName = $isUrdu
@@ -211,6 +215,12 @@
                                     ($booking->party->name_en ?? ($booking->party->name ?? 'N/A'))
                                 : $booking->party->name_en ??
                                     ($booking->party->name_ur ?? ($booking->party->name ?? 'N/A'));
+
+                            $partyFName = $isUrdu
+                                ? $booking->party->father_name_ur ??
+                                    ($booking->party->father_name_en ?? ($booking->party->father_name ?? 'N/A'))
+                                : $booking->party->father_name_en ??
+                                    ($booking->party->father_name_ur ?? ($booking->party->father_name ?? 'N/A'));
 
                             $partyCast = $isUrdu
                                 ? $booking->party->cast->title_ur ??
@@ -278,7 +288,8 @@
                         {{-- PARTY --}}
 
                         <td>
-                            {{ $partyName }} - {{ $partyCast }}<br> ({{ $partyCnic }}) {{$partyContact}}
+                            {{ $partyName }} ({{ $partyFName }}) - {{ $partyCast }}<br>
+                            ({{ $partyCnic }}) {{ $partyContact }}
                         </td>
 
 

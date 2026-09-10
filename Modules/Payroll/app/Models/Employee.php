@@ -13,6 +13,7 @@ use Modules\Payroll\App\Models\EmployeeContact;
 use Modules\Payroll\App\Models\EmployeeDeduction;
 use Modules\Payroll\App\Models\LeaveBalance;
 use Modules\Payroll\App\Models\Payroll;
+use Modules\Payroll\Models\EmployeeWeeklyHoliday;
 
 class Employee extends Model
 {
@@ -109,5 +110,10 @@ class Employee extends Model
     public function shift()
     {
         return $this->belongsTo(Shift::class);
+    }
+
+    public function weeklyHolidays(): HasMany
+    {
+        return $this->hasMany(EmployeeWeeklyHoliday::class);
     }
 }

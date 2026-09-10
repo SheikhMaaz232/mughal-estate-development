@@ -24,7 +24,7 @@ class EmployeeController extends Controller
         $this->employeeService = $employeeService;
     }
 
-     private function getMasterData()
+    private function getMasterData()
     {
         return [
             'designations' => Cache::remember('designations_data', 3600, fn() =>
@@ -48,7 +48,7 @@ class EmployeeController extends Controller
     public function index()
     {
         $employeesData = Employee::latest()->paginate(10);
-        return view('payroll::employees.index', compact('employeesData') , $this->getMasterData());
+        return view('payroll::employees.index', compact('employeesData'), $this->getMasterData());
     }
 
     /**
@@ -59,25 +59,24 @@ class EmployeeController extends Controller
         $leaveTypes = LeaveType::orderBy('title_en')->get();
 
         return view('payroll::employees.create', compact('leaveTypes'), $this->getMasterData());
-
     }
 
     /**
      * Store a newly created resource in storage.
      */
-       public function store(Request $request)
-        {
-            try {
-                $employee = $this->employeeService->createEmployee($request->all());
+    public function store(Request $request)
+    {
+        try {
+            $employee = $this->employeeService->createEmployee($request->all());
 
-                return redirect()->route('payroll.employees.index')
-                    ->with('success', __('messages.record-saved'));
-            } catch (\Exception $e) {
-                return redirect()->back()
-                    ->withInput()
-                    ->with('error', __('Error creating employee: ') . $e->getMessage());
-            }
+            return redirect()->route('payroll.employees.index')
+                ->with('success', __('messages.record-saved'));
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('Error creating employee: ') . $e->getMessage());
         }
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -95,16 +94,16 @@ class EmployeeController extends Controller
      */
     public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
-         try {
-                $this->employeeService->updateEmployee($employee, $request->all());
+        try {
+            $this->employeeService->updateEmployee($employee, $request->all());
 
-                return redirect()->route('payroll.employees.index')
-                    ->with('success', __('messages.record-updated'));
-             } catch (\Exception $e) {
+            return redirect()->route('payroll.employees.index')
+                ->with('success', __('messages.record-updated'));
+        } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
                 ->with('error', __('Error updating employee: ') . $e->getMessage());
-             }
+        }
     }
 
     /**
@@ -136,15 +135,15 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        try{
+        try {
             $employee->delete();
 
             return redirect()->route('payroll.employees.index')
-                    ->with('success', __('messages.record-updated'));
-             } catch (\Exception $e) {
+                ->with('success', __('messages.record-updated'));
+        } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
                 ->with('error', __('Error updating employee: ') . $e->getMessage());
-            }
+        }
     }
 }

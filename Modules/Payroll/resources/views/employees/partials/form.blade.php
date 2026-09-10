@@ -335,6 +335,130 @@
                             </div>
                         </div>
 
+                        <div class="row mt-2">
+                            <div class="col-md-12 mb-3">
+
+                                <label class="form-label">
+                                    <i class="fas fa-calendar-week me-1"></i>
+                                    Weekly Holidays
+                                </label>
+
+                                @php
+                                    $weeklyHolidayData = old(
+                                        'weekly_holidays',
+                                        isset($employee) && $employee->weeklyHolidays
+                                            ? $employee->weeklyHolidays
+                                                ->pluck('day_of_week')
+                                                ->map(fn($day) => (int) $day)
+                                                ->toArray()
+                                            : [],
+                                    );
+                                @endphp
+
+                                <div class="row">
+
+                                    {{-- Sunday --}}
+                                    <div class="col-md-2 col-sm-4 col-6 mb-2">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="weekly_holidays[]" value="0"
+                                                id="holiday_sunday" class="form-check-input"
+                                                @checked(in_array(0, $weeklyHolidayData))>
+                                            <label class="form-check-label" for="holiday_sunday">
+                                                Sunday
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    {{-- Monday --}}
+                                    <div class="col-md-2 col-sm-4 col-6 mb-2">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="weekly_holidays[]" value="1"
+                                                id="holiday_monday" class="form-check-input"
+                                                @checked(in_array(1, $weeklyHolidayData))>
+                                            <label class="form-check-label" for="holiday_monday">
+                                                Monday
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    {{-- Tuesday --}}
+                                    <div class="col-md-2 col-sm-4 col-6 mb-2">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="weekly_holidays[]" value="2"
+                                                id="holiday_tuesday" class="form-check-input"
+                                                @checked(in_array(2, $weeklyHolidayData))>
+                                            <label class="form-check-label" for="holiday_tuesday">
+                                                Tuesday
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    {{-- Wednesday --}}
+                                    <div class="col-md-2 col-sm-4 col-6 mb-2">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="weekly_holidays[]" value="3"
+                                                id="holiday_wednesday" class="form-check-input"
+                                                @checked(in_array(3, $weeklyHolidayData))>
+                                            <label class="form-check-label" for="holiday_wednesday">
+                                                Wednesday
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    {{-- Thursday --}}
+                                    <div class="col-md-2 col-sm-4 col-6 mb-2">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="weekly_holidays[]" value="4"
+                                                id="holiday_thursday" class="form-check-input"
+                                                @checked(in_array(4, $weeklyHolidayData))>
+                                            <label class="form-check-label" for="holiday_thursday">
+                                                Thursday
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    {{-- Friday --}}
+                                    <div class="col-md-2 col-sm-4 col-6 mb-2">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="weekly_holidays[]" value="5"
+                                                id="holiday_friday" class="form-check-input"
+                                                @checked(in_array(5, $weeklyHolidayData))>
+                                            <label class="form-check-label" for="holiday_friday">
+                                                Friday
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    {{-- Saturday --}}
+                                    <div class="col-md-2 col-sm-4 col-6 mb-2">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="weekly_holidays[]" value="6"
+                                                id="holiday_saturday" class="form-check-input"
+                                                @checked(in_array(6, $weeklyHolidayData))>
+                                            <label class="form-check-label" for="holiday_saturday">
+                                                Saturday
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <small class="text-muted">
+                                    Select the weekly holidays for this employee.
+                                    You can select multiple days.
+                                </small>
+
+                                @error('weekly_holidays')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+
+                                @error('weekly_holidays.*')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+
+                            </div>
+                        </div>
+
                         <!-- Contact Information Section -->
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="contactInfoHeading">
