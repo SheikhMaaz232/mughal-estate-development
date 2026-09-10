@@ -573,9 +573,6 @@ return [
     'total' => 'Total',
     'no_department' => 'No Department',
     'no_records' => 'No payroll records found.',
-
-
-
     'department_salary_summary' => 'Department-wise Salary Summary Report',
     'year' => 'Year',
     'payroll_status' => 'Payroll Status',
@@ -585,5 +582,14 @@ return [
     'deduction_adjustment_summary' => 'Deduction & Adjustment Summary',
     'not_assigned' => 'Not Assigned',
     'no_records_found' => 'No records found.',
+    'weekly_holidays' => 'Weekly Holidays',
+    'sunday' => 'Sunday',
+    'monday' => 'Monday',
+    'tuesday' => 'Tuesday',
+    'wednesday' => 'Wednesday',
+    'thursday' => 'Thursday',
+    'friday' => 'Friday',
+    'saturday' => 'Saturday',
+    'weekly_holidays_help' => 'Select all weekly off days for this employee. You can select multiple days.',
 
 ];

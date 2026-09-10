@@ -13,7 +13,8 @@ class AttendanceService
 {
     public function processDate($date)
     {
-        $employees = Employee::with('shift')->get();
+        $employees = Employee::with('shift', 'weeklyHolidays')->get();
+        $dateCarbon = Carbon::parse($date);
 
         foreach ($employees as $employee) {
 
@@ -42,6 +43,22 @@ class AttendanceService
             if ($holiday) {
                 $attendance->fill([
                     'status' => 'holiday',
+                    'late_minutes' => 0,
+                    'early_leave_minutes' => 0,
+                    'overtime_minutes' => 0,
+                ])->save();
+
+                continue;
+            }
+
+            $isWeeklyHoliday = $employee->weeklyHolidays
+                ->contains('day_of_week', $dateCarbon->dayOfWeek);
+
+            if ($isWeeklyHoliday) {
+                $attendance->fill([
+                    'status' => 'holiday',
+                    'check_in' => null,
+                    'check_out' => null,
                     'late_minutes' => 0,
                     'early_leave_minutes' => 0,
                     'overtime_minutes' => 0,

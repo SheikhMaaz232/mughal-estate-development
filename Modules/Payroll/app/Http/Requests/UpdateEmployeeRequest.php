@@ -76,6 +76,15 @@ class UpdateEmployeeRequest extends FormRequest
             'leave_balances.*.leave_type_id' => 'required|exists:leave_types,id',
             'leave_balances.*.total_days' => 'nullable|integer|min:0',
             'leave_balances.*.used_days' => 'nullable|integer|min:0',
+            'weekly_holidays' => [
+                'nullable',
+                'array',
+            ],
+
+            'weekly_holidays.*' => [
+                'integer',
+                'between:0,6',
+            ],
         ];
     }
 
@@ -115,19 +124,19 @@ class UpdateEmployeeRequest extends FormRequest
 
         // Filter out completely empty sections
         $this->merge([
-            'contacts' => array_filter($this->contacts, function($contact) {
+            'contacts' => array_filter($this->contacts, function ($contact) {
                 return !empty(array_filter($contact));
             }),
-            'banks' => array_filter($this->banks, function($bank) {
+            'banks' => array_filter($this->banks, function ($bank) {
                 return !empty(array_filter($bank));
             }),
-            'allowances' => array_filter($this->allowances, function($allowance) {
+            'allowances' => array_filter($this->allowances, function ($allowance) {
                 return !empty(array_filter($allowance));
             }),
-            'deductions' => array_filter($this->deductions, function($deduction) {
+            'deductions' => array_filter($this->deductions, function ($deduction) {
                 return !empty(array_filter($deduction));
             }),
-            'leave_balances' => array_filter($this->leave_balances, function($balance) {
+            'leave_balances' => array_filter($this->leave_balances, function ($balance) {
                 return isset($balance['leave_type_id']) || isset($balance['total_days']) || isset($balance['used_days']);
             }),
         ]);

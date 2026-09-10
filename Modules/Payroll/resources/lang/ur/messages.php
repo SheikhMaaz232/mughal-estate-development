@@ -585,5 +585,16 @@ return [
     'deduction_adjustment_summary' => 'کٹوتی اور ایڈجسٹمنٹ کا خلاصہ',
     'not_assigned' => 'مختص نہیں',
     'no_records_found' => 'کوئی ریکارڈ نہیں ملا۔',
+    'weekly_holidays' => 'ہفتہ وار تعطیلات',
+    'sunday' => 'اتوار',
+    'monday' => 'پیر',
+    'tuesday' => 'منگل',
+    'wednesday' => 'بدھ',
+    'thursday' => 'جمعرات',
+    'friday' => 'جمعہ',
+    'saturday' => 'ہفتہ',
+    'weekly_holidays_help' =>
+        'اس ملازم کے تمام ہفتہ وار چھٹی کے دن منتخب کریں۔ آپ ایک سے زیادہ دن منتخب کر سکتے ہیں۔',
+
 
 ];

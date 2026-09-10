@@ -67,23 +67,39 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         try {
-            $employee = $this->employeeService->createEmployee($request->all());
 
-            return redirect()->route('payroll.employees.index')
-                ->with('success', __('messages.record-saved'));
+            $employee = $this->employeeService
+                ->createEmployee($request->all());
+
+            return redirect()
+                ->route('payroll.employees.index')
+                ->with(
+                    'success',
+                    __('messages.record-saved')
+                );
         } catch (\Exception $e) {
-            return redirect()->back()
+
+            return redirect()
+                ->back()
                 ->withInput()
-                ->with('error', __('Error creating employee: ') . $e->getMessage());
+                ->with(
+                    'error',
+                    __('Error creating employee: ') .
+                        $e->getMessage()
+                );
         }
     }
+
+    /**
+     * Show edit employee form.
+     */
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(Employee $employee)
     {
-        $employee->load(['contacts', 'banks', 'allowances', 'deductions', 'leaveBalances.leaveType']);
+        $employee->load(['contacts', 'banks', 'allowances', 'deductions', 'leaveBalances.leaveType', 'weeklyHolidays']);
         $leaveTypes = LeaveType::orderBy('title_en')->get();
 
         return view('payroll::employees.edit', compact('employee', 'leaveTypes'), $this->getMasterData());
@@ -92,19 +108,36 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateEmployeeRequest $request, Employee $employee)
-    {
+    public function update(
+        UpdateEmployeeRequest $request,
+        Employee $employee
+    ) {
         try {
-            $this->employeeService->updateEmployee($employee, $request->all());
 
-            return redirect()->route('payroll.employees.index')
-                ->with('success', __('messages.record-updated'));
+            $this->employeeService->updateEmployee(
+                $employee,
+                $request->all()
+            );
+
+            return redirect()
+                ->route('payroll.employees.index')
+                ->with(
+                    'success',
+                    __('messages.record-updated')
+                );
         } catch (\Exception $e) {
-            return redirect()->back()
+
+            return redirect()
+                ->back()
                 ->withInput()
-                ->with('error', __('Error updating employee: ') . $e->getMessage());
+                ->with(
+                    'error',
+                    __('Error updating employee: ') .
+                        $e->getMessage()
+                );
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -119,6 +152,7 @@ class EmployeeController extends Controller
                 'allowances.allowance',
                 'deductions.deduction',
                 'leaveBalances.leaveType',
+                'weeklyHolidays',
                 'department',
                 'designation'
             ]);
@@ -136,14 +170,25 @@ class EmployeeController extends Controller
     public function destroy(Employee $employee)
     {
         try {
-            $employee->delete();
 
-            return redirect()->route('payroll.employees.index')
-                ->with('success', __('messages.record-updated'));
+            $this->employeeService->deleteEmployee($employee);
+
+            return redirect()
+                ->route('payroll.employees.index')
+                ->with(
+                    'success',
+                    __('messages.record-updated')
+                );
         } catch (\Exception $e) {
-            return redirect()->back()
+
+            return redirect()
+                ->back()
                 ->withInput()
-                ->with('error', __('Error updating employee: ') . $e->getMessage());
+                ->with(
+                    'error',
+                    __('Error deleting employee: ') .
+                        $e->getMessage()
+                );
         }
     }
 }

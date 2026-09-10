@@ -2,29 +2,97 @@
 
 namespace Modules\Payroll\App\Services;
 
-use Modules\Payroll\App\Models\Employee;
-use Modules\Payroll\App\Models\EmployeeContact;
-use Modules\Payroll\App\Models\EmployeeBank;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Modules\Payroll\App\Models\Employee;
 use Modules\Payroll\App\Models\EmployeeAllowance;
+use Modules\Payroll\App\Models\EmployeeBank;
+use Modules\Payroll\App\Models\EmployeeContact;
 use Modules\Payroll\App\Models\EmployeeDeduction;
 use Modules\Payroll\App\Models\LeaveBalance;
+use Modules\Payroll\Models\EmployeeWeeklyHoliday;
 
 class EmployeeService
 {
     /**
      * Create a new employee with related data
      */
+    // public function createEmployee(array $data): Employee
+    // {
+    //     return DB::transaction(function () use ($data) {
+    //         // Handle profile picture upload
+    //         if (isset($data['profile_picture']) && $data['profile_picture']->isValid()) {
+    //             $data['profile_picture'] = $data['profile_picture']->store('employee-profile-pictures', 'public');
+    //         }
+
+    //         // Create the employee
+    //         $employee = Employee::create([
+    //             'first_name_en' => $data['first_name_en'],
+    //             'first_name_ur' => $data['first_name_ur'],
+    //             'last_name_en' => $data['last_name_en'] ?? null,
+    //             'last_name_ur' => $data['last_name_ur'] ?? null,
+    //             'father_name_en' => $data['father_name_en'] ?? null,
+    //             'father_name_ur' => $data['father_name_ur'] ?? null,
+    //             'device_user_id' => $data['device_user_id'],
+    //             'cnic' => $data['cnic'],
+    //             'dob' => $data['dob'] ?? null,
+    //             'gender' => $data['gender'] ?? null,
+    //             'marital_status' => $data['marital_status'] ?? null,
+    //             'shift_id' => $data['shift_id'] ?? null,
+    //             'device_id' => '1' ?? null,
+    //             'department_id' => $data['department_id'] ?? null,
+    //             'designation_id' => $data['designation_id'] ?? null,
+    //             'joining_date' => $data['joining_date'] ?? null,
+    //             'basic_salary' => $data['basic_salary'] ?? 0,
+    //             'profile_picture' => $data['profile_picture'] ?? null,
+    //             'status' => isset($data['status']) && $data['status'] === 'active' ? 'active' : 'inactive',
+    //         ]);
+
+    //         // Create contact information
+    //         if (!empty($data['contacts'])) {
+    //             $this->createContacts($employee, $data['contacts']);
+    //         }
+
+    //         // Create bank information
+    //         if (!empty($data['banks'])) {
+    //             $this->saveBanks($employee, $data['banks']);
+    //         }
+
+    //         // Create deductions information
+    //         if (!empty($data['deductions'])) {
+    //             $this->saveDeductions($employee, $data['deductions']);
+    //         }
+
+    //         // Create allowances information
+    //         if (!empty($data['allowances'])) {
+    //             $this->saveAllowances($employee, $data['allowances']);
+    //         }
+
+    //         // Create leave balance information
+    //         if (!empty($data['leave_balances'])) {
+    //             $this->saveLeaveBalances($employee, $data['leave_balances']);
+    //         }
+
+    //         return $employee->load(['contacts', 'banks', 'allowances', 'deductions', 'leaveBalances']);
+    //     });
+    // }
+
+
+
     public function createEmployee(array $data): Employee
     {
         return DB::transaction(function () use ($data) {
+
             // Handle profile picture upload
-            if (isset($data['profile_picture']) && $data['profile_picture']->isValid()) {
-                $data['profile_picture'] = $data['profile_picture']->store('employee-profile-pictures', 'public');
+            if (
+                isset($data['profile_picture']) &&
+                $data['profile_picture']->isValid()
+            ) {
+                $data['profile_picture'] = $data['profile_picture']
+                    ->store('employee-profile-pictures', 'public');
             }
 
-            // Create the employee
+            // Create employee
             $employee = Employee::create([
                 'first_name_en' => $data['first_name_en'],
                 'first_name_ur' => $data['first_name_ur'],
@@ -38,64 +106,176 @@ class EmployeeService
                 'gender' => $data['gender'] ?? null,
                 'marital_status' => $data['marital_status'] ?? null,
                 'shift_id' => $data['shift_id'] ?? null,
-                'device_id' => '1' ?? null,
+
+                // Keep your existing device logic if intentional
+                'device_id' => $data['device_id'] ?? null,
+
                 'department_id' => $data['department_id'] ?? null,
                 'designation_id' => $data['designation_id'] ?? null,
                 'joining_date' => $data['joining_date'] ?? null,
                 'basic_salary' => $data['basic_salary'] ?? 0,
                 'profile_picture' => $data['profile_picture'] ?? null,
-                'status' => isset($data['status']) && $data['status'] === 'active' ? 'active' : 'inactive',
+                'status' => isset($data['status']) &&
+                    $data['status'] === 'active'
+                    ? 'active'
+                    : 'inactive',
             ]);
 
-            // Create contact information
+            // Contacts
             if (!empty($data['contacts'])) {
-                $this->createContacts($employee, $data['contacts']);
+                $this->createContacts(
+                    $employee,
+                    $data['contacts']
+                );
             }
 
-            // Create bank information
+            // Banks
             if (!empty($data['banks'])) {
-                $this->saveBanks($employee, $data['banks']);
+                $this->saveBanks(
+                    $employee,
+                    $data['banks']
+                );
             }
 
-            // Create deductions information
+            // Deductions
             if (!empty($data['deductions'])) {
-                $this->saveDeductions($employee, $data['deductions']);
+                $this->saveDeductions(
+                    $employee,
+                    $data['deductions']
+                );
             }
 
-            // Create allowances information
+            // Allowances
             if (!empty($data['allowances'])) {
-                $this->saveAllowances($employee, $data['allowances']);
+                $this->saveAllowances(
+                    $employee,
+                    $data['allowances']
+                );
             }
 
-            // Create leave balance information
+            // Leave balances
             if (!empty($data['leave_balances'])) {
-                $this->saveLeaveBalances($employee, $data['leave_balances']);
+                $this->saveLeaveBalances(
+                    $employee,
+                    $data['leave_balances']
+                );
             }
 
-            return $employee->load(['contacts', 'banks', 'allowances', 'deductions', 'leaveBalances']);
+            // Weekly holidays
+            $this->saveWeeklyHolidays(
+                $employee,
+                $data['weekly_holidays'] ?? []
+            );
+
+            return $employee->load([
+                'contacts',
+                'banks',
+                'allowances',
+                'deductions',
+                'leaveBalances',
+                'weeklyHolidays',
+            ]);
         });
     }
+
+
 
     /**
      * Update an existing employee with related data
      */
-    public function updateEmployee(Employee $employee, array $data): Employee
-    {
+    // public function updateEmployee(Employee $employee, array $data): Employee
+    // {
+    //     return DB::transaction(function () use ($employee, $data) {
+    //         // Handle profile picture upload
+    //         if (isset($data['profile_picture']) && $data['profile_picture']->isValid()) {
+    //             // Delete old profile picture if exists
+    //             if ($employee->profile_picture) {
+    //                 Storage::disk('public')->delete($employee->profile_picture);
+    //             }
+
+    //             $data['profile_picture'] = $data['profile_picture']->store('employee-profile-pictures', 'public');
+    //         } else {
+    //             // Keep the existing profile picture if not updating
+    //             $data['profile_picture'] = $employee->profile_picture;
+    //         }
+
+    //         // Update the employee
+    //         $employee->update([
+    //             'first_name_en' => $data['first_name_en'],
+    //             'first_name_ur' => $data['first_name_ur'],
+    //             'last_name_en' => $data['last_name_en'] ?? null,
+    //             'last_name_ur' => $data['last_name_ur'] ?? null,
+    //             'father_name_en' => $data['father_name_en'] ?? null,
+    //             'father_name_ur' => $data['father_name_ur'] ?? null,
+    //             'device_user_id' => $data['device_user_id'],
+    //             'cnic' => $data['cnic'],
+    //             'dob' => $data['dob'] ?? null,
+    //             'gender' => $data['gender'] ?? null,
+    //             'marital_status' => $data['marital_status'] ?? null,
+    //             'shift_id' => $data['shift_id'] ?? null,
+    //             'device_id' => $data['device_id'] ?? null,
+    //             'department_id' => $data['department_id'] ?? null,
+    //             'designation_id' => $data['designation_id'] ?? null,
+    //             'joining_date' => $data['joining_date'] ?? null,
+    //             'basic_salary' => $data['basic_salary'] ?? 0,
+    //             'profile_picture' => $data['profile_picture'] ?? null,
+    //             'status' => isset($data['status']) && $data['status'] === 'active' ? 'active' : 'inactive',
+    //         ]);
+
+    //         // Update contact information
+    //         if (isset($data['contacts'])) {
+    //             $this->updateContacts($employee, $data['contacts']);
+    //         }
+
+    //         // Update bank information
+    //         if (isset($data['banks'])) {
+    //             $this->updateBanks($employee, $data['banks']);
+    //         }
+
+    //         // Update deductions information
+    //         if (isset($data['deductions'])) {
+    //             $this->updateDeductions($employee, $data['deductions']);
+    //         }
+
+    //         // Update allowances information
+    //         if (isset($data['allowances'])) {
+    //             $this->updateAllowances($employee, $data['allowances']);
+    //         }
+
+    //         // Update leave balance information
+    //         if (isset($data['leave_balances'])) {
+    //             $this->updateLeaveBalances($employee, $data['leave_balances']);
+    //         }
+
+    //         return $employee->load(['contacts', 'banks', 'allowances', 'deductions', 'leaveBalances']);
+    //     });
+    // }
+
+    public function updateEmployee(
+        Employee $employee,
+        array $data
+    ): Employee {
         return DB::transaction(function () use ($employee, $data) {
+
             // Handle profile picture upload
-            if (isset($data['profile_picture']) && $data['profile_picture']->isValid()) {
-                // Delete old profile picture if exists
+            if (
+                isset($data['profile_picture']) &&
+                $data['profile_picture']->isValid()
+            ) {
+
                 if ($employee->profile_picture) {
-                    Storage::disk('public')->delete($employee->profile_picture);
+                    Storage::disk('public')
+                        ->delete($employee->profile_picture);
                 }
 
-                $data['profile_picture'] = $data['profile_picture']->store('employee-profile-pictures', 'public');
+                $data['profile_picture'] = $data['profile_picture']
+                    ->store('employee-profile-pictures', 'public');
             } else {
-                // Keep the existing profile picture if not updating
-                $data['profile_picture'] = $employee->profile_picture;
+                $data['profile_picture'] =
+                    $employee->profile_picture;
             }
 
-            // Update the employee
+            // Update employee
             $employee->update([
                 'first_name_en' => $data['first_name_en'],
                 'first_name_ur' => $data['first_name_ur'],
@@ -115,36 +295,115 @@ class EmployeeService
                 'joining_date' => $data['joining_date'] ?? null,
                 'basic_salary' => $data['basic_salary'] ?? 0,
                 'profile_picture' => $data['profile_picture'] ?? null,
-                'status' => isset($data['status']) && $data['status'] === 'active' ? 'active' : 'inactive',
+                'status' => isset($data['status']) &&
+                    $data['status'] === 'active'
+                    ? 'active'
+                    : 'inactive',
             ]);
 
-            // Update contact information
+            // Contacts
             if (isset($data['contacts'])) {
-                $this->updateContacts($employee, $data['contacts']);
+                $this->updateContacts(
+                    $employee,
+                    $data['contacts']
+                );
             }
 
-            // Update bank information
+            // Banks
             if (isset($data['banks'])) {
-                $this->updateBanks($employee, $data['banks']);
+                $this->updateBanks(
+                    $employee,
+                    $data['banks']
+                );
             }
 
-            // Update deductions information
+            // Deductions
             if (isset($data['deductions'])) {
-                $this->updateDeductions($employee, $data['deductions']);
+                $this->updateDeductions(
+                    $employee,
+                    $data['deductions']
+                );
             }
 
-            // Update allowances information
+            // Allowances
             if (isset($data['allowances'])) {
-                $this->updateAllowances($employee, $data['allowances']);
+                $this->updateAllowances(
+                    $employee,
+                    $data['allowances']
+                );
             }
 
-            // Update leave balance information
+            // Leave balances
             if (isset($data['leave_balances'])) {
-                $this->updateLeaveBalances($employee, $data['leave_balances']);
+                $this->updateLeaveBalances(
+                    $employee,
+                    $data['leave_balances']
+                );
             }
 
-            return $employee->load(['contacts', 'banks', 'allowances', 'deductions', 'leaveBalances']);
+            // Weekly holidays
+            $this->updateWeeklyHolidays(
+                $employee,
+                $data['weekly_holidays'] ?? []
+            );
+
+            return $employee->load([
+                'contacts',
+                'banks',
+                'allowances',
+                'deductions',
+                'leaveBalances',
+                'weeklyHolidays',
+            ]);
         });
+    }
+
+    /**
+     * Save weekly holidays for an employee.
+     */
+    protected function saveWeeklyHolidays(
+        Employee $employee,
+        array $weeklyHolidays
+    ): void {
+        $holidayData = [];
+
+        foreach (array_unique($weeklyHolidays) as $day) {
+
+            $day = (int) $day;
+
+            // Only allow Sunday-Saturday
+            if ($day < 0 || $day > 6) {
+                continue;
+            }
+
+            $holidayData[] = [
+                'employee_id' => $employee->id,
+                'day_of_week' => $day,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+
+        if (!empty($holidayData)) {
+            EmployeeWeeklyHoliday::insert($holidayData);
+        }
+    }
+
+    /**
+     * Update weekly holidays for an employee.
+     */
+    protected function updateWeeklyHolidays(
+        Employee $employee,
+        array $weeklyHolidays
+    ): void {
+        // Remove old weekly holidays
+        $employee->weeklyHolidays()->delete();
+
+        // Save new weekly holidays
+        $this->saveWeeklyHolidays(
+            $employee,
+            $weeklyHolidays
+        );
     }
 
     /**
