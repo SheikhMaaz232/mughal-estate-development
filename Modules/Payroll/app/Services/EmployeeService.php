@@ -9,8 +9,8 @@ use Modules\Payroll\App\Models\EmployeeAllowance;
 use Modules\Payroll\App\Models\EmployeeBank;
 use Modules\Payroll\App\Models\EmployeeContact;
 use Modules\Payroll\App\Models\EmployeeDeduction;
+use Modules\Payroll\App\Models\EmployeeWeeklyHoliday;
 use Modules\Payroll\App\Models\LeaveBalance;
-use Modules\Payroll\Models\EmployeeWeeklyHoliday;
 
 class EmployeeService
 {

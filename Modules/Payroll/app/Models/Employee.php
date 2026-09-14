@@ -13,7 +13,7 @@ use Modules\Payroll\App\Models\EmployeeContact;
 use Modules\Payroll\App\Models\EmployeeDeduction;
 use Modules\Payroll\App\Models\LeaveBalance;
 use Modules\Payroll\App\Models\Payroll;
-use Modules\Payroll\Models\EmployeeWeeklyHoliday;
+use Modules\Payroll\App\Models\EmployeeWeeklyHoliday;
 
 class Employee extends Model
 {
