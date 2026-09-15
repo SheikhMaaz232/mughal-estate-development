@@ -1340,19 +1340,28 @@ class ReportController extends Controller
     |--------------------------------------------------------------------------
     */
 
+        // $query->where(function ($q) {
+        //     $q->whereNull('case')
+        //         ->orWhereNotIn('case', [
+        //             'transfer',
+        //             'ownership_changed',
+        //         ]);
+        // });
+
+        // $query->where(function ($q) {
+        //     $q->whereNull('status')
+        //         ->orWhereRaw('LOWER(status) != ?', ['cancelled']);
+        // });
+
+
+        // ONLY VERIFIED BOOKINGS
+        $query->whereRaw('LOWER(status) = ?', ['verified']);
+
+        // EXCLUDE OWNERSHIP CHANGED
         $query->where(function ($q) {
             $q->whereNull('case')
-                ->orWhereNotIn('case', [
-                    'transfer',
-                    'ownership_changed',
-                ]);
+                ->orWhere('case', '!=', 'ownership_changed');
         });
-
-        $query->where(function ($q) {
-            $q->whereNull('status')
-                ->orWhereRaw('LOWER(status) != ?', ['cancelled']);
-        });
-
 
         /*
     |--------------------------------------------------------------------------
@@ -1513,8 +1522,8 @@ class ReportController extends Controller
         });
 
         $totalMarlas = $bookings->sum(function ($booking) {
-    return (float) ($booking->product->total_marla ?? 0);
-});
+            return (float) ($booking->product->total_marla ?? 0);
+        });
 
         $grandTotals = [
             'total_marlas' => $totalMarlas,
