@@ -76,6 +76,80 @@
                     <br>
 
 
+                    <div class="row">
+
+                        {{-- =====================================================
+                            PARTY
+                        ====================================================== --}}
+
+                        <div class="col-md-6">
+
+                            <label>
+                                Party
+                            </label>
+
+                            <select name="party_id[]" id="party_id" multiple class="form-control select2 custom-select2">
+
+                                <option value="all">
+                                    All
+                                </option>
+
+                                @foreach ($searchParties as $searchParty)
+                                    <option value="{{ $searchParty->id }}"
+                                        {{ collect(request('party_id'))->contains($searchParty->id) ? 'selected' : '' }}>
+                                        {{ App::getLocale() === 'ur' ? $searchParty->name_ur ?? '-' : $searchParty->name_en ?? '-' }}
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $searchParty->cnic_no ?? 'N/A' }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        - {{ $searchParty->contact_number_1 ?? 'N/A' }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        -
+                                        {{ App::getLocale() === 'ur' ? $searchParty->cast->title_ur ?? '-' : $searchParty->cast->title_en ?? '-' }}
+                                    </option>
+                                @endforeach
+
+                            </select>
+
+                        </div>
+
+
+                        {{-- =====================================================
+                            FROM DATE
+                        ====================================================== --}}
+
+                        <div class="col-md-3">
+
+                            <label>
+                                From Date
+                            </label>
+
+                            <input type="date" name="from_date" id="from_date" class="form-control">
+
+                        </div>
+
+
+                        {{-- =====================================================
+                            TO DATE
+                        ====================================================== --}}
+
+                        <div class="col-md-3">
+
+                            <label>
+                                To Date
+                            </label>
+
+                            <input type="date" name="to_date" id="to_date" class="form-control">
+
+                        </div>
+
+                    </div>
+
+
+                    <br>
+
+
+                    {{-- =====================================================
+                        BUTTONS
+                    ====================================================== --}}
+
                     <button type="submit" class="btn btn-primary">
 
                         @lang('messages.generate_report')
@@ -106,6 +180,12 @@
         $(document).ready(function() {
 
 
+            /*
+            |--------------------------------------------------------------------------
+            | PROJECT CHANGE
+            |--------------------------------------------------------------------------
+            */
+
             $('#project_id').on('change', function() {
 
                 let projectIds = $(this).val();
@@ -113,7 +193,10 @@
                 let productSelect = $('#product_id');
 
 
-                console.log('Selected Projects:', projectIds);
+                console.log(
+                    'Selected Projects:',
+                    projectIds
+                );
 
 
                 /*
@@ -154,7 +237,9 @@
 
                 if (projectIds.includes('all')) {
 
-                    console.log('All projects selected');
+                    console.log(
+                        'All projects selected'
+                    );
 
                     loadProducts(['all']);
 
@@ -260,8 +345,7 @@
                                             value: product.id,
 
                                             text: "{{ app()->getLocale() }}" === 'ur' ?
-                                                product.name_ur :
-                                                product.name_en
+                                                product.name_ur : product.name_en
 
                                         })
 
@@ -342,6 +426,36 @@
                 });
 
             }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | DATE VALIDATION
+            |--------------------------------------------------------------------------
+            */
+
+            $('#from_date, #to_date').on('change', function() {
+
+                let fromDate = $('#from_date').val();
+
+                let toDate = $('#to_date').val();
+
+
+                if (
+                    fromDate &&
+                    toDate &&
+                    fromDate > toDate
+                ) {
+
+                    alert(
+                        'From Date cannot be greater than To Date.'
+                    );
+
+                    $('#to_date').val('');
+
+                }
+
+            });
 
         });
     </script>

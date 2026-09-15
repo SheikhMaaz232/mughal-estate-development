@@ -1390,6 +1390,53 @@ class ReportController extends Controller
 
         /*
     |--------------------------------------------------------------------------
+    | PARTY FILTER
+    |--------------------------------------------------------------------------
+    */
+
+        if (
+            $request->filled('party_id') &&
+            !in_array('all', (array) $request->party_id)
+        ) {
+            $query->whereIn(
+                'party_id',
+                (array) $request->party_id
+            );
+        }
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | FROM DATE FILTER
+    |--------------------------------------------------------------------------
+    */
+
+        if ($request->filled('from_date')) {
+            $query->whereDate(
+                'date',
+                '>=',
+                $request->from_date
+            );
+        }
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | TO DATE FILTER
+    |--------------------------------------------------------------------------
+    */
+
+        if ($request->filled('to_date')) {
+            $query->whereDate(
+                'date',
+                '<=',
+                $request->to_date
+            );
+        }
+
+
+        /*
+    |--------------------------------------------------------------------------
     | GET BOOKINGS
     |--------------------------------------------------------------------------
     */
@@ -1462,12 +1509,15 @@ class ReportController extends Controller
         $totalReceivedAmount = $bookings->sum(function ($booking) use (
             $receivedAmountByAccount
         ) {
-
             return $receivedAmountByAccount[$booking->detail_account_id] ?? 0;
         });
 
+        $totalMarlas = $bookings->sum(function ($booking) {
+    return (float) ($booking->product->total_marla ?? 0);
+});
 
         $grandTotals = [
+            'total_marlas' => $totalMarlas,
 
             'bookings' => $bookings->count(),
 
@@ -1490,6 +1540,7 @@ class ReportController extends Controller
             )
         );
     }
+
 
     public function bookingPaymentReport2(Request $request)
     {

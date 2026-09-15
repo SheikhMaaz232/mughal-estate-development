@@ -141,13 +141,21 @@
                         {{ $isUrdu ? 'پروڈکٹ / یونٹ' : 'Product / Unit' }}
                     </th>
 
+                    <th>
+                        {{ $isUrdu ? 'مرلے' : 'Marlas' }}
+                    </th>
+
 
                     <th>
                         {{ $isUrdu ? 'پارٹی' : 'Party' }}
                     </th>
 
 
-                    <th>
+                    {{-- <th>
+                        {{ $isUrdu ? 'تاریخ' : 'Date' }}
+                    </th> --}}
+
+                    <th style="white-space: nowrap;">
                         {{ $isUrdu ? 'تاریخ' : 'Date' }}
                     </th>
 
@@ -184,10 +192,20 @@
                 */
 
                         $productName = 'N/A';
+                        $productMarlas = 'N/A';
+                        $projectTotalMarlas = 'N/A';
 
                         if ($booking->product) {
                             $productName = $isUrdu ? $booking->product->name_ur : $booking->product->name_en;
                         }
+
+                        if ($booking->product) {
+                            $productMarlas = $isUrdu ? $booking->product->total_marla : $booking->product->total_marla;
+                        }
+
+                        $projectTotalMarlas = $projectBookings->sum(function ($booking) {
+                            return (float) ($booking->product->total_marla ?? 0);
+                        });
 
                         /*
                 |--------------------------------------------------------------------------
@@ -284,6 +302,12 @@
 
                         </td>
 
+                        <td>
+
+                            {{ $productMarlas }}
+
+                        </td>
+
 
                         {{-- PARTY --}}
 
@@ -295,10 +319,8 @@
 
                         {{-- DATE --}}
 
-                        <td>
-
+                        <td style="white-space: nowrap;">
                             {{ \Carbon\Carbon::parse($booking->date)->format('d-m-Y') }}
-
                         </td>
 
                         {{-- BOOKING AMOUNT --}}
@@ -338,8 +360,19 @@
 
                 <tr class="total-row">
 
+                    <td colspan="3">
 
-                    <td colspan="5">
+                        {{ $isUrdu ? 'کل مرلے' : 'Total Marlas' }}
+
+                    </td>
+
+                    <td>
+
+                        {{ number_format($projectTotalMarlas, 2) }}
+
+                    </td>
+
+                    <td colspan="2">
 
                         {{ $isUrdu ? 'پروجیکٹ کل' : 'Project Total' }}
 
