@@ -11,7 +11,6 @@ use App\Models\Party;
 use App\Models\Product;
 use App\Models\Project;
 use App\Models\StockLedger;
-use App\Models\SubSubSubHead;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -1784,14 +1783,7 @@ class ReportController extends Controller
 
     public function saleReportFilter()
     {
-        $projects = DB::table('projects')
-            ->select(
-                'id',
-                'name_en',
-                'name_ur'
-            )
-            ->orderBy('name_en')
-            ->get();
+        $projects = DB::table('projects')->select('id', 'name_en', 'name_ur')->orderBy('name_en')->whereNull('deleted_at')->get();
 
         return view(
             'reports.sale-report.filter',

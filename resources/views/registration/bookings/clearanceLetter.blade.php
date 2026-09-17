@@ -305,9 +305,9 @@
 
         <!-- Signatures -->
         <div class="signatures2" style="margin-top: 1.5in;">
-            <div>Accountant Signature</div>
-            <div>G.M Signature</div>
             <div>CEO Signature</div>
+            <div>G.M Signature</div>
+            <div>Accountant Signature</div>
         </div>
 
     </div>
