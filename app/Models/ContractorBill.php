@@ -27,7 +27,7 @@ class ContractorBill extends Model implements Auditable
     protected $casts = [
         'bill_date' => 'date',
         'verified_at' => 'datetime',
-        'amount' => 'decimal:2',
+        'total_amount' => 'decimal:2',
     ];
 
     /**

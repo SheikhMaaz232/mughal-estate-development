@@ -101,6 +101,8 @@ return [
     'brv_approval' => 'BRV Approval',
     'booking-report' => 'Plot Booking Report',
     'account-statement' => 'Account Statement',
-    'sale_report' => 'Sale Report'
+    'sale_report' => 'Sale Report',
+    'registry-types' => 'Registry Types',
+    'plotPurchaseInvoice' => 'Plot Purchase Invoice',
 
 ];

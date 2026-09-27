@@ -679,210 +679,218 @@
                                     </a>
                                     <ul class="nav-main-submenu">
 
+                                        @can('user.index')
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('users.index') ? ' active' : '' }}"
+                                                    href="{{ route('users.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.users')</span>
+                                                </a>
+                                            </li>
+                                        @endcan
 
+                                        @can('itemRegistration.index')
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('itemRegistration.index') ? ' active' : '' }}"
+                                                    href="{{ route('itemRegistration.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.Item-Registration')</span>
+                                                </a>
+                                            </li>
+                                        @endcan
 
-                                        {{-- @can('user.list') --}}
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('users.index') ? ' active' : '' }}"
-                                                href="{{ route('users.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.users')</span>
-                                            </a>
-                                        </li>
+                                        @can('parties.index')
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('parties.index') ? ' active' : '' }}"
+                                                    href="{{ route('parties.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.party-registration')</span>
+                                                </a>
+                                            </li>
+                                        @endcan
 
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('itemRegistration.index') ? ' active' : '' }}"
-                                                href="{{ route('itemRegistration.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.Item-Registration')</span>
-                                            </a>
-                                        </li>
-
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('parties.index') ? ' active' : '' }}"
-                                                href="{{ route('parties.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.party-registration')</span>
-                                            </a>
-                                        </li>
-
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('companies.index') ? ' active' : '' }}"
-                                                href="{{ route('companies.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.companies')</span>
-                                            </a>
-                                        </li>
+                                        @can('companies.index')
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('companies.index') ? ' active' : '' }}"
+                                                    href="{{ route('companies.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.companies')</span>
+                                                </a>
+                                            </li>
+                                        @endcan
 
                                         {{-- <li class="nav-main-item">
                                                 <a class="nav-main-link{{ request()->routeIs('unitRegistration.index') ? ' active' : '' }}"
                                                     href="{{ route('unitRegistration.index') }}">
                                                     <span class="nav-main-link-name">@lang('menu.unitRegistration')</span>
                                                 </a>
-                                            </li> --}}
+                                        </li> --}}
 
+                                        @can('relations.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('relations.index') ? ' active' : '' }}"
                                                 href="{{ route('relations.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.relations')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('register.group') --}}
+                                        @can('groups.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('groups.index') ? ' active' : '' }}"
                                                 href="{{ route('groups.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.groups')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('register.project') --}}
+                                        @can('projects.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('projects.*') ? ' active' : '' }}"
                                                 href="{{ route('projects.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.projects')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('register.city') --}}
+                                        @can('cities.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('cities.index') ? ' active' : '' }}"
                                                 href="{{ route('cities.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.cities')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('register.residential') --}}
+                                        @can('residentials.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('residentials.index') ? ' active' : '' }}"
                                                 href="{{ route('residentials.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.residential-types')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('register.bank') --}}
+                                        @can('banks.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('banks.index') ? ' active' : '' }}"
                                                 href="{{ route('banks.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.banks')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('register.period') --}}
+                                        @can('periods.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('periods.index') ? ' active' : '' }}"
                                                 href="{{ route('periods.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.schedule-periods')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('register.cast') --}}
+                                        @can('schedule-types.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('schedule-types.index') ? ' active' : '' }}"
                                                 href="{{ route('schedule-types.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.schedule-type')</span>
                                             </a>
                                         </li>
+                                        @endcan
+                                         @can('casts.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('casts.index') ? ' active' : '' }}"
                                                 href="{{ route('casts.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.casts')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('register.warehouse') --}}
+                                        @can('warehouses.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('warehouses.index') ? ' active' : '' }}"
                                                 href="{{ route('warehouses.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.warehouses')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('register.unit') --}}
+                                        @can('units.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('units.index') ? ' active' : '' }}"
                                                 href="{{ route('units.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.measurement-units')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('register.tehsil') --}}
+                                        @can('tehsils.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('tehsils.index') ? ' active' : '' }}"
                                                 href="{{ route('tehsils.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.tehsils')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('register.area') --}}
+                                        @can('areas.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('areas.index') ? ' active' : '' }}"
                                                 href="{{ route('areas.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.areas')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('register.occupation-type') --}}
+                                        @can('occupation-types.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('occupation-types.index') ? ' active' : '' }}"
                                                 href="{{ route('occupation-types.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.occupation-types')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('register.phase-type') --}}
+                                        @can('phase-types.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('phase-types.index') ? ' active' : '' }}"
                                                 href="{{ route('phase-types.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.phase-types')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('register.department') --}}
+                                        @can('departments.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('departments.index') ? ' active' : '' }}"
                                                 href="{{ route('departments.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.department')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('registry-types.view') --}}
+                                        @can('registry-types.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('registry-types.index') ? ' active' : '' }}"
                                                 href="{{ route('registry-types.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.registry-types')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('register.road-category') --}}
+                                        @can('road-categories.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('road-categories.index') ? ' active' : '' }}"
                                                 href="{{ route('road-categories.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.road-category')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
-                                        {{-- @can('register.road-specification') --}}
+                                        @can('road-specifications.index')
                                         <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs(patterns: 'road-specifications.index') ? ' active' : '' }}"
                                                 href="{{ route('road-specifications.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.roads-specification')</span>
                                             </a>
                                         </li>
-                                        {{-- @endcan --}}
+                                        @endcan
 
                                         {{-- @can('register.road-specification')  --}}
                                         {{-- <li class="nav-main-item">
@@ -1246,6 +1254,13 @@
                                                 <span class="nav-main-link-name">@lang('menu.purchaseReturn')</span>
                                             </a>
                                         </li>
+
+                                         <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('plot-purchase-invoice*') ? ' active' : '' }}"
+                                                href="{{ route('plot-purchase-invoice.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.plotPurchaseInvoice')</span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 @endcan
                             </li>
@@ -1477,9 +1492,10 @@
                                             </a>
                                         </li>
 
-                                          <li class="nav-main-item{{ request()->routeIs('reports.sale-report.*') ? ' open' : '' }}">
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('reports.sale-report.*') ? ' open' : '' }}">
                                             <a class="nav-main-link{{ request()->routeIs('reports.sale-report.*') ? ' active' : '' }}"
-                                            href="{{ route('reports.sale-report.filter') }}" >
+                                                href="{{ route('reports.sale-report.filter') }}">
                                                 <span class="nav-main-link-name">@lang('menu.sale_report')</span>
                                             </a>
                                         </li>
@@ -1513,7 +1529,7 @@
                                             </a>
                                         </li>
 
-                                      
+
 
 
                                         {{-- <li class="nav-item">

@@ -61,8 +61,7 @@ class RegisteredPartiesController extends Controller
                 ->latest()
                 ->paginate(10);
         });
-        return view(
-            'registration.party_registration.index',
+        return view('registration.party_registration.index',
             array_merge(
                 [
                     'parties' => $parties,

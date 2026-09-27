@@ -103,5 +103,7 @@ return [
     'brv_approval' => 'بی آر وی کی منظوری',
     'booking-report' => 'بکنگ رپورٹ',
     'account-statement' => 'اکاؤنٹ اسٹیٹمنٹ',
-    'sale_report' => 'سیل رپورٹ'
+    'sale_report' => 'سیل رپورٹ',
+    'registry-types' => 'رجسٹری کی اقسام',
+    'plotPurchaseInvoice' => 'پلاٹ پرچیز انوائس',
 ];

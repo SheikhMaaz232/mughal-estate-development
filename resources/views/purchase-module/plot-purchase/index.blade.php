@@ -5,9 +5,9 @@
         <div class="content content-full">
             <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center py-2">
                 <div class="flex-grow-1">
-                    <h2 class="fs-base lh-base fw-medium text-muted mb-0">@lang('messages.list-of-sale-invoice')</h2>
+                    <h2 class="fs-base lh-base fw-medium text-muted mb-0">@lang('messages.list-of-plot-purchase-invoice')</h2>
                 </div>
-                <a href="{{ route('sale-invoice.create') }}" class="btn btn-sm btn-primary">@lang('messages.add-sale-invoice')</a>
+                <a href="{{ route('plot-purchase-invoice.create') }}" class="btn btn-sm btn-primary">@lang('messages.add-plot-purchase-invoice')</a>
             </div>
         </div>
     </div>
@@ -27,7 +27,7 @@
             </div>
         @endif
 
-        <form method="GET" action="{{ route('sale-invoice.index') }}">
+        <form method="GET" action="{{ route('plot-purchase-invoice.index') }}">
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="date" class="form-label">@lang('messages.Date')</label>
@@ -35,12 +35,14 @@
                     <input type="date" class="form-control" name="date" value="{{ request('date') }}">
                 </div>
 
-                <div class="col-lg-6 mb-3">
-                    <label for="search">@lang('messages.sale_invoice_no')</label>
-                    <input type="number" class="form-control" name="id" placeholder="@lang('messages.sale_invoice_no')" step="any"
+                  <div class="col-lg-6 mb-3">
+                    <label for="search">@lang('messages.plot-purchase_invoice_no')</label>
+                    <input type="number" class="form-control" name="id" placeholder="@lang('messages.plot-purchase_invoice_no')" step="any"
                         onwheel="this.blur()" value="{{ request('id') }}">
                 </div>
+
             </div>
+
             <div class="row">
 
                 <div class="col-lg-6 mb-3">
@@ -81,8 +83,8 @@
                 <div class="col-lg-6 mb-3">
                     <button class="btn btn-primary" type="submit">@lang('messages.search')</button>
 
-                    @if (request()->hasAny(['search', 'party_id', 'detail_account_id', 'date', 'id']))
-                        <a href="{{ route('sale-invoice.index') }}" class="btn btn-secondary">@lang('messages.clear')</a>
+                    @if (request()->hasAny(['search', 'party_id', 'occupation_id', 'sub_head_id', 'sub_sub_head_id']))
+                        <a href="{{ route('plot-purchase-invoice.index') }}" class="btn btn-secondary">@lang('messages.clear')</a>
                     @endif
                 </div>
             </div>
@@ -104,22 +106,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($saleInvoicesListing as $saleInvoiceListing)
+                        @foreach ($plotPurchaseListing as $purchaseInvoiceListing)
                             <tr>
-                                <td class="text-center">{{ $saleInvoiceListing->id }}</td>
-                                <td>{{ \Carbon\Carbon::parse($saleInvoiceListing->date)->format('d M Y') }}</td>
+                                <td class="text-center">{{ $purchaseInvoiceListing->id }}</td>
+                                <td>{{ \Carbon\Carbon::parse($purchaseInvoiceListing->date)->format('d M Y') }}</td>
                                 <td>
-                                    {{ App::getLocale() === 'ur' ? $saleInvoiceListing->party->name_ur ?? '-' : $saleInvoiceListing->party->name_en ?? '-' }}
+                                    {{ App::getLocale() === 'ur' ? $purchaseInvoiceListing->party->name_ur ?? '-' : $purchaseInvoiceListing->party->name_en ?? '-' }}
                                 </td>
                                 <td>
-                                    {{ App::getLocale() === 'ur' ? $saleInvoiceListing->detailAccount->name_ur ?? '-' : $saleInvoiceListing->detailAccount->name_en ?? '-' }}
+                                    {{ App::getLocale() === 'ur' ? $purchaseInvoiceListing->detailAccount->name_ur ?? '-' : $purchaseInvoiceListing->detailAccount->name_en ?? '-' }}
                                 </td>
-                                <td>{{ $saleInvoiceListing->total_quantity }}</td>
-                                <td>{{ $saleInvoiceListing->gross_bill }}</td>
+                                <td>{{ $purchaseInvoiceListing->total_quantity }}</td>
+                                <td>{{ $purchaseInvoiceListing->gross_bill }}</td>
                                 <td>
-                                    @if ($saleInvoiceListing->status === 'Unverified')
+                                    @if ($purchaseInvoiceListing->status === 'Unverified')
                                         @lang('messages.unverified')
-                                    @elseif ($saleInvoiceListing->status === 'Verified')
+                                    @elseif ($purchaseInvoiceListing->status === 'Verified')
                                         @lang('messages.verified')
                                     @else
                                         -
@@ -128,9 +130,9 @@
 
                                 <td class="text-left">
                                     <div class="btn-group">
-                                        @if ($saleInvoiceListing->status === 'Unverified')
+                                        @if ($purchaseInvoiceListing->status === 'Unverified')
                                             <form method="POST"
-                                                action="{{ route('sale-invoice.updateStatus', $saleInvoiceListing->id) }}"
+                                                action="{{ route('plot-purchase-invoice.updateStatus', $purchaseInvoiceListing->id) }}"
                                                 class="d-inline-block">
                                                 @csrf
                                                 @method('PATCH')
@@ -144,15 +146,15 @@
                                             </form>
                                         @endif
 
-                                        <a href="{{ route('sale-invoice.edit', $saleInvoiceListing->id) }}"
+                                        <a href="{{ route('plot-purchase-invoice.edit', $purchaseInvoiceListing->id) }}"
                                             class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                            data-bs-toggle="tooltip" aria-label="Edit Sale Invoice"
-                                            data-bs-original-title="Edit Sale Invoice"> <i
+                                            data-bs-toggle="tooltip" aria-label="Edit Purchase Order"
+                                            data-bs-original-title="Edit Purchase Order"> <i
                                                 class="fa fa-fw fa-pencil-alt"></i></a>
 
-                                        @if ($saleInvoiceListing->status === 'Unverified')
+                                        @if ($purchaseInvoiceListing->status === 'Unverified')
                                             <form method="POST"
-                                                action="{{ route('sale-invoice.destroy', $saleInvoiceListing->id) }}"
+                                                action="{{ route('plot-purchase-invoice.destroy', $purchaseInvoiceListing->id) }}"
                                                 class="d-inline-block delete-form">
                                                 @csrf
                                                 @method('DELETE')
@@ -164,13 +166,17 @@
 
                                             </form>
                                         @endif
-                                        <a href="{{ route('sale-invoice.show', $saleInvoiceListing->id) }}"
+                                        <a href="{{ route('plot-purchase-invoice.show', $purchaseInvoiceListing->id) }}"
                                             class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                            data-bs-toggle="tooltip" aria-label="View Sale Invoice"
-                                            data-bs-original-title="View Sale Invoice">
+                                            data-bs-toggle="tooltip" aria-label="View purchaseInvoiceListing"
+                                            data-bs-original-title="View purchaseInvoiceListing">
                                             <i class="fa fa-fw fa-eye"></i>
                                         </a>
                                     </div>
+
+                                    {{-- @if ($purchaseInvoiceListing->status === 'Verified') --}}
+                                   
+                                    {{-- @endif --}}
                                 </td>
                             </tr>
                         @endforeach
@@ -186,7 +192,7 @@
                                     aria-label="@lang('messages.close')"></button>
                             </div>
                             <div class="modal-body text-center">
-                                <p>@lang('messages.verify_confirmation_text_sale_invoice')</p>
+                                <p>@lang('messages.verify_confirmation_text_purchase_invoice')</p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-alt-secondary"
@@ -199,7 +205,7 @@
                 </div>
                 <!-- Pagination -->
                 <div class="d-flex justify-content-center">
-                    {{ $saleInvoicesListing->links() }}
+                    {{ $plotPurchaseListing->links() }}
                 </div>
             </div>
         </div>

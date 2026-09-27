@@ -5,10 +5,10 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserRoleController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\ConstructionModule\BOQMasterController;
+use App\Http\Controllers\ConstructionModule\ConstructionReportController;
 use App\Http\Controllers\ConstructionModule\ConstructionSiteController;
 use App\Http\Controllers\ConstructionModule\ContractorBillController;
 use App\Http\Controllers\ConstructionModule\ContractorPaymentController;
-use App\Http\Controllers\ConstructionModule\ConstructionReportController;
 use App\Http\Controllers\ConstructionModule\TenderController;
 use App\Http\Controllers\ConstructionModule\WorkOrderController;
 use App\Http\Controllers\ConstructionModule\WorkProgressController;
@@ -19,6 +19,7 @@ use App\Http\Controllers\LandRegistration\LandReportController;
 use App\Http\Controllers\LandRegistration\LandTransferController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\PurchaseModule\GRNController;
+use App\Http\Controllers\PurchaseModule\PlotPurchaseController;
 use App\Http\Controllers\PurchaseModule\PurchaseController;
 use App\Http\Controllers\PurchaseModule\PurchaseOrderController;
 use App\Http\Controllers\PurchaseModule\PurchaseReturnController;
@@ -67,19 +68,19 @@ use App\Http\Controllers\Registration\UnitController;
 use App\Http\Controllers\Registration\UnitRegistrationController;
 use App\Http\Controllers\Registration\UserController;
 use App\Http\Controllers\Registration\WarehouseController;
+use App\Http\Controllers\Reports\AccountStatementController;
 use App\Http\Controllers\Reports\ReportController;
 use App\Http\Controllers\SaleModule\SaleInvoiceController;
-use Illuminate\Support\Facades\Route;
-use Modules\Payroll\App\Http\Controllers\DashboardController;
-use Modules\Payroll\App\Http\Controllers\QualificationController;
-use App\Http\Controllers\Reports\AccountStatementController;
 use App\Models\AccountLedger;
 use App\Models\BookingApplication;
+use App\Models\Project;
 use App\Models\PurchaseMaster;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseReturnMaster;
-use App\Models\Project;
 use App\Models\SaleInvoice;
+use Illuminate\Support\Facades\Route;
+use Modules\Payroll\App\Http\Controllers\DashboardController;
+use Modules\Payroll\App\Http\Controllers\QualificationController;
 
 Route::post('/locale', LocaleController::class)->name('locale.change');
 
@@ -327,12 +328,19 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('registry-order', RegistryOrderController::class);
     Route::get('/get-detail-account-data', [PurchaseOrderController::class, 'getDetailAccounts'])
         ->name('get.detail.account.data.project');
+
+    Route::get('/get-payable-detail-account-data', [PlotPurchaseController::class, 'getDetailAccounts'])
+        ->name('get.payable.detail.account.data.project');
     Route::get('/get-project-items/{projectId}', [PurchaseOrderController::class, 'getProjectItems'])
         ->name('purchase-order.getProjectItems');
+    Route::get('/get-project-products/{projectId}', [PlotPurchaseController::class, 'getProjectProducts'])
+        ->name('plot-purchase.getProjectProducts');
     Route::resource('purchase-order', PurchaseOrderController::class);
     Route::patch('/purchase-order/{id}/status', [PurchaseOrderController::class, 'updateStatus'])->name('purchase-order.updateStatus');
     Route::get('purchase-order/get-product-size/{id}', [PurchaseOrderController::class, 'getItemMeasurementUnitDetail'])
         ->name('purchase-order.getProductSizeDetail');
+    Route::get('plot-purchase/get-product-measurement/{id}', [PlotPurchaseController::class, 'getItemMeasurementUnitDetail'])
+        ->name('plot-purchase.getProductSizeDetail');
     Route::resource('grn', GRNController::class);
     Route::get('grn/generate', [GRNController::class, 'generate'])->name('grn.generate');
     Route::patch('/grn/{id}/status', [GRNController::class, 'updateStatus'])->name('grn.updateStatus');
@@ -341,6 +349,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('purchase-invoice', PurchaseController::class);
     Route::patch('/purchase-invoice/{id}/status', [PurchaseController::class, 'updateStatus'])->name('purchase-invoice.updateStatus');
 
+    Route::resource('plot-purchase-invoice', PlotPurchaseController::class);
+    Route::patch('/plot-purchase-invoice/{id}/status', [PlotPurchaseController::class, 'updateStatus'])->name('plot-purchase-invoice.updateStatus');
     Route::resource('sale-invoice', SaleInvoiceController::class);
     Route::patch('/sale-invoice/{id}/status', [SaleInvoiceController::class, 'updateStatus'])->name('sale-invoice.updateStatus');
 

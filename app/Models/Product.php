@@ -66,7 +66,7 @@ class Product extends Model implements Auditable
 
     public function subSubSubHead()
     {
-        return $this->belongsTo(SubSubSubHead::class);
+        return $this->belongsTo(SubSubSubHead::class, 'sub_sub_sub_head_id');
     }
 
     public function company()

@@ -124,30 +124,34 @@
 
                                 <td class="text-center">
                                     <div class="btn-group">
+                                        @can('party.edit')
+                                            <a href="{{ route('parties.edit', $party->id) }}"
+                                                class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                data-bs-toggle="tooltip" aria-label="Edit party"
+                                                data-bs-original-title="Edit party"> <i class="fa fa-fw fa-pencil-alt"></i></a>
+                                        @endcan
 
-                                        <a href="{{ route('parties.edit', $party->id) }}"
-                                            class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                            data-bs-toggle="tooltip" aria-label="Edit sub Head"
-                                            data-bs-original-title="Edit sub Head"> <i
-                                                class="fa fa-fw fa-pencil-alt"></i></a>
+                                        @can('party.delete')
+                                            <form method="POST" action="{{ route('parties.destroy', $party->id) }}"
+                                                class="d-inline-block delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button"
+                                                    class="btn btn-sm btn-alt-danger js-bs-tooltip-enabled btn-delete"
+                                                    data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                                    <i class="fa fa-fw fa-times text-danger"></i>
+                                                </button>
 
-                                        <form method="POST" action="{{ route('parties.destroy', $party->id) }}"
-                                            class="d-inline-block delete-form">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button"
-                                                class="btn btn-sm btn-alt-danger js-bs-tooltip-enabled btn-delete"
-                                                data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                                                <i class="fa fa-fw fa-times text-danger"></i>
-                                            </button>
-
-                                        </form>
-                                        <a href="{{ route('parties.show', $party->id) }}"
-                                            class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                            data-bs-toggle="tooltip" aria-label="View Party"
-                                            data-bs-original-title="View Party">
-                                            <i class="fa fa-fw fa-eye"></i>
-                                        </a>
+                                            </form>
+                                        @endcan
+                                        @can('party.show')
+                                            <a href="{{ route('parties.show', $party->id) }}"
+                                                class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                data-bs-toggle="tooltip" aria-label="View Party"
+                                                data-bs-original-title="View Party">
+                                                <i class="fa fa-fw fa-eye"></i>
+                                            </a>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>

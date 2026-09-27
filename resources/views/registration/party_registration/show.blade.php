@@ -7,9 +7,11 @@
                 <i class="fa fa-building me-1"></i>@lang('messages.party_details')
             </h3>
             <div class="block-options">
-                <a href="{{ route('parties.edit', $party->id) }}" class="btn btn-sm btn-alt-primary">
-                    <i class="fa fa-edit me-1"></i>@lang('messages.edit-parties')
-                </a>
+                @can('party.show')
+                    <a href="{{ route('parties.edit', $party->id) }}" class="btn btn-sm btn-alt-primary">
+                        <i class="fa fa-edit me-1"></i>@lang('messages.edit-parties')
+                    </a>
+                @endcan
             </div>
         </div>
         <div class="block-content">
@@ -275,7 +277,8 @@
                             </div>
 
                             <div class="d-flex justify-content-center mt-3 mb-3">
-                                <hr class="my-4" style="width:50%; height:8px; background-color:#000000; border:none; border-radius:4px;">
+                                <hr class="my-4"
+                                    style="width:50%; height:8px; background-color:#000000; border:none; border-radius:4px;">
                             </div>
 
                         @empty

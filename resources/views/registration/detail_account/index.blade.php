@@ -72,7 +72,8 @@
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label for="sub_sub_head_id">@lang('messages.sub-sub-heads')</label>
-                    <select name="sub_sub_head_id[]" id="sub_sub_head_id" class="form-control form-select" multiple></select>
+                    <select name="sub_sub_head_id[]" id="sub_sub_head_id" class="form-control form-select"
+                        multiple></select>
                     {{-- <select name="sub_sub_head_id[]" id="sub_sub_head_id"
                         class="form-control form-select select2 @error('sub_sub_head_id') is-invalid @enderror" multiple>
                         @foreach ($searchSubSubHeads as $subSubHead)
@@ -99,7 +100,8 @@
                         @endforeach
                     </select> --}}
 
-                    <select name="sub_sub_sub_head_id[]" id="sub_sub_sub_head_id" class="form-control form-select" multiple></select>
+                    <select name="sub_sub_sub_head_id[]" id="sub_sub_sub_head_id" class="form-control form-select"
+                        multiple></select>
                 </div>
 
                 <div class="col-lg-6 mb-3">
@@ -182,25 +184,28 @@
 
                                 <td class="text-center">
                                     <div class="btn-group">
+                                        @can('detail_accounts.edit')
+                                            <a href="{{ route('detail-accounts.edit', $detailAccount->id) }}"
+                                                class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                data-bs-toggle="tooltip" aria-label="Edit Detail Account"
+                                                data-bs-original-title="Edit Detail Account"> <i
+                                                    class="fa fa-fw fa-pencil-alt"></i></a>
+                                        @endcan
 
-                                        <a href="{{ route('detail-accounts.edit', $detailAccount->id) }}"
-                                            class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                            data-bs-toggle="tooltip" aria-label="Edit sub Head"
-                                            data-bs-original-title="Edit sub Head"> <i
-                                                class="fa fa-fw fa-pencil-alt"></i></a>
+                                        @can('detail_accounts.delete')
+                                            <form method="POST"
+                                                action="{{ route('detail-accounts.destroy', $detailAccount->id) }}"
+                                                class="d-inline-block delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button"
+                                                    class="btn btn-sm btn-alt-danger js-bs-tooltip-enabled btn-delete"
+                                                    data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                                    <i class="fa fa-fw fa-times text-danger"></i>
+                                                </button>
 
-                                        <form method="POST"
-                                            action="{{ route('detail-accounts.destroy', $detailAccount->id) }}"
-                                            class="d-inline-block delete-form">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button"
-                                                class="btn btn-sm btn-alt-danger js-bs-tooltip-enabled btn-delete"
-                                                data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                                                <i class="fa fa-fw fa-times text-danger"></i>
-                                            </button>
-
-                                        </form>
+                                            </form>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>
