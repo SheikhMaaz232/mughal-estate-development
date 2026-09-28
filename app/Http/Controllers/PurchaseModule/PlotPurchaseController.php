@@ -15,7 +15,6 @@ use App\Services\PlotPurchaseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
 class PlotPurchaseController extends Controller
@@ -100,10 +99,16 @@ class PlotPurchaseController extends Controller
             $purchaseMaster = $this->plotPurchaseService->getById($id);
             $purchaseDetails = PlotPurchaseDetail::where('plot_purchase_master_id', $id)->get();
 
+            $projectId = $purchaseMaster->project_id;
+            $itemsData = Product::whereHas('subSubSubHead', function ($q) use ($projectId) {
+                $q->where('project_id', $projectId);
+            })->get();
+
             return view('purchase-module.plot-purchase.edit', array_merge(
                 [
                     'purchaseMaster' => $purchaseMaster,
-                    'purchaseDetails' => $purchaseDetails
+                    'purchaseDetails' => $purchaseDetails,
+                    'itemsData' => $itemsData
                 ],
                 $this->getMasterData()
             ));
@@ -117,18 +122,18 @@ class PlotPurchaseController extends Controller
      */
     public function update(UpdatePlotPurchaseRequestphp $request, $id)
     {
-        // try {
-        $purchaseMaster = PlotPurchaseMaster::findOrFail($id);
-        $this->plotPurchaseService->update($request->validated(), $purchaseMaster);
+        try {
+            $purchaseMaster = PlotPurchaseMaster::findOrFail($id);
+            $this->plotPurchaseService->update($request->validated(), $purchaseMaster);
 
-        return redirect()
-            ->route('plot-purchase-invoice.index')
-            ->with('success', __('messages.record-updated'));
-        // } catch (\Throwable $e) {
-        //     return back()
-        //         ->withInput()
-        //         ->withErrors(['error' => 'Something went wrong while updating the purchase order.']);
-        // }
+            return redirect()
+                ->route('plot-purchase-invoice.index')
+                ->with('success', __('messages.record-updated'));
+        } catch (\Throwable $e) {
+            return back()
+                ->withInput()
+                ->withErrors(['error' => 'Something went wrong while updating the purchase order.']);
+        }
     }
 
     /**

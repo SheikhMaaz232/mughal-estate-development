@@ -504,7 +504,11 @@
                             $row.find('.quantity').val(data.total_marla);
 
                             // Rate
-                            $row.find('.price').val(data.amount_in_pkr);
+                            // $row.find('.price').val(data.amount_in_pkr);
+
+                            $row.find('.price').val(
+                                parseFloat(data.total_amount) / parseFloat(data.total_marla)
+                            );
 
                             // Amount
                             $row.find('.amount').val(data.total_amount);

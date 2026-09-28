@@ -67,36 +67,72 @@ class PlotPurchaseService
     /**
      * Update Purchase Invoice (Master + Details)
      */
+
     public function update(array $data, $master)
     {
         return DB::transaction(function () use ($data, $master) {
 
-
+            // Update master
             $master->update([
-                'date'               => $data['date'],
-                'project_id'         => $data['project_id'],
-                'party_id'           => $data['party_id'],
-                'detail_account_id'  => $data['detail_account_id'],
-                'status' => $data['status'],
-                'gross_bill'         => $data['gross_bill'],
-                'total_quantity'     => $data['total_quantity'],
-                'remarks_en'            => $data['remarks_en'] ?? null,
-                'remarks_ur'            => $data['remarks_ur'] ?? null,
+                'date'              => $data['date'],
+                'project_id'        => $data['project_id'],
+                'party_id'          => $data['party_id'],
+                'detail_account_id' => $data['detail_account_id'],
+                'status'            => $data['status'],
+                'gross_bill'        => $data['gross_bill'],
+                'total_quantity'    => $data['total_quantity'],
+                'remarks_en'        => $data['remarks_en'] ?? null,
+                'remarks_ur'        => $data['remarks_ur'] ?? null,
             ]);
 
+            // Delete old details
             $master->details()->delete();
 
+            // Create new details
             foreach ($data['product_id'] as $index => $productId) {
 
                 PlotPurchaseDetail::create([
                     'plot_purchase_master_id' => $master->id,
-                    'product_id'         => $productId,
-                    'size'           => $data['size'][$index],
-                    'per_marla_rate'              => $data['per_marla_rate'][$index],
-                    'amount'             => $data['amount'][$index],
-                    'detail_remarks_en'            => $data['detail_remarks_en'][$index] ?? null,
-                    'detail_remarks_ur'            => $data['detail_remarks_ur'][$index] ?? null,
+                    'product_id'              => $productId,
+                    'size'                    => $data['size'][$index],
+                    'per_marla_rate'          => $data['per_marla_rate'][$index],
+                    'amount'                  => $data['amount'][$index],
+                    'detail_remarks_en'       => $data['detail_remarks_en'][$index] ?? null,
+                    'detail_remarks_ur'       => $data['detail_remarks_ur'][$index] ?? null,
                 ]);
+            }
+
+            /*
+        |--------------------------------------------------------------------------
+        | Ledger Handling
+        |--------------------------------------------------------------------------
+        */
+
+            // Always remove existing ledger entries for this invoice first.
+            AccountLedger::where('invoice_id', $master->id)
+                ->where('document_number', 'P-P-I-' . $master->id)
+                ->delete();
+
+            GeneralJournal::where('invoice_id', $master->id)
+                ->where('document_number', 'P-P-I-' . $master->id)
+                ->delete();
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | Only create ledger entries when status is Verified
+        |--------------------------------------------------------------------------
+        */
+
+            if (strtolower($master->status) === 'verified') {
+
+                // Get fresh details after update
+                $purchaseDetails = PlotPurchaseDetail::where(
+                    'plot_purchase_master_id',
+                    $master->id
+                )->get();
+
+                $this->createLedgerEntry($master, $purchaseDetails);
             }
 
             return $master;
