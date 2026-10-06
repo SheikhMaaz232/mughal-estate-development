@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Party;
 use App\Models\Product;
 use App\Models\Project;
-use App\Models\StockLedger;
 use App\Models\AccountLedger;
 use App\Models\DetailAccount;
 use App\Models\GeneralJournal;

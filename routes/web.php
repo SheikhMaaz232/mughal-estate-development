@@ -534,6 +534,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('companies', CompanyController::class);
     Route::resource('audit-logs', AuditLogController::class);
     Route::resource('users', UserController::class);
+    Route::get('/user-passwords', [\App\Http\Controllers\Registration\UserPasswordController::class, 'index'])
+        ->middleware('permission:users.reset_password')
+        ->name('user-passwords.index');
+    Route::put('/user-passwords', [\App\Http\Controllers\Registration\UserPasswordController::class, 'update'])
+        ->middleware('permission:users.reset_password')
+        ->name('user-passwords.update');
     Route::resource('groups', GroupController::class);
     Route::resource('projects', ProjectController::class);
     Route::resource('cities', CityController::class);
@@ -618,6 +624,9 @@ Route::middleware(['auth'])->prefix('reports')->group(function () {
     Route::get('/balance-sheet', [ReportController::class, 'viewBalanceSheet'])
         ->name('reports.balance.sheet.view');
 
+    Route::get('/balance-sheet/chart-options', [ReportController::class, 'getBalanceSheetChartOptions'])
+        ->name('reports.balance.sheet.chart-options');
+
     Route::get('/balance-sheet/report', [ReportController::class, 'getBalanceSheet'])
         ->name('reports.balance.sheet.report');
 
@@ -638,6 +647,12 @@ Route::middleware(['auth'])->prefix('reports')->group(function () {
 
     Route::get('/profit-loss/report', [ReportController::class, 'getProfitLoss'])
         ->name('reports.profit.loss.report');
+
+    Route::get('/financial-activity', [ReportController::class, 'viewFinancialActivityReport'])
+        ->name('reports.financial.activity.view');
+
+    Route::get('/financial-activity/report', [ReportController::class, 'getFinancialActivityReport'])
+        ->name('reports.financial.activity.report');
 
     Route::get(
         '/account-statement',

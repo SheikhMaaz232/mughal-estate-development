@@ -432,6 +432,71 @@
     <script src="{{ asset('js/plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js') }}"></script>
 
+    @can('partyLedger.view')
+        @if (request()->routeIs(
+            'bank-payment-voucher.create',
+            'bank-payment-voucher.edit',
+            'bank-receipt-voucher.create',
+            'bank-receipt-voucher.edit',
+            'cash-payment-voucher.create',
+            'cash-payment-voucher.edit',
+            'cash-receipt-voucher.create',
+            'cash-receipt-voucher.edit',
+            'jv-voucher.create',
+            'jv-voucher.edit'
+        ))
+            <script>
+                (function ($) {
+                    const accountSelector = [
+                        'select[name="detail_account_id"]',
+                        'select[name="debit_detail_account_id[]"]',
+                        'select[name="credit_detail_account_id[]"]'
+                    ].join(',');
+
+                    function updateAccountLedgerLink(select) {
+                        const $select = $(select);
+                        let $link = $select.data('accountLedgerLink');
+
+                        if (!$link || !$link.length) {
+                            $link = $('<a class="btn btn-sm btn-outline-primary mt-2 account-ledger-link" target="_blank" rel="noopener"></a>')
+                                .text(@json(__('messages.view_account_ledger')));
+                            $select.data('accountLedgerLink', $link);
+
+                            const $select2Container = $select.next('.select2');
+                            ($select2Container.length ? $select2Container : $select).after($link);
+                        }
+
+                        const accountId = $select.val();
+                        if (accountId && !Array.isArray(accountId)) {
+                            const ledgerUrl = new URL(@json(route('partyAccount.ledger.report')), window.location.origin);
+                            ledgerUrl.searchParams.append('detail_account_id[]', accountId);
+                            $link.attr('href', ledgerUrl.toString()).show();
+                        } else {
+                            $link.removeAttr('href').hide();
+                        }
+                    }
+
+                    $(function () {
+                        $(accountSelector).each(function () {
+                            updateAccountLedgerLink(this);
+                        });
+                    });
+
+                    $(document).on('change select2:select select2:clear', accountSelector, function () {
+                        updateAccountLedgerLink(this);
+                    });
+
+                    $(document).on('select2:open', accountSelector, function () {
+                        const select = this;
+                        window.setTimeout(function () {
+                            updateAccountLedgerLink(select);
+                        }, 0);
+                    });
+                })(jQuery);
+            </script>
+        @endif
+    @endcan
+
     @yield('script')
 
     {{--  <script src="https://unpkg.com/simple-keyboard/build/index.js"></script>  --}}
@@ -644,6 +709,7 @@
 
                             <li
                                 class="nav-main-item{{ request()->is('users*') ||
+                                request()->is('user-passwords*') ||
                                 request()->is('companies*') ||
                                 request()->is('itemRegistration*') ||
                                 request()->is('groups*') ||
@@ -671,7 +737,7 @@
                                     ? ' open'
                                     : '' }}">
 
-                                @can('registration.view')
+                                @canany(['registration.view', 'users.reset_password'])
                                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                         aria-haspopup="true" aria-expanded="true" href="#">
                                         <i class="nav-main-link-icon si si-plus"></i>
@@ -684,6 +750,14 @@
                                                 <a class="nav-main-link{{ request()->routeIs('users.index') ? ' active' : '' }}"
                                                     href="{{ route('users.index') }}">
                                                     <span class="nav-main-link-name">@lang('menu.users')</span>
+                                                </a>
+                                            </li>
+                                        @endcan
+                                        @can('users.reset_password')
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('user-passwords.*') ? ' active' : '' }}"
+                                                    href="{{ route('user-passwords.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.user-passwords')</span>
                                                 </a>
                                             </li>
                                         @endcan
@@ -1475,6 +1549,13 @@
                                             <a class="nav-main-link{{ request()->routeIs('reports.profit.loss.*') ? ' active' : '' }}"
                                                 href="{{ route('reports.profit.loss.view') }}">
                                                 <span class="nav-main-link-name">@lang('menu.profit-loss')</span>
+                                            </a>
+                                        </li>
+                                        <li
+                                            class="nav-main-item{{ request()->routeIs('reports.financial.activity.*') ? ' open' : '' }}">
+                                            <a class="nav-main-link{{ request()->routeIs('reports.financial.activity.*') ? ' active' : '' }}"
+                                                href="{{ route('reports.financial.activity.view') }}">
+                                                <span class="nav-main-link-name">@lang('menu.financial-activity')</span>
                                             </a>
                                         </li>
                                         <li

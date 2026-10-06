@@ -6,16 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Models\AccountLedger;
 use App\Models\BookingApplication;
 use App\Models\BookingPaymentShedule;
+use App\Models\ControlHead;
 use App\Models\DetailAccount;
+use App\Models\MainHead;
 use App\Models\Party;
 use App\Models\Product;
 use App\Models\Project;
 use App\Models\StockLedger;
+use App\Models\SubHead;
+use App\Models\SubSubHead;
+use App\Models\SubSubSubHead;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use OwenIt\Auditing\Models\Audit;
 
 class ReportController extends Controller
@@ -564,8 +570,48 @@ class ReportController extends Controller
     public function viewBalanceSheet(Request $request)
     {
         $projects = Project::orderBy('name_en')->get();
+        $mainHeads = MainHead::orderBy('name_en')->get(['id', 'name_en', 'name_ur']);
+        $selectedChartFilters = $request->only([
+            'main_head_id',
+            'control_head_id',
+            'sub_head_id',
+            'sub_sub_head_id',
+            'sub_sub_sub_head_id',
+            'detail_account_id',
+        ]);
 
-        return view('reports.balance-sheet.view', compact('projects', 'request'));
+        return view('reports.balance-sheet.view', compact(
+            'projects',
+            'mainHeads',
+            'request',
+            'selectedChartFilters'
+        ));
+    }
+
+    public function getBalanceSheetChartOptions(Request $request)
+    {
+        $request->validate([
+            'level' => ['required', 'in:control_heads,sub_heads,sub_sub_heads,sub_sub_sub_heads,detail_accounts'],
+            'parent_ids' => ['required', 'array', 'min:1'],
+        ]);
+
+        $levels = [
+            'control_heads' => [ControlHead::class, 'main_head_id', 'main_heads'],
+            'sub_heads' => [SubHead::class, 'control_head_id', 'control_heads'],
+            'sub_sub_heads' => [SubSubHead::class, 'sub_head_id', 'sub_heads'],
+            'sub_sub_sub_heads' => [SubSubSubHead::class, 'sub_sub_head_id', 'sub_sub_heads'],
+            'detail_accounts' => [DetailAccount::class, 'sub_sub_sub_head_id', 'sub_sub_sub_heads'],
+        ];
+        [$model, $parentColumn, $parentTable] = $levels[$request->input('level')];
+        $request->validate([
+            'parent_ids.*' => ['required', 'integer', "exists:$parentTable,id"],
+        ]);
+
+        return $model::query()
+            ->whereIn($parentColumn, $request->input('parent_ids'))
+            ->orderBy('name_en')
+            ->distinct()
+            ->get(['id', 'name_en', 'name_ur']);
     }
 
     public function viewFinancialPosition(Request $request)
@@ -780,8 +826,168 @@ class ReportController extends Controller
         ));
     }
 
+    public function viewFinancialActivityReport(Request $request)
+    {
+        $projects = Project::orderBy('name_en')->get();
+        $mainHeads = MainHead::orderBy('id')->get();
+
+        return view('reports.financial-activity.view', compact('projects', 'mainHeads', 'request'));
+    }
+
+    public function getFinancialActivityReport(Request $request)
+    {
+        $request->validate([
+            'from_date' => ['required', 'date'],
+            'to_date' => ['required', 'date', 'after_or_equal:from_date'],
+            'project_id' => ['nullable', 'array'],
+            'project_id.*' => ['nullable', 'string'],
+            'main_head_id' => ['nullable', 'integer', 'exists:main_heads,id'],
+        ]);
+
+        $requestedProjectIds = (array) $request->input('project_id', []);
+        $projectIds = in_array('all', $requestedProjectIds, true)
+            ? []
+            : array_values(array_filter($requestedProjectIds, fn($id) => $id !== null && $id !== ''));
+
+        Validator::make(
+            ['project_ids' => $projectIds],
+            ['project_ids.*' => ['integer', 'exists:projects,id']]
+        )->validate();
+
+        $fromDate = Carbon::parse($request->input('from_date'))->startOfDay();
+        $toDate = Carbon::parse($request->input('to_date'))->endOfDay();
+        $isUrdu = app()->getLocale() === 'ur';
+        $mainHeads = MainHead::orderBy('id')->get();
+        $selectedMainHeadId = $request->filled('main_head_id')
+            ? (int) $request->input('main_head_id')
+            : null;
+
+        $entries = AccountLedger::with([
+            'project',
+            'party',
+            'detailAccount.mainHead',
+            'detailAccount.controlHead',
+            'detailAccount.subHead',
+            'detailAccount.subSubHead',
+            'detailAccount.subSubSubHead',
+        ])
+            ->whereBetween('date', [$fromDate, $toDate])
+            ->when($projectIds, fn($query) => $query->whereIn('project_id', $projectIds))
+            ->when($selectedMainHeadId, fn($query) => $query->whereHas(
+                'detailAccount',
+                fn($accountQuery) => $accountQuery->where('main_head_id', $selectedMainHeadId)
+            ))
+            ->orderBy('date')
+            ->orderBy('id')
+            ->get()
+            ->filter(fn($entry) => $entry->detailAccount?->mainHead !== null)
+            ->values();
+
+        $makeHeadSummary = function (Collection $headEntries, MainHead $mainHead) {
+            $debit = $headEntries->sum('debit');
+            $credit = $headEntries->sum('credit');
+            $hasDebitNormalBalance = in_array((int) $mainHead->id, [1, 4], true);
+
+            return (object) [
+                'id' => $mainHead->id,
+                'name_en' => $mainHead->name_en,
+                'name_ur' => $mainHead->name_ur,
+                'debit' => $debit,
+                'credit' => $credit,
+                'amount' => $hasDebitNormalBalance ? $debit - $credit : $credit - $debit,
+            ];
+        };
+
+        $projectWiseData = $entries->groupBy('project_id')->map(function ($projectEntries) use (
+            $mainHeads,
+            $makeHeadSummary
+        ) {
+            $project = $projectEntries->first()->project;
+            $headData = $mainHeads->map(function ($mainHead) use ($projectEntries, $makeHeadSummary) {
+                $headEntries = $projectEntries->filter(
+                    fn($entry) => (int) $entry->detailAccount->main_head_id === (int) $mainHead->id
+                )->values();
+
+                $accounts = $headEntries->groupBy('detail_account_id')->map(function ($accountEntries) {
+                    $account = $accountEntries->first()->detailAccount;
+
+                    return (object) [
+                        'name_en' => $account->name_en,
+                        'name_ur' => $account->name_ur,
+                        'classification_en' => collect([
+                            $account->controlHead?->name_en,
+                            $account->subHead?->name_en,
+                            $account->subSubHead?->name_en,
+                            $account->subSubSubHead?->name_en,
+                        ])->filter()->implode(' / '),
+                        'classification_ur' => collect([
+                            $account->controlHead?->name_ur,
+                            $account->subHead?->name_ur,
+                            $account->subSubHead?->name_ur,
+                            $account->subSubSubHead?->name_ur,
+                        ])->filter()->implode(' / '),
+                        'entries' => $accountEntries,
+                    ];
+                })->sortBy('name_en')->values();
+
+                $summary = $makeHeadSummary($headEntries, $mainHead);
+                $summary->accounts = $accounts;
+
+                return $summary;
+            });
+
+            return (object) [
+                'project_id' => $project?->id,
+                'project_name_en' => $project?->name_en ?? __('messages.unknown_project'),
+                'project_name_ur' => $project?->name_ur ?: __('messages.unknown_project'),
+                'main_heads' => $headData,
+            ];
+        })->values();
+
+        $grandHeadTotals = $mainHeads->map(function ($mainHead) use ($entries, $makeHeadSummary) {
+            $headEntries = $entries->filter(
+                fn($entry) => (int) $entry->detailAccount->main_head_id === (int) $mainHead->id
+            )->values();
+
+            return $makeHeadSummary($headEntries, $mainHead);
+        });
+
+        return view('reports.financial-activity.report', compact(
+            'projectWiseData',
+            'grandHeadTotals',
+            'fromDate',
+            'toDate',
+            'isUrdu'
+        ));
+    }
+
     public function getBalanceSheet(Request $request)
     {
+        $request->validate([
+            'project_id' => ['nullable', 'array'],
+            'main_head_id' => ['nullable', 'array'],
+            'main_head_id.*' => ['integer', 'exists:main_heads,id'],
+            'control_head_id' => ['nullable', 'array'],
+            'control_head_id.*' => ['integer', 'exists:control_heads,id'],
+            'sub_head_id' => ['nullable', 'array'],
+            'sub_head_id.*' => ['integer', 'exists:sub_heads,id'],
+            'sub_sub_head_id' => ['nullable', 'array'],
+            'sub_sub_head_id.*' => ['integer', 'exists:sub_sub_heads,id'],
+            'sub_sub_sub_head_id' => ['nullable', 'array'],
+            'sub_sub_sub_head_id.*' => ['integer', 'exists:sub_sub_sub_heads,id'],
+            'detail_account_id' => ['nullable', 'array'],
+            'detail_account_id.*' => ['integer', 'exists:detail_accounts,id'],
+        ]);
+        $requestedProjectIds = (array) $request->input('project_id', []);
+        $projectIds = in_array('all', $requestedProjectIds, true)
+            ? []
+            : array_values(array_filter($requestedProjectIds, fn($id) => $id !== null && $id !== ''));
+
+        Validator::make(
+            ['project_ids' => $projectIds],
+            ['project_ids.*' => ['integer', 'exists:projects,id']]
+        )->validate();
+
         $isUrdu = app()->getLocale() === 'ur';
 
         $asOfDate = null;
@@ -800,13 +1006,36 @@ class ReportController extends Controller
             }
         }
 
-        $ledgerEntries = AccountLedger::with(['project', 'detailAccount.mainHead'])
+        $mainHeads = MainHead::orderBy('id')->get();
+        $chartFilters = [
+            'main_head_id',
+            'control_head_id',
+            'sub_head_id',
+            'sub_sub_head_id',
+            'sub_sub_sub_head_id',
+            'detail_account_id',
+        ];
+
+        $ledgerEntries = AccountLedger::with([
+            'project',
+            'detailAccount.mainHead',
+            'detailAccount.controlHead',
+            'detailAccount.subHead',
+            'detailAccount.subSubHead',
+            'detailAccount.subSubSubHead',
+        ])
             ->when(
-                $request->filled('project_id') && !in_array('all', (array)$request->project_id),
-                function ($query) use ($request) {
-                    $query->whereIn('project_id', (array)$request->project_id);
-                }
+                $projectIds,
+                fn($query) => $query->whereIn('project_id', $projectIds)
             )
+            ->whereHas('detailAccount', function ($query) use ($request, $chartFilters) {
+                foreach ($chartFilters as $filter) {
+                    $query->when($request->filled($filter), fn($accountQuery) => $accountQuery->whereIn(
+                        $filter,
+                        (array) $request->input($filter)
+                    ));
+                }
+            })
             ->when($asOfDate, function ($query) use ($asOfDate) {
                 $query->where('date', '<=', $asOfDate);
             })
@@ -815,7 +1044,7 @@ class ReportController extends Controller
 
         $projectWiseData = $ledgerEntries
             ->groupBy('project_id')
-            ->map(function ($projectEntries) {
+            ->map(function ($projectEntries) use ($mainHeads) {
 
                 $project = $projectEntries->first()->project;
 
@@ -835,11 +1064,11 @@ class ReportController extends Controller
                             'main_head_id' => $account->mainHead?->id,
                             'main_head_en' => $account->mainHead?->name_en,
                             'main_head_ur' => $account->mainHead?->name_ur,
-                            'balance' => $balance,
+                            'balance' => abs($balance),
+                            'detail_account' => $account,
                         ];
                     });
 
-                // MAIN HEAD IDS (your DB)
                 $assets = $accounts->where('main_head_id', 1)->sortBy('account_name_en')->values();
                 $liabilities = $accounts->where('main_head_id', 2)->sortBy('account_name_en')->values();
                 $income = $accounts->where('main_head_id', 3)->sortBy('account_name_en')->values();
@@ -856,16 +1085,87 @@ class ReportController extends Controller
                 $ownerEquity = $equity->sum(fn($a) => abs($a->balance));
                 $totalEquity = $ownerEquity + $netProfit;
 
+                $chart = $mainHeads->mapWithKeys(fn($mainHead) => [
+                    $mainHead->id => [
+                        'key' => 'main-' . $mainHead->id,
+                        'name_en' => $mainHead->name_en,
+                        'name_ur' => $mainHead->name_ur,
+                        'balance' => 0,
+                        'children' => [],
+                    ],
+                ])->all();
+
+                foreach ($accounts as $accountSummary) {
+                    $account = $accountSummary->detail_account;
+                    $mainHeadId = $account->main_head_id;
+                    if (!isset($chart[$mainHeadId])) {
+                        continue;
+                    }
+
+                    $nodes =& $chart[$mainHeadId]['children'];
+                    $path = [
+                        ['id' => $account->control_head_id, 'type' => 'control', 'model' => $account->controlHead],
+                        ['id' => $account->sub_head_id, 'type' => 'sub', 'model' => $account->subHead],
+                        ['id' => $account->sub_sub_head_id, 'type' => 'sub-sub', 'model' => $account->subSubHead],
+                        ['id' => $account->sub_sub_sub_head_id, 'type' => 'sub-sub-sub', 'model' => $account->subSubSubHead],
+                    ];
+
+                    foreach ($path as $parent) {
+                        if (!$parent['id'] || !$parent['model']) {
+                            continue;
+                        }
+
+                        $key = $parent['type'] . '-' . $parent['id'];
+                        if (!isset($nodes[$key])) {
+                            $nodes[$key] = [
+                                'key' => $key,
+                                'name_en' => $parent['model']->name_en,
+                                'name_ur' => $parent['model']->name_ur,
+                                'balance' => 0,
+                                'children' => [],
+                            ];
+                        }
+                        $nodes =& $nodes[$key]['children'];
+                    }
+
+                    $detailKey = 'detail-' . $account->id;
+                    $nodes[$detailKey] = [
+                        'key' => $detailKey,
+                        'name_en' => $account->name_en,
+                        'name_ur' => $account->name_ur,
+                        'balance' => $accountSummary->balance,
+                        'children' => [],
+                    ];
+                    unset($nodes);
+                }
+
+                $sumChildBalances = function (array &$nodes) use (&$sumChildBalances) {
+                    uasort($nodes, fn($left, $right) => strnatcasecmp($left['name_en'], $right['name_en']));
+                    $total = 0;
+                    foreach ($nodes as &$node) {
+                        if ($node['children']) {
+                            $node['balance'] = $sumChildBalances($node['children']);
+                        }
+                        $total += $node['balance'];
+                    }
+                    unset($node);
+
+                    return $total;
+                };
+
+                foreach ($chart as &$mainHeadNode) {
+                    $mainHeadNode['balance'] = $sumChildBalances($mainHeadNode['children']);
+                }
+                unset($mainHeadNode);
+
                 return (object)[
                     'project_name_en' => $project->name_en ?? 'Unknown',
                     'project_name_ur' => $project->name_ur ?? 'نامعلوم',
-                    'assets' => $assets,
-                    'liabilities' => $liabilities,
-                    'equity' => $equity,
-                    'income' => $income,
-                    'expenses' => $expenses,
+                    'chart' => $chart,
                     'total_assets' => $totalAssets,
                     'total_liabilities' => $totalLiabilities,
+                    'total_income' => $totalIncome,
+                    'total_expenses' => $totalExpenses,
                     'total_equity' => $totalEquity,
                     'owner_equity' => $ownerEquity,
                     'net_profit' => $netProfit,
@@ -876,6 +1176,8 @@ class ReportController extends Controller
         // GRAND TOTALS
         $grandAssets = $projectWiseData->sum('total_assets');
         $grandLiabilities = $projectWiseData->sum('total_liabilities');
+        $grandIncome = $projectWiseData->sum('total_income');
+        $grandExpenses = $projectWiseData->sum('total_expenses');
         $grandOwnerEquity = $projectWiseData->sum('owner_equity');
         $grandNetProfit = $projectWiseData->sum('net_profit');
         $grandEquity = $projectWiseData->sum('total_equity');
@@ -884,6 +1186,8 @@ class ReportController extends Controller
             'projectWiseData',
             'grandAssets',
             'grandLiabilities',
+            'grandIncome',
+            'grandExpenses',
             'grandOwnerEquity',
             'grandNetProfit',
             'grandEquity',

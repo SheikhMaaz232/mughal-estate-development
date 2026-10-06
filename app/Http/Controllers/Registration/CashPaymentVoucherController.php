@@ -95,6 +95,7 @@ class CashPaymentVoucherController extends Controller
     {
         try {
             $cashPaymentVoucher = $this->cashPaymentVoucherService->getById($id);
+            dd($cashPaymentVoucher);
 
             return view('registration.vouchers.cpv.edit', array_merge(
                 [

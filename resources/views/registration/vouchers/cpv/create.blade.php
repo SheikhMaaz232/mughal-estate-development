@@ -12,7 +12,7 @@
                         <div class="col-md-6 mb-3">
                             <label for="date" class="form-label">@lang('messages.voucher_no')</label>
 
-                            <input  class="form-control" name="date" value="CPV-{{$maxid}}" disabled>
+                            <input class="form-control" name="date" value="CPV-{{ $maxid }}" disabled>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="date" class="form-label">@lang('messages.Date')</label>

@@ -6,12 +6,14 @@
             <h3 class="block-title text-primary">
                 <i class="fa fa-building me-1"></i>@lang('messages.brv_voucher_details')
             </h3>
-            <div class="block-options">
-                <a href="{{ route('bank-receipt-voucher.edit', $bankReceiptVoucher->id) }}"
-                    class="btn btn-sm btn-alt-primary">
-                    <i class="fa fa-edit me-1"></i>@lang('messages.edit-brv')
-                </a>
-            </div>
+            @can('brv.edit')
+                <div class="block-options">
+                    <a href="{{ route('bank-receipt-voucher.edit', $bankReceiptVoucher->id) }}"
+                        class="btn btn-sm btn-alt-primary">
+                        <i class="fa fa-edit me-1"></i>@lang('messages.edit-brv')
+                    </a>
+                </div>
+            @endcan
         </div>
         <div class="block-content">
             <div class="row">

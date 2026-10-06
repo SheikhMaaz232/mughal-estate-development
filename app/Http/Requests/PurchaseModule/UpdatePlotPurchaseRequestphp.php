@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\PurchaseModule;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePlotPurchaseRequestphp extends FormRequest

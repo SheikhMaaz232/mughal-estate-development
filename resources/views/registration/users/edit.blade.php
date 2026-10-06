@@ -47,26 +47,6 @@
                     <!-- Shared keyboard container -->
                     <div id="keyboard" class="simple-keyboard mt-2" style="display: none;"></div>
 
-                    {{-- Password fields are usually left blank during edit unless the user wants to change them --}}
-                    <div class="mb-3">
-                        <label>@lang('messages.password')</label>
-                        <div class="input-group">
-                            <input type="password" name="password" class="form-control password-field" id="password-field-edit">
-                            <button type="button" class="btn btn-outline-secondary toggle-password" data-target="password-field-edit" aria-label="Show password">
-                                <i class="fa fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label>@lang('messages.confirm-password')</label>
-                        <div class="input-group">
-                            <input type="password" name="password_confirmation" class="form-control password-field" id="password-confirmation-field-edit">
-                            <button type="button" class="btn btn-outline-secondary toggle-password" data-target="password-confirmation-field-edit" aria-label="Show password">
-                                <i class="fa fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
                      {{--  <div class="form-group mb-4">
                         <label for="avatar">@lang('messages.photo')</label><br>
                         <input type="file" name="avatar" class="form-control-file">
@@ -109,26 +89,3 @@
         </div>
     </div>
 </div>
-@section('script')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.toggle-password').forEach(function (button) {
-                button.addEventListener('click', function () {
-                    const target = document.getElementById(this.dataset.target);
-                    if (!target) return;
-
-                    const icon = this.querySelector('i');
-                    if (target.type === 'password') {
-                        target.type = 'text';
-                        icon.classList.remove('fa-eye');
-                        icon.classList.add('fa-eye-slash');
-                    } else {
-                        target.type = 'password';
-                        icon.classList.remove('fa-eye-slash');
-                        icon.classList.add('fa-eye');
-                    }
-                });
-            });
-        });
-    </script>
-@endsection

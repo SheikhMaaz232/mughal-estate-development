@@ -77,7 +77,13 @@
 
                       {{-- Password --}}
                       <div class="mb-4">
-                        <input type="password" name="password" class="form-control form-control-lg form-control-alt py-3" placeholder="Password" required>
+                        <div class="input-group input-group-lg">
+                          <input type="password" name="password" id="login-password" class="form-control form-control-alt py-3" placeholder="@lang('messages.password')" autocomplete="current-password" required>
+                          <button type="button" class="btn btn-alt-secondary" id="toggle-login-password"
+                                  aria-label="@lang('messages.show_password')" aria-pressed="false">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                          </button>
+                        </div>
                       </div>
 
                       {{-- Forgot + Submit --}}
@@ -121,7 +127,7 @@
   </div>
 @endsection
 
-@push('scripts')
+@section('js')
     <script src="{{ asset('assets/js/lib/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/op_auth_signin.min.js') }}"></script>
@@ -131,6 +137,24 @@
             if (typeof One !== 'undefined') {
                 One.helpers('core-browser');
             }
+
+            const password = document.getElementById('login-password');
+            const toggle = document.getElementById('toggle-login-password');
+            const icon = toggle.querySelector('i');
+
+            toggle.addEventListener('click', function() {
+                const willShowPassword = password.type === 'password';
+                password.type = willShowPassword ? 'text' : 'password';
+                toggle.setAttribute('aria-pressed', String(willShowPassword));
+                toggle.setAttribute(
+                    'aria-label',
+                    willShowPassword
+                        ? @json(__('messages.hide_password'))
+                        : @json(__('messages.show_password'))
+                );
+                icon.classList.toggle('fa-eye', !willShowPassword);
+                icon.classList.toggle('fa-eye-slash', willShowPassword);
+            });
         });
     </script>
-@endpush
+@endsection
