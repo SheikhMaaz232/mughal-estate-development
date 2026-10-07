@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate	esting\Concerns\InteractsWithAuthentication;
+use Illuminateesting\Concerns\InteractsWithAuthentication;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Payroll\App\Models\Employee;
 use Modules\Payroll\App\Models\Designation;
