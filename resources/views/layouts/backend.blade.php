@@ -1111,14 +1111,6 @@
                                                     </a>
                                                 </li>
                                             @endcan
-                                            @can('brv-approval.list')
-                                                <li class="nav-main-item">
-                                                    <a class="nav-main-link{{ request()->routeIs('bank-receipt-voucher.approval-list') ? ' active' : '' }}"
-                                                        href="{{ route('bank-receipt-voucher.approval-list') }}">
-                                                        <span class="nav-main-link-name">@lang('menu.brv_approval')</span>
-                                                    </a>
-                                                </li>
-                                            @endcan
                                             @can('cpv.list')
                                                 <li class="nav-main-item">
                                                     <a class="nav-main-link{{ request()->routeIs('cash-payment-voucher.*') ? ' active' : '' }}"
@@ -1585,7 +1577,7 @@
                             </li>
 
                             <li
-                                class="nav-main-item{{ request()->is('exective-reports*') || request()->is('exective-reports.direct-products.filter.*') ? ' open' : '' }}">
+                                class="nav-main-item{{ request()->is('exective-reports*') || request()->is('exective-reports.direct-products.filter.*') || request()->routeIs('bank-receipt-voucher.approval-list', 'products.index', 'bookings.bookingListing', 'purchase-order.index', 'grn.index', 'purchase-invoice.index', 'plot-purchase-invoice.index', 'sale-invoice.index', 'purchase-return.index', 'bookingReturns.index', 'client-invoices.index', 'contractor-bills.index') ? ' open' : '' }}">
                                 @can('executive-reports.view')
                                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                         aria-haspopup="true" aria-expanded="true" href="#">
@@ -1594,6 +1586,102 @@
                                     </a>
 
                                     <ul class="nav-main-submenu">
+                                        @canany(['brv-approval.list', 'products.list', 'booking-module.view', 'purchase-module.view', 'sale-module.view', 'construction-module.view'])
+                                            <li
+                                                class="nav-main-item{{ request()->routeIs('bank-receipt-voucher.approval-list', 'products.index', 'bookings.bookingListing', 'purchase-order.index', 'grn.index', 'purchase-invoice.index', 'plot-purchase-invoice.index', 'sale-invoice.index', 'purchase-return.index', 'bookingReturns.index', 'client-invoices.index', 'contractor-bills.index') ? ' open' : '' }}">
+                                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
+                                                    aria-haspopup="true" aria-expanded="true" href="#">
+                                                    <span class="nav-main-link-name">@lang('menu.approvals')</span>
+                                                </a>
+                                                <ul class="nav-main-submenu">
+                                                    @can('brv-approval.list')
+                                                        <li class="nav-main-item">
+                                                            <a class="nav-main-link{{ request()->routeIs('bank-receipt-voucher.approval-list') ? ' active' : '' }}"
+                                                                href="{{ route('bank-receipt-voucher.approval-list', ['approval_queue' => 1]) }}">
+                                                                <span class="nav-main-link-name">@lang('menu.brv_approval')</span>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('products.list')
+                                                        <li class="nav-main-item">
+                                                            <a class="nav-main-link{{ request()->routeIs('products.index') ? ' active' : '' }}"
+                                                                href="{{ route('products.index', ['approval_queue' => 1]) }}">
+                                                                <span class="nav-main-link-name">@lang('menu.product_approvals')</span>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('booking-module.view')
+                                                        <li class="nav-main-item">
+                                                            <a class="nav-main-link{{ request()->routeIs('bookings.bookingListing') ? ' active' : '' }}"
+                                                                href="{{ route('bookings.bookingListing', ['approval_queue' => 1]) }}">
+                                                                <span class="nav-main-link-name">@lang('menu.booking_approvals')</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="nav-main-item">
+                                                            <a class="nav-main-link{{ request()->routeIs('bookingReturns.index') ? ' active' : '' }}"
+                                                                href="{{ route('bookingReturns.index', ['approval_queue' => 1]) }}">
+                                                                <span class="nav-main-link-name">@lang('menu.booking_return_approvals')</span>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('purchase-module.view')
+                                                        <li class="nav-main-item">
+                                                            <a class="nav-main-link{{ request()->routeIs('purchase-order.index') ? ' active' : '' }}"
+                                                                href="{{ route('purchase-order.index', ['approval_queue' => 1]) }}">
+                                                                <span class="nav-main-link-name">@lang('menu.purchase_order_approvals')</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="nav-main-item">
+                                                            <a class="nav-main-link{{ request()->routeIs('grn.index') ? ' active' : '' }}"
+                                                                href="{{ route('grn.index', ['approval_queue' => 1]) }}">
+                                                                <span class="nav-main-link-name">@lang('menu.grn_approvals')</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="nav-main-item">
+                                                            <a class="nav-main-link{{ request()->routeIs('purchase-invoice.index') ? ' active' : '' }}"
+                                                                href="{{ route('purchase-invoice.index', ['approval_queue' => 1]) }}">
+                                                                <span class="nav-main-link-name">@lang('menu.purchase_invoice_approvals')</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="nav-main-item">
+                                                            <a class="nav-main-link{{ request()->routeIs('plot-purchase-invoice.index') ? ' active' : '' }}"
+                                                                href="{{ route('plot-purchase-invoice.index', ['approval_queue' => 1]) }}">
+                                                                <span class="nav-main-link-name">@lang('menu.plot_purchase_approvals')</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="nav-main-item">
+                                                            <a class="nav-main-link{{ request()->routeIs('purchase-return.index') ? ' active' : '' }}"
+                                                                href="{{ route('purchase-return.index', ['approval_queue' => 1]) }}">
+                                                                <span class="nav-main-link-name">@lang('menu.purchase_return_approvals')</span>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('sale-module.view')
+                                                        <li class="nav-main-item">
+                                                            <a class="nav-main-link{{ request()->routeIs('sale-invoice.index') ? ' active' : '' }}"
+                                                                href="{{ route('sale-invoice.index', ['approval_queue' => 1]) }}">
+                                                                <span class="nav-main-link-name">@lang('menu.sale_invoice_approvals')</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="nav-main-item">
+                                                            <a class="nav-main-link{{ request()->routeIs('client-invoices.index') ? ' active' : '' }}"
+                                                                href="{{ route('client-invoices.index', ['approval_queue' => 1]) }}">
+                                                                <span class="nav-main-link-name">@lang('menu.client_invoice_approvals')</span>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('construction-module.view')
+                                                        <li class="nav-main-item">
+                                                            <a class="nav-main-link{{ request()->routeIs('contractor-bills.index') ? ' active' : '' }}"
+                                                                href="{{ route('contractor-bills.index', ['approval_queue' => 1]) }}">
+                                                                <span class="nav-main-link-name">@lang('menu.contractor_bill_approvals')</span>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                </ul>
+                                            </li>
+                                        @endcanany
+
                                         <li
                                             class="nav-main-item{{ request()->routeIs('exective-reports.direct-products.filter.*') ? ' open' : '' }}">
                                             <a class="nav-main-link{{ request()->routeIs('exective-reports.direct-products.filter.*') ? ' active' : '' }}"
@@ -1690,28 +1778,27 @@
                     <!-- END Search Form -->
                 </div>
                 <!-- END Left Section -->
-                {{--  @php
-                            dd(Auth::user()->avatar);
-                        @endphp  --}}
                 <!-- Right Section -->
                 <div class="d-flex align-items-center">
                     <!-- User Dropdown -->
+                    @auth
                     <div class="dropdown d-inline-block ms-2">
                         <button type="button" class="btn btn-sm btn-alt-secondary d-flex align-items-center"
                             id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">
-                            <img class="rounded-circle" src="{{ asset(path: 'storage/' . \Auth::user()->avatar) }}"
+                            <img class="rounded-circle" src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('images/avatar.jpg') }}"
                                 alt="Header Avatar" style="width: 21px;">
                             <span
-                                class="d-none d-sm-inline-block ms-2">{{ \Auth::user()->{'name_' . app()->getLocale()} }}</span>
+                                class="d-none d-sm-inline-block ms-2">{{ auth()->user()->{'name_' . app()->getLocale()} }}</span>
                             <i class="fa fa-fw fa-angle-down d-none d-sm-inline-block ms-1 mt-1"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-md dropdown-menu-end p-0 border-0"
                             aria-labelledby="page-header-user-dropdown">
                             <div class="p-3 text-center bg-body-light border-bottom rounded-top">
                                 <img class="img-avatar img-avatar48 img-avatar-thumb"
-                                    src="{{ asset('storage/' . \Auth::user()->avatar) }}" alt="">
-                                <p class="mt-2 mb-0 fw-medium">{{ \Auth::user()->{'name_' . app()->getLocale()} }}
+                                    src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('images/avatar.jpg') }}"
+                                    alt="">
+                                <p class="mt-2 mb-0 fw-medium">{{ auth()->user()->{'name_' . app()->getLocale()} }}
                                 </p>
                                 {{--  <p class="mb-0 text-muted fs-sm fw-medium">Web Developer</p>  --}}
                             </div>
@@ -1747,6 +1834,7 @@
                             </div>
                         </div>
                     </div>
+                    @endauth
                     <!-- Language Selector -->
                     <br>
 
@@ -1773,86 +1861,60 @@
 
                         <!-- Notifications Dropdown -->
                         <div class="dropdown d-inline-block ms-2">
-                            {{--  <button type="button" class="btn btn-sm btn-alt-secondary" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-fw fa-bell"></i>
-                            <span class="text-primary">•</span>
-                            </button>  --}}
+                            <button type="button" class="btn btn-sm btn-alt-secondary position-relative"
+                                id="page-header-notifications-dropdown" data-bs-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false"
+                                aria-label="@lang('messages.notifications')">
+                                <i class="fa fa-fw fa-bell"></i>
+                                @if ($unreadNotificationCount > 0)
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        {{ $unreadNotificationCount > 99 ? '99+' : $unreadNotificationCount }}
+                                    </span>
+                                @endif
+                            </button>
                             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 border-0 fs-sm"
                                 aria-labelledby="page-header-notifications-dropdown">
-                                <div class="p-2 bg-body-light border-bottom text-center rounded-top">
-                                    <h5 class="dropdown-header text-uppercase">Notifications</h5>
+                                <div class="p-2 bg-body-light border-bottom d-flex justify-content-between align-items-center rounded-top">
+                                    <span class="fw-semibold">@lang('messages.notifications')</span>
+                                    @if ($unreadNotificationCount > 0)
+                                        <form method="POST" action="{{ route('notifications.mark-all-read') }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-link p-0">
+                                                @lang('messages.mark_all_read')
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                                 <ul class="nav-items mb-0">
-                                    <li>
-                                        <a class="text-dark d-flex py-2" href="javascript:void(0)">
-                                            <div class="flex-shrink-0 me-2 ms-3">
-                                                <i class="fa fa-fw fa-check-circle text-success"></i>
-                                            </div>
-                                            <div class="flex-grow-1 pe-2">
-                                                <div class="fw-semibold">You have a new follower</div>
-                                                <span class="fw-medium text-muted">15 min ago</span>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="text-dark d-flex py-2" href="javascript:void(0)">
-                                            <div class="flex-shrink-0 me-2 ms-3">
-                                                <i class="fa fa-fw fa-plus-circle text-primary"></i>
-                                            </div>
-                                            <div class="flex-grow-1 pe-2">
-                                                <div class="fw-semibold">1 new sale, keep it up</div>
-                                                <span class="fw-medium text-muted">22 min ago</span>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="text-dark d-flex py-2" href="javascript:void(0)">
-                                            <div class="flex-shrink-0 me-2 ms-3">
-                                                <i class="fa fa-fw fa-times-circle text-danger"></i>
-                                            </div>
-                                            <div class="flex-grow-1 pe-2">
-                                                <div class="fw-semibold">Update failed, restart server</div>
-                                                <span class="fw-medium text-muted">26 min ago</span>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="text-dark d-flex py-2" href="javascript:void(0)">
-                                            <div class="flex-shrink-0 me-2 ms-3">
-                                                <i class="fa fa-fw fa-plus-circle text-primary"></i>
-                                            </div>
-                                            <div class="flex-grow-1 pe-2">
-                                                <div class="fw-semibold">2 new sales, keep it up</div>
-                                                <span class="fw-medium text-muted">33 min ago</span>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="text-dark d-flex py-2" href="javascript:void(0)">
-                                            <div class="flex-shrink-0 me-2 ms-3">
-                                                <i class="fa fa-fw fa-user-plus text-success"></i>
-                                            </div>
-                                            <div class="flex-grow-1 pe-2">
-                                                <div class="fw-semibold">You have a new subscriber</div>
-                                                <span class="fw-medium text-muted">41 min ago</span>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="text-dark d-flex py-2" href="javascript:void(0)">
-                                            <div class="flex-shrink-0 me-2 ms-3">
-                                                <i class="fa fa-fw fa-check-circle text-success"></i>
-                                            </div>
-                                            <div class="flex-grow-1 pe-2">
-                                                <div class="fw-semibold">You have a new follower</div>
-                                                <span class="fw-medium text-muted">42 min ago</span>
-                                            </div>
-                                        </a>
-                                    </li>
+                                    @forelse ($recentNotifications as $notification)
+                                        @php
+                                            $notificationData = $notification->data;
+                                            $localeSuffix = app()->getLocale() === 'ur' ? 'ur' : 'en';
+                                        @endphp
+                                        <li class="{{ $notification->read_at ? '' : 'bg-body-light' }}">
+                                            <form method="POST" action="{{ route('notifications.open', $notification->id) }}">
+                                                @csrf
+                                                <button type="submit" class="dropdown-item text-dark d-flex align-items-start py-2 text-wrap">
+                                                    <i class="fa fa-fw fa-clipboard-check text-primary me-2 mt-1"></i>
+                                                    <span class="flex-grow-1">
+                                                        <span class="d-block {{ $notification->read_at ? '' : 'fw-semibold' }}">
+                                                            {{ $notificationData['title_' . $localeSuffix] ?? __('messages.notifications') }}
+                                                        </span>
+                                                        <small class="text-muted">
+                                                            {{ $notificationData['message_' . $localeSuffix] ?? '' }}
+                                                            · {{ $notification->created_at->diffForHumans() }}
+                                                        </small>
+                                                    </span>
+                                                </button>
+                                            </form>
+                                        </li>
+                                    @empty
+                                        <li class="p-3 text-center text-muted">@lang('messages.no_notifications')</li>
+                                    @endforelse
                                 </ul>
                                 <div class="p-2 border-top text-center">
-                                    <a class="d-inline-block fw-medium" href="javascript:void(0)">
-                                        <i class="fa fa-fw fa-arrow-down me-1 opacity-50"></i> Load More..
+                                    <a class="d-inline-block fw-medium" href="{{ route('notifications.index') }}">
+                                        @lang('messages.view_all_notifications')
                                     </a>
                                 </div>
                             </div>

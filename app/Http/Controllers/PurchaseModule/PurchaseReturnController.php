@@ -50,7 +50,16 @@ class PurchaseReturnController extends Controller
     public function index(Request $request)
     {
         $filters = $request->all();
-        $purchaseReturnsListing = PurchaseReturnMaster::with('party', 'detailAccount', 'project')->search($filters)->latest()->paginate(10);
+        $purchaseReturnsListing = PurchaseReturnMaster::with('party', 'detailAccount', 'project')
+            ->search($filters)
+            ->when(
+                $request->boolean('approval_queue'),
+                fn ($query) => $query->where('status', 'Unverified'),
+                fn ($query) => $query->where('status', '!=', 'Unverified')
+            )
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return view('purchase-module.purchase-return.index', array_merge(
             [

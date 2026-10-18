@@ -89,7 +89,16 @@ class BookingApplicationController extends Controller
     public function bookingListing(Request $request)
     {
         $search = $request->all();
-        $bookings = BookingApplication::with('party', 'detailAccount', 'project', 'product', 'dealer')->search($search)->latest()->paginate(10)->appends(request()->input());
+        $bookings = BookingApplication::with('party', 'detailAccount', 'project', 'product', 'dealer')
+            ->search($search)
+            ->when(
+                $request->boolean('approval_queue'),
+                fn ($query) => $query->where('status', 'Unverified'),
+                fn ($query) => $query->where('status', '!=', 'Unverified')
+            )
+            ->latest()
+            ->paginate(10)
+            ->appends(request()->input());
 
         return view('registration.bookings.index', array_merge(
             [

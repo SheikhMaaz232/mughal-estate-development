@@ -28,14 +28,15 @@ class ClientInvoiceController extends Controller
     {
         $filters = [
             'search' => $request->input('search'),
-            'status' => $request->input('status'),
+            'status' => $request->boolean('approval_queue') ? 'draft' : $request->input('status'),
+            'exclude_status' => $request->boolean('approval_queue') ? null : 'draft',
             'tender_id' => $request->input('tender_id'),
             'from_date' => $request->input('from_date'),
             'to_date' => $request->input('to_date'),
             'per_page' => $request->input('per_page', 15),
         ];
 
-        $invoices = $this->clientInvoiceService->getAll($filters);
+        $invoices = $this->clientInvoiceService->getAll($filters)->withQueryString();
         $tenders = Tender::select('id', 'title_en', 'title_ur')->get();
         $statuses = ['draft', 'verified', 'partial_received', 'received', 'cancelled'];
 

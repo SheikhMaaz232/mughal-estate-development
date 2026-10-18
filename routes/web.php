@@ -534,6 +534,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('companies', CompanyController::class);
     Route::resource('audit-logs', AuditLogController::class);
     Route::resource('users', UserController::class);
+    Route::get('/notifications', [\App\Http\Controllers\Registration\UserNotificationController::class, 'index'])
+        ->name('notifications.index');
+    Route::post('/notifications/{notification}/open', [\App\Http\Controllers\Registration\UserNotificationController::class, 'open'])
+        ->name('notifications.open');
+    Route::post('/notifications/mark-all-read', [\App\Http\Controllers\Registration\UserNotificationController::class, 'markAllRead'])
+        ->name('notifications.mark-all-read');
     Route::get('/user-passwords', [\App\Http\Controllers\Registration\UserPasswordController::class, 'index'])
         ->middleware('permission:users.reset_password')
         ->name('user-passwords.index');

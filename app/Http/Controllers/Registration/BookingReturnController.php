@@ -40,8 +40,17 @@ class BookingReturnController extends Controller
      */
     public function index(Request $request)
     {
-        $request = $request->all();
-        $bookingReturns = BookingReturn::with('bookingApplication')->search($request)->latest()->paginate(10)->appends(request()->input());
+        $filters = $request->all();
+        $bookingReturns = BookingReturn::with('bookingApplication')
+            ->search($filters)
+            ->when(
+                $request->boolean('approval_queue'),
+                fn ($query) => $query->where('status', 'Unverified'),
+                fn ($query) => $query->where('status', '!=', 'Unverified')
+            )
+            ->latest()
+            ->paginate(10)
+            ->appends(request()->input());
 
         return view('registration.booking-returns.index', array_merge(
             [

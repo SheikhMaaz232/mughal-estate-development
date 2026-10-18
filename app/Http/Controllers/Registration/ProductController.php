@@ -77,7 +77,16 @@ class ProductController extends Controller
             'name_ur',
             'status',
             'type'
-        )->with('project', 'mainHead', 'controlHead', 'subHead', 'subSubHead', 'subSubSubHead')->search($search)->latest()->paginate(10)->appends(request()->input());
+        )->with('project', 'mainHead', 'controlHead', 'subHead', 'subSubHead', 'subSubSubHead')
+            ->search($search)
+            ->when(
+                $request->boolean('approval_queue'),
+                fn ($query) => $query->where('status', 'Unverified'),
+                fn ($query) => $query->where('status', '!=', 'Unverified')
+            )
+            ->latest()
+            ->paginate(10)
+            ->appends(request()->input());
 
 
         return view('registration.products.index', array_merge(['products' => $products, 'search' => $search,], $this->getMasterData()));

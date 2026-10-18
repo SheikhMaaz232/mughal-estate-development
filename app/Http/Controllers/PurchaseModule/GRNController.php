@@ -47,7 +47,16 @@ class GRNController extends Controller
     public function index(Request $request)
     {
         $filters = $request->all();
-        $grnsListing = GoodsReceivedNoteMaster::with('party', 'detailAccount', 'project')->search($filters)->latest()->paginate(10);
+        $grnsListing = GoodsReceivedNoteMaster::with('party', 'detailAccount', 'project')
+            ->search($filters)
+            ->when(
+                $request->boolean('approval_queue'),
+                fn ($query) => $query->where('status', 'Unverified'),
+                fn ($query) => $query->where('status', '!=', 'Unverified')
+            )
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return view('purchase-module.grn.index', array_merge(
             [

@@ -39,6 +39,7 @@ class ContractorBillService
             ->with('tender', 'contractorAccount', 'items')
             ->search($filters['search'] ?? null)
             ->filterByStatus($filters['status'] ?? null)
+            ->when(!empty($filters['exclude_status']), fn ($query) => $query->where('status', '!=', $filters['exclude_status']))
             ->filterByTender($filters['tender_id'] ?? null)
             ->filterByDate(
                 $filters['from_date'] ?? null,

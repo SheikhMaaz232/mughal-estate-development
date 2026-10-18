@@ -52,7 +52,16 @@ class PurchaseController extends Controller
     public function index(Request $request)
     {
         $filters = $request->all();
-        $purchaseInvoicesListing = PurchaseMaster::with('party', 'detailAccount', 'project')->search($filters)->latest()->paginate(10);
+        $purchaseInvoicesListing = PurchaseMaster::with('party', 'detailAccount', 'project')
+            ->search($filters)
+            ->when(
+                $request->boolean('approval_queue'),
+                fn ($query) => $query->where('status', 'Unverified'),
+                fn ($query) => $query->where('status', '!=', 'Unverified')
+            )
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return view('purchase-module.purchase.index', array_merge(
             [

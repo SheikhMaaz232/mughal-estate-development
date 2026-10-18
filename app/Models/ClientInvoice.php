@@ -92,6 +92,9 @@ class ClientInvoice extends Model implements Auditable
             ->when(!empty($filters['status']), function ($q) use ($filters) {
                 $q->where('status', $filters['status']);
             })
+            ->when(!empty($filters['exclude_status']), function ($q) use ($filters) {
+                $q->where('status', '!=', $filters['exclude_status']);
+            })
             ->when(!empty($filters['from_date']), function ($q) use ($filters) {
                 $q->whereDate('invoice_date', '>=', $filters['from_date']);
             })

@@ -48,7 +48,16 @@ class SaleInvoiceController extends Controller
     public function index(Request $request)
     {
         $filters = $request->all();
-        $saleInvoicesListing = SaleInvoice::with('party', 'detailAccount', 'project')->search($filters)->latest()->paginate(10);
+        $saleInvoicesListing = SaleInvoice::with('party', 'detailAccount', 'project')
+            ->search($filters)
+            ->when(
+                $request->boolean('approval_queue'),
+                fn ($query) => $query->where('status', 'Unverified'),
+                fn ($query) => $query->where('status', '!=', 'Unverified')
+            )
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return view('sale-module.sale.index', array_merge(
             [

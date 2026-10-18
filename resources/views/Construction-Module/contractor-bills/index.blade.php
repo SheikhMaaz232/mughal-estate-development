@@ -33,6 +33,9 @@
         @endif
 
         <form method="GET" action="{{ route('contractor-bills.index') }}">
+            @if(request()->boolean('approval_queue'))
+                <input type="hidden" name="approval_queue" value="1">
+            @endif
             <div class="row">
                 <div class="col-md-3 mb-3">
                     <label for="search" class="form-label">@lang('messages.search')</label>
@@ -79,7 +82,7 @@
                 <div class="col-md-6 mb-3">
                     <button class="btn btn-primary" type="submit">@lang('messages.search')</button>
                     @if (request()->hasAny(['search', 'status', 'tender_id', 'from_date', 'to_date']))
-                        <a href="{{ route('contractor-bills.index') }}" class="btn btn-secondary">@lang('messages.clear')</a>
+                        <a href="{{ route('contractor-bills.index', request()->boolean('approval_queue') ? ['approval_queue' => 1] : []) }}" class="btn btn-secondary">@lang('messages.clear')</a>
                     @endif
                 </div>
             </div>

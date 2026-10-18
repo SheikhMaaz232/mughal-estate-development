@@ -27,6 +27,9 @@
         @endif
 
         <form method="GET" action="{{ route('bookingReturns.index') }}">
+            @if(request()->boolean('approval_queue'))
+                <input type="hidden" name="approval_queue" value="1">
+            @endif
             <div class="row">
                 <div class="col-lg-6 mb-3">
                     <label for="main_head_id">@lang('messages.date')</label>
@@ -85,7 +88,7 @@
                     <button class="btn btn-primary" type="submit">@lang('messages.search')</button>
 
                     {{-- @if (request()->hasAny(['search'])) --}}
-                        <a href="{{ route('bookingReturns.index') }}" class="btn btn-secondary">@lang('messages.clear')</a>
+                        <a href="{{ route('bookingReturns.index', request()->boolean('approval_queue') ? ['approval_queue' => 1] : []) }}" class="btn btn-secondary">@lang('messages.clear')</a>
                     {{-- @endif --}}
                 </div>
             </div>

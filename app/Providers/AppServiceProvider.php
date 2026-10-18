@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Models\Company;
 use App\Models\User;
+use App\Observers\ApprovalEntryObserver;
 use App\Observers\AuditLogObserver;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -35,6 +37,24 @@ class AppServiceProvider extends ServiceProvider
     {
         User::observe(
             AuditLogObserver::class);
+
+        foreach ([
+            \App\Models\BankReceiptVoucher::class,
+            \App\Models\Product::class,
+            \App\Models\BookingApplication::class,
+            \App\Models\BookingReturn::class,
+            \App\Models\PurchaseOrder::class,
+            \App\Models\GoodsReceivedNoteMaster::class,
+            \App\Models\PurchaseMaster::class,
+            \App\Models\PlotPurchaseMaster::class,
+            \App\Models\SaleInvoice::class,
+            \App\Models\PurchaseReturnMaster::class,
+            \App\Models\ClientInvoice::class,
+            \App\Models\ContractorBill::class,
+        ] as $approvalModel) {
+            $approvalModel::observe(ApprovalEntryObserver::class);
+        }
+
         //app()->setLocale(session('locale', config('app.locale')));
         App::setLocale(session('locale', config('app.locale')));
 
@@ -42,6 +62,11 @@ class AppServiceProvider extends ServiceProvider
             $companyId = session('selected_company_id');
             $company = $companyId ? Company::find($companyId) : null;
             $view->with('selectedCompany', $company);
+
+            $view->with('unreadNotificationCount', Auth::check() ? Auth::user()->unreadNotifications()->count() : 0);
+            $view->with('recentNotifications', Auth::check()
+                ? Auth::user()->notifications()->latest()->limit(6)->get()
+                : collect());
         });
 
         Paginator::useBootstrapFive();

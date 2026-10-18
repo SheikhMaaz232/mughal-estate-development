@@ -40,6 +40,9 @@
         <div class="block block-rounded mb-2">
             <div class="block-content block-content-full">
                 <form method="GET" action="{{ route('client-invoices.index') }}" class="row g-3 mb-3">
+                    @if(request()->boolean('approval_queue'))
+                        <input type="hidden" name="approval_queue" value="1">
+                    @endif
                     <div class="col-md-3">
                         <input type="text" name="search" class="form-control" placeholder="@lang('messages.search')"
                             value="{{ request('search') }}">

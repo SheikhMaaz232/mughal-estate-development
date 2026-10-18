@@ -43,7 +43,16 @@ class PurchaseOrderController extends Controller
     public function index(Request $request)
     {
         $filters = $request->all();
-        $purchaseOrderListing = PurchaseOrder::with('party', 'detailAccount')->search($filters)->latest()->paginate(10);
+        $purchaseOrderListing = PurchaseOrder::with('party', 'detailAccount')
+            ->search($filters)
+            ->when(
+                $request->boolean('approval_queue'),
+                fn ($query) => $query->where('status', 'Unverified'),
+                fn ($query) => $query->where('status', '!=', 'Unverified')
+            )
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return view('purchase-module.purchase-order.index', array_merge(
             [

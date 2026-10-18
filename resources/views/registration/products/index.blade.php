@@ -26,6 +26,9 @@
             </div>
         @endif
         <form method="GET" action="{{ route('products.index') }}">
+            @if(request()->boolean('approval_queue'))
+                <input type="hidden" name="approval_queue" value="1">
+            @endif
             <div class="row">
                 <div class="col-lg-4 mb-3">
                     <label for="project_id">@lang('messages.projects')</label>
@@ -127,7 +130,7 @@
                     <button class="btn btn-primary" type="submit">@lang('messages.search')</button>
 
                     @if (request()->hasAny(['search', 'main_head_id', 'control_head_id', 'sub_head_id', 'sub_sub_head_id']))
-                        <a href="{{ route('products.index') }}" class="btn btn-secondary">@lang('messages.clear')</a>
+                        <a href="{{ route('products.index', request()->boolean('approval_queue') ? ['approval_queue' => 1] : []) }}" class="btn btn-secondary">@lang('messages.clear')</a>
                     @endif
                 </div>
             </div>

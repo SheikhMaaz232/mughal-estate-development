@@ -50,8 +50,8 @@ class BankReceiptVoucherController extends Controller
             'detailAccount',
             'bank'
         ])
+            ->where('status', 'Unverified')
             ->search($filters)
-            ->orderByRaw("CASE WHEN status = 'Unverified' THEN 0 ELSE 1 END")
             ->orderByDesc('id')
             ->paginate(10)
             ->withQueryString();
