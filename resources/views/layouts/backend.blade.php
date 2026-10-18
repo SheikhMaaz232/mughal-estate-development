@@ -434,19 +434,18 @@
 
     @can('partyLedger.view')
         @if (request()->routeIs(
-            'bank-payment-voucher.create',
-            'bank-payment-voucher.edit',
-            'bank-receipt-voucher.create',
-            'bank-receipt-voucher.edit',
-            'cash-payment-voucher.create',
-            'cash-payment-voucher.edit',
-            'cash-receipt-voucher.create',
-            'cash-receipt-voucher.edit',
-            'jv-voucher.create',
-            'jv-voucher.edit'
-        ))
+                'bank-payment-voucher.create',
+                'bank-payment-voucher.edit',
+                'bank-receipt-voucher.create',
+                'bank-receipt-voucher.edit',
+                'cash-payment-voucher.create',
+                'cash-payment-voucher.edit',
+                'cash-receipt-voucher.create',
+                'cash-receipt-voucher.edit',
+                'jv-voucher.create',
+                'jv-voucher.edit'))
             <script>
-                (function ($) {
+                (function($) {
                     const accountSelector = [
                         'select[name="detail_account_id"]',
                         'select[name="debit_detail_account_id[]"]',
@@ -458,7 +457,9 @@
                         let $link = $select.data('accountLedgerLink');
 
                         if (!$link || !$link.length) {
-                            $link = $('<a class="btn btn-sm btn-outline-primary mt-2 account-ledger-link" target="_blank" rel="noopener"></a>')
+                            $link = $(
+                                    '<a class="btn btn-sm btn-outline-primary mt-2 account-ledger-link" target="_blank" rel="noopener"></a>'
+                                    )
                                 .text(@json(__('messages.view_account_ledger')));
                             $select.data('accountLedgerLink', $link);
 
@@ -476,19 +477,19 @@
                         }
                     }
 
-                    $(function () {
-                        $(accountSelector).each(function () {
+                    $(function() {
+                        $(accountSelector).each(function() {
                             updateAccountLedgerLink(this);
                         });
                     });
 
-                    $(document).on('change select2:select select2:clear', accountSelector, function () {
+                    $(document).on('change select2:select select2:clear', accountSelector, function() {
                         updateAccountLedgerLink(this);
                     });
 
-                    $(document).on('select2:open', accountSelector, function () {
+                    $(document).on('select2:open', accountSelector, function() {
                         const select = this;
-                        window.setTimeout(function () {
+                        window.setTimeout(function() {
                             updateAccountLedgerLink(select);
                         }, 0);
                     });
@@ -797,173 +798,173 @@
                                         </li> --}}
 
                                         @can('relations.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('relations.index') ? ' active' : '' }}"
-                                                href="{{ route('relations.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.relations')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('relations.index') ? ' active' : '' }}"
+                                                    href="{{ route('relations.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.relations')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('groups.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('groups.index') ? ' active' : '' }}"
-                                                href="{{ route('groups.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.groups')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('groups.index') ? ' active' : '' }}"
+                                                    href="{{ route('groups.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.groups')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('projects.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('projects.*') ? ' active' : '' }}"
-                                                href="{{ route('projects.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.projects')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('projects.*') ? ' active' : '' }}"
+                                                    href="{{ route('projects.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.projects')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('cities.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('cities.index') ? ' active' : '' }}"
-                                                href="{{ route('cities.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.cities')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('cities.index') ? ' active' : '' }}"
+                                                    href="{{ route('cities.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.cities')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('residentials.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('residentials.index') ? ' active' : '' }}"
-                                                href="{{ route('residentials.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.residential-types')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('residentials.index') ? ' active' : '' }}"
+                                                    href="{{ route('residentials.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.residential-types')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('banks.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('banks.index') ? ' active' : '' }}"
-                                                href="{{ route('banks.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.banks')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('banks.index') ? ' active' : '' }}"
+                                                    href="{{ route('banks.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.banks')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('periods.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('periods.index') ? ' active' : '' }}"
-                                                href="{{ route('periods.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.schedule-periods')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('periods.index') ? ' active' : '' }}"
+                                                    href="{{ route('periods.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.schedule-periods')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('schedule-types.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('schedule-types.index') ? ' active' : '' }}"
-                                                href="{{ route('schedule-types.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.schedule-type')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('schedule-types.index') ? ' active' : '' }}"
+                                                    href="{{ route('schedule-types.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.schedule-type')</span>
+                                                </a>
+                                            </li>
                                         @endcan
-                                         @can('casts.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('casts.index') ? ' active' : '' }}"
-                                                href="{{ route('casts.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.casts')</span>
-                                            </a>
-                                        </li>
+                                        @can('casts.index')
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('casts.index') ? ' active' : '' }}"
+                                                    href="{{ route('casts.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.casts')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('warehouses.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('warehouses.index') ? ' active' : '' }}"
-                                                href="{{ route('warehouses.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.warehouses')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('warehouses.index') ? ' active' : '' }}"
+                                                    href="{{ route('warehouses.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.warehouses')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('units.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('units.index') ? ' active' : '' }}"
-                                                href="{{ route('units.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.measurement-units')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('units.index') ? ' active' : '' }}"
+                                                    href="{{ route('units.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.measurement-units')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('tehsils.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('tehsils.index') ? ' active' : '' }}"
-                                                href="{{ route('tehsils.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.tehsils')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('tehsils.index') ? ' active' : '' }}"
+                                                    href="{{ route('tehsils.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.tehsils')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('areas.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('areas.index') ? ' active' : '' }}"
-                                                href="{{ route('areas.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.areas')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('areas.index') ? ' active' : '' }}"
+                                                    href="{{ route('areas.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.areas')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('occupation-types.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('occupation-types.index') ? ' active' : '' }}"
-                                                href="{{ route('occupation-types.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.occupation-types')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('occupation-types.index') ? ' active' : '' }}"
+                                                    href="{{ route('occupation-types.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.occupation-types')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('phase-types.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('phase-types.index') ? ' active' : '' }}"
-                                                href="{{ route('phase-types.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.phase-types')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('phase-types.index') ? ' active' : '' }}"
+                                                    href="{{ route('phase-types.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.phase-types')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('departments.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('departments.index') ? ' active' : '' }}"
-                                                href="{{ route('departments.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.department')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('departments.index') ? ' active' : '' }}"
+                                                    href="{{ route('departments.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.department')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('registry-types.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('registry-types.index') ? ' active' : '' }}"
-                                                href="{{ route('registry-types.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.registry-types')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('registry-types.index') ? ' active' : '' }}"
+                                                    href="{{ route('registry-types.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.registry-types')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('road-categories.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs('road-categories.index') ? ' active' : '' }}"
-                                                href="{{ route('road-categories.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.road-category')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs('road-categories.index') ? ' active' : '' }}"
+                                                    href="{{ route('road-categories.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.road-category')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         @can('road-specifications.index')
-                                        <li class="nav-main-item">
-                                            <a class="nav-main-link{{ request()->routeIs(patterns: 'road-specifications.index') ? ' active' : '' }}"
-                                                href="{{ route('road-specifications.index') }}">
-                                                <span class="nav-main-link-name">@lang('menu.roads-specification')</span>
-                                            </a>
-                                        </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link{{ request()->routeIs(patterns: 'road-specifications.index') ? ' active' : '' }}"
+                                                    href="{{ route('road-specifications.index') }}">
+                                                    <span class="nav-main-link-name">@lang('menu.roads-specification')</span>
+                                                </a>
+                                            </li>
                                         @endcan
 
                                         {{-- @can('register.road-specification')  --}}
@@ -1321,7 +1322,7 @@
                                             </a>
                                         </li>
 
-                                         <li class="nav-main-item">
+                                        <li class="nav-main-item">
                                             <a class="nav-main-link{{ request()->routeIs('plot-purchase-invoice*') ? ' active' : '' }}"
                                                 href="{{ route('plot-purchase-invoice.index') }}">
                                                 <span class="nav-main-link-name">@lang('menu.plotPurchaseInvoice')</span>
@@ -1586,7 +1587,8 @@
                                     </a>
 
                                     <ul class="nav-main-submenu">
-                                        @canany(['brv-approval.list', 'products.list', 'booking-module.view', 'purchase-module.view', 'sale-module.view', 'construction-module.view'])
+                                        @canany(['brv-approval.list', 'products.list', 'booking-module.view',
+                                            'purchase-module.view', 'sale-module.view', 'construction-module.view'])
                                             <li
                                                 class="nav-main-item{{ request()->routeIs('bank-receipt-voucher.approval-list', 'products.index', 'bookings.bookingListing', 'purchase-order.index', 'grn.index', 'purchase-invoice.index', 'plot-purchase-invoice.index', 'sale-invoice.index', 'purchase-return.index', 'bookingReturns.index', 'client-invoices.index', 'contractor-bills.index') ? ' open' : '' }}">
                                                 <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
@@ -1782,27 +1784,28 @@
                 <div class="d-flex align-items-center">
                     <!-- User Dropdown -->
                     @auth
-                    <div class="dropdown d-inline-block ms-2">
-                        <button type="button" class="btn btn-sm btn-alt-secondary d-flex align-items-center"
-                            id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">
-                            <img class="rounded-circle" src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('images/avatar.jpg') }}"
-                                alt="Header Avatar" style="width: 21px;">
-                            <span
-                                class="d-none d-sm-inline-block ms-2">{{ auth()->user()->{'name_' . app()->getLocale()} }}</span>
-                            <i class="fa fa-fw fa-angle-down d-none d-sm-inline-block ms-1 mt-1"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-md dropdown-menu-end p-0 border-0"
-                            aria-labelledby="page-header-user-dropdown">
-                            <div class="p-3 text-center bg-body-light border-bottom rounded-top">
-                                <img class="img-avatar img-avatar48 img-avatar-thumb"
+                        <div class="dropdown d-inline-block ms-2">
+                            <button type="button" class="btn btn-sm btn-alt-secondary d-flex align-items-center"
+                                id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                <img class="rounded-circle"
                                     src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('images/avatar.jpg') }}"
-                                    alt="">
-                                <p class="mt-2 mb-0 fw-medium">{{ auth()->user()->{'name_' . app()->getLocale()} }}
-                                </p>
-                                {{--  <p class="mb-0 text-muted fs-sm fw-medium">Web Developer</p>  --}}
-                            </div>
-                            {{--  <div class="p-2">
+                                    alt="Header Avatar" style="width: 21px;">
+                                <span
+                                    class="d-none d-sm-inline-block ms-2">{{ auth()->user()->{'name_' . app()->getLocale()} }}</span>
+                                <i class="fa fa-fw fa-angle-down d-none d-sm-inline-block ms-1 mt-1"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-md dropdown-menu-end p-0 border-0"
+                                aria-labelledby="page-header-user-dropdown">
+                                <div class="p-3 text-center bg-body-light border-bottom rounded-top">
+                                    <img class="img-avatar img-avatar48 img-avatar-thumb"
+                                        src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('images/avatar.jpg') }}"
+                                        alt="">
+                                    <p class="mt-2 mb-0 fw-medium">{{ auth()->user()->{'name_' . app()->getLocale()} }}
+                                    </p>
+                                    {{--  <p class="mb-0 text-muted fs-sm fw-medium">Web Developer</p>  --}}
+                                </div>
+                                {{--  <div class="p-2">
                                 <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
                                 <span class="fs-sm fw-medium">Inbox</span>
                                 <span class="badge rounded-pill bg-primary ms-2">3</span>
@@ -1816,24 +1819,24 @@
                                 </a>
                             </div>  --}}
 
-                            <div role="separator" class="dropdown-divider m-0"></div>
-                            <div class="p-2">
-                                {{--  <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
+                                <div role="separator" class="dropdown-divider m-0"></div>
+                                <div class="p-2">
+                                    {{--  <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
                                 <span class="fs-sm fw-medium">Lock Account</span>
                                 </a>  --}}
-                                <a class="dropdown-item d-flex align-items-center justify-content-between"
-                                    href="#"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <span class="fs-sm fw-medium">@lang('messages.logout')</span>
-                                </a>
+                                    <a class="dropdown-item d-flex align-items-center justify-content-between"
+                                        href="#"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <span class="fs-sm fw-medium">@lang('messages.logout')</span>
+                                    </a>
 
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                    class="d-none">
-                                    @csrf
-                                </form>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                        class="d-none">
+                                        @csrf
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     @endauth
                     <!-- Language Selector -->
                     <br>
@@ -1860,65 +1863,74 @@
                     <!-- END User Dropdown -->
 
                         <!-- Notifications Dropdown -->
-                        <div class="dropdown d-inline-block ms-2">
-                            <button type="button" class="btn btn-sm btn-alt-secondary position-relative"
-                                id="page-header-notifications-dropdown" data-bs-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false"
-                                aria-label="@lang('messages.notifications')">
-                                <i class="fa fa-fw fa-bell"></i>
-                                @if ($unreadNotificationCount > 0)
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                        {{ $unreadNotificationCount > 99 ? '99+' : $unreadNotificationCount }}
-                                    </span>
-                                @endif
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 border-0 fs-sm"
-                                aria-labelledby="page-header-notifications-dropdown">
-                                <div class="p-2 bg-body-light border-bottom d-flex justify-content-between align-items-center rounded-top">
-                                    <span class="fw-semibold">@lang('messages.notifications')</span>
+                        @can('view-notifications')
+
+
+                            <div class="dropdown d-inline-block ms-2">
+                                <button type="button" class="btn btn-sm btn-alt-secondary position-relative"
+                                    id="page-header-notifications-dropdown" data-bs-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false" aria-label="@lang('messages.notifications')">
+                                    <i class="fa fa-fw fa-bell"></i>
                                     @if ($unreadNotificationCount > 0)
-                                        <form method="POST" action="{{ route('notifications.mark-all-read') }}">
-                                            @csrf
-                                            <button type="submit" class="btn btn-sm btn-link p-0">
-                                                @lang('messages.mark_all_read')
-                                            </button>
-                                        </form>
+                                        <span
+                                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            {{ $unreadNotificationCount > 99 ? '99+' : $unreadNotificationCount }}
+                                        </span>
                                     @endif
-                                </div>
-                                <ul class="nav-items mb-0">
-                                    @forelse ($recentNotifications as $notification)
-                                        @php
-                                            $notificationData = $notification->data;
-                                            $localeSuffix = app()->getLocale() === 'ur' ? 'ur' : 'en';
-                                        @endphp
-                                        <li class="{{ $notification->read_at ? '' : 'bg-body-light' }}">
-                                            <form method="POST" action="{{ route('notifications.open', $notification->id) }}">
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 border-0 fs-sm"
+                                    aria-labelledby="page-header-notifications-dropdown">
+                                    <div
+                                        class="p-2 bg-body-light border-bottom d-flex justify-content-between align-items-center rounded-top">
+                                        <span class="fw-semibold">@lang('messages.notifications')</span>
+                                        @if ($unreadNotificationCount > 0)
+                                            <form method="POST" action="{{ route('notifications.mark-all-read') }}">
                                                 @csrf
-                                                <button type="submit" class="dropdown-item text-dark d-flex align-items-start py-2 text-wrap">
-                                                    <i class="fa fa-fw fa-clipboard-check text-primary me-2 mt-1"></i>
-                                                    <span class="flex-grow-1">
-                                                        <span class="d-block {{ $notification->read_at ? '' : 'fw-semibold' }}">
-                                                            {{ $notificationData['title_' . $localeSuffix] ?? __('messages.notifications') }}
-                                                        </span>
-                                                        <small class="text-muted">
-                                                            {{ $notificationData['message_' . $localeSuffix] ?? '' }}
-                                                            · {{ $notification->created_at->diffForHumans() }}
-                                                        </small>
-                                                    </span>
+                                                <button type="submit" class="btn btn-sm btn-link p-0">
+                                                    @lang('messages.mark_all_read')
                                                 </button>
                                             </form>
-                                        </li>
-                                    @empty
-                                        <li class="p-3 text-center text-muted">@lang('messages.no_notifications')</li>
-                                    @endforelse
-                                </ul>
-                                <div class="p-2 border-top text-center">
-                                    <a class="d-inline-block fw-medium" href="{{ route('notifications.index') }}">
-                                        @lang('messages.view_all_notifications')
-                                    </a>
+                                        @endif
+                                    </div>
+                                    <ul class="nav-items mb-0">
+                                        @forelse ($recentNotifications as $notification)
+                                            @php
+                                                $notificationData = $notification->data;
+                                                $localeSuffix = app()->getLocale() === 'ur' ? 'ur' : 'en';
+                                            @endphp
+                                            <li class="{{ $notification->read_at ? '' : 'bg-body-light' }}">
+                                                <form method="POST"
+                                                    action="{{ route('notifications.open', $notification->id) }}">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="dropdown-item text-dark d-flex align-items-start py-2 text-wrap">
+                                                        <i class="fa fa-fw fa-clipboard-check text-primary me-2 mt-1"></i>
+                                                        <span class="flex-grow-1">
+                                                            <span
+                                                                class="d-block {{ $notification->read_at ? '' : 'fw-semibold' }}">
+                                                                {{ $notificationData['title_' . $localeSuffix] ?? __('messages.notifications') }}
+                                                            </span>
+                                                            <small class="text-muted">
+                                                                {{ $notificationData['message_' . $localeSuffix] ?? '' }}
+                                                                · {{ $notification->created_at->diffForHumans() }}
+                                                            </small>
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        @empty
+                                            <li class="p-3 text-center text-muted">@lang('messages.no_notifications')</li>
+                                        @endforelse
+                                    </ul>
+                                    <div class="p-2 border-top text-center">
+                                        <a class="d-inline-block fw-medium" href="{{ route('notifications.index') }}">
+                                            @lang('messages.view_all_notifications')
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+
+                        @endcan
                         <!-- END Notifications Dropdown -->
 
                         <!-- Toggle Side Overlay -->
