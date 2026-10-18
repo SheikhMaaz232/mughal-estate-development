@@ -14,10 +14,11 @@ use Modules\Payroll\App\Models\EmployeeDeduction;
 use Modules\Payroll\App\Models\LeaveBalance;
 use Modules\Payroll\App\Models\Payroll;
 use Modules\Payroll\App\Models\EmployeeWeeklyHoliday;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Employee extends Model
+class Employee extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \OwenIt\Auditing\Auditable;
 
     /**
      * The attributes that are mass assignable.

@@ -5,11 +5,12 @@ namespace Modules\Payroll\App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Payroll\App\Models\HolidayType;
+use OwenIt\Auditing\Contracts\Auditable;
 // use Modules\Payroll\Database\Factories\HolidayFactory;
 
-class Holiday extends Model
+class Holiday extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \OwenIt\Auditing\Auditable;
 
     /**
      * The attributes that are mass assignable.

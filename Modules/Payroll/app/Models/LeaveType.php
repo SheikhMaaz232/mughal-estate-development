@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Payroll\App\Models\LeaveBalance;
 // use Modules\Payroll\Database\Factories\LeaveTypeFactory;
 
-class LeaveType extends Model
+class LeaveType extends Model implements \OwenIt\Auditing\Contracts\Auditable
 {
-    use HasFactory;
+    use HasFactory, \OwenIt\Auditing\Auditable;
 
     /**
      * The attributes that are mass assignable.

@@ -3,12 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class JournalEntry extends Model implements Auditable
+class JournalEntry extends Model
 {
-    use SoftDeletes, \OwenIt\Auditing\Auditable;
+    use SoftDeletes;
     protected $fillable = [
         'journal_voucher_id',
         'credit_detail_account_id',

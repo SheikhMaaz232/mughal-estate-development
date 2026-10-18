@@ -78,6 +78,14 @@
                             <td>{{ $user['email'] }}</td>
                             <td class="text-center">
                                 <div class="btn-group">
+                                    <!-- View Button -->
+                                    <a href="{{ route('users.show', $user['id']) }}"
+                                       class="btn btn-sm btn-alt-secondary"
+                                       title="@lang('messages.view_user')"
+                                       aria-label="@lang('messages.view_user')">
+                                        <i class="fa fa-fw fa-eye"></i>
+                                    </a>
+
                                     <!-- Edit Button -->
                                     <a href="{{ route('users.edit', $user['id']) }}"
                                     class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"

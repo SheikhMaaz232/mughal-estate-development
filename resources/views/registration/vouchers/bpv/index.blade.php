@@ -7,7 +7,9 @@
                 <div class="flex-grow-1">
                     <h2 class="fs-base lh-base fw-medium text-muted mb-0">@lang('messages.list-of-bpv')</h2>
                 </div>
-                <a href="{{ route('bank-payment-voucher.create') }}" class="btn btn-sm btn-primary">@lang('messages.add-voucher')</a>
+                @can('bpv.create')
+                    <a href="{{ route('bank-payment-voucher.create') }}" class="btn btn-sm btn-primary">@lang('messages.add-voucher')</a>
+                @endcan
             </div>
         </div>
     </div>
@@ -106,35 +108,43 @@
 
                                     <div class="btn-group">
 
-                                        <a href="{{ route('bank-payment-voucher.edit', $bankPaymentVoucher->id) }}"
-                                            class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                            data-bs-toggle="tooltip" aria-label="Edit sub Head"
-                                            data-bs-original-title="Edit sub Head"> <i
-                                                class="fa fa-fw fa-pencil-alt"></i></a>
+                                        @can('bpv.edit')
+                                            <a href="{{ route('bank-payment-voucher.edit', $bankPaymentVoucher->id) }}"
+                                                class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                data-bs-toggle="tooltip" aria-label="Edit sub Head"
+                                                data-bs-original-title="Edit sub Head"> <i
+                                                    class="fa fa-fw fa-pencil-alt"></i></a>
+                                        @endcan
 
-                                        <form method="POST"
-                                            action="{{ route('bank-payment-voucher.destroy', $bankPaymentVoucher->id) }}"
-                                            class="d-inline-block delete-form">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button"
-                                                class="btn btn-sm btn-alt-danger js-bs-tooltip-enabled btn-delete"
-                                                data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                                                <i class="fa fa-fw fa-times text-danger"></i>
-                                            </button>
+                                        @can('bpv.delete')
+                                            <form method="POST"
+                                                action="{{ route('bank-payment-voucher.destroy', $bankPaymentVoucher->id) }}"
+                                                class="d-inline-block delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button"
+                                                    class="btn btn-sm btn-alt-danger js-bs-tooltip-enabled btn-delete"
+                                                    data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                                    <i class="fa fa-fw fa-times text-danger"></i>
+                                                </button>
 
-                                        </form>
-                                        <a href="{{ route('bank-payment-voucher.show', $bankPaymentVoucher->id) }}"
-                                            class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                            data-bs-toggle="tooltip" aria-label="View bankPaymentVoucher"
-                                            data-bs-original-title="View bankPaymentVoucher">
-                                            <i class="fa fa-fw fa-eye"></i>
-                                        </a>
+                                            </form>
+                                        @endcan
+                                        @can('bpv.show')
+                                            <a href="{{ route('bank-payment-voucher.show', $bankPaymentVoucher->id) }}"
+                                                class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                data-bs-toggle="tooltip" aria-label="View bankPaymentVoucher"
+                                                data-bs-original-title="View bankPaymentVoucher">
+                                                <i class="fa fa-fw fa-eye"></i>
+                                            </a>
+                                        @endcan
 
-                                        <a href="{{ route('bank-payment-voucher.print', $bankPaymentVoucher->id) }}"
-                                            class="btn btn-sm btn-alt-success" target="_blank" title="Print">
-                                            <i class="fa fa-fw fa-print"></i>
-                                        </a>
+                                        @can('bpv.print')
+                                            <a href="{{ route('bank-payment-voucher.print', $bankPaymentVoucher->id) }}"
+                                                class="btn btn-sm btn-alt-success" target="_blank" title="Print">
+                                                <i class="fa fa-fw fa-print"></i>
+                                            </a>
+                                        @endcan
 
                                     </div>
                                 </td>

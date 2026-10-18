@@ -63,6 +63,14 @@ class UserController extends Controller
         return view('registration.users.edit', compact('user'));
     }
 
+    public function show(User $user)
+    {
+        $user->load('roles');
+        $permissions = $user->getAllPermissions();
+
+        return view('registration.users.show', compact('user', 'permissions'));
+    }
+
     public function update(UpdateUserRequest $request, User $user)
     {
         $data = $request->only(['name_en', 'name_ur', 'father_name_en', 'father_name_ur', 'avatar']);

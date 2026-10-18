@@ -3,12 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PurchaseOrderDetails extends Model implements Auditable
+class PurchaseOrderDetails extends Model
 {
-     use SoftDeletes, \OwenIt\Auditing\Auditable;
+     use SoftDeletes;
 
     protected $fillable = [
         'purchase_order_master_id',

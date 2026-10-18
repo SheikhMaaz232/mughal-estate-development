@@ -4,11 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use OwenIt\Auditing\Contracts\Auditable;
 
-class SaleInvoiceDetail extends Model implements Auditable
+class SaleInvoiceDetail extends Model
 {
-    use SoftDeletes, \OwenIt\Auditing\Auditable;
+    use SoftDeletes;
     protected $fillable = [
         'sale_invoice_master_id',
         'product_id',
