@@ -7,7 +7,7 @@
                 <i class="fa fa-building me-1"></i>@lang('messages.party_details')
             </h3>
             <div class="block-options">
-                @can('party.show')
+                @can('party.edit')
                     <a href="{{ route('parties.edit', $party->id) }}" class="btn btn-sm btn-alt-primary">
                         <i class="fa fa-edit me-1"></i>@lang('messages.edit-parties')
                     </a>
