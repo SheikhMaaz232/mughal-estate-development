@@ -439,6 +439,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('cash-receipt-voucher', CashReceiptVoucherController::class);
     Route::get('cash-receipt-voucher/get-cash-detail-account/{projectId}', [CashReceiptVoucherController::class, 'getCashAccountsAndDetailAccount'])->name('get.crv.cash.detail.account');
 
+    Route::get('jv-voucher/{id}/print', [JournalVoucherController::class, 'print'])->name('jv-voucher.print');
     Route::resource('jv-voucher', JournalVoucherController::class);
 
     Route::resource('client-invoices', ClientInvoiceController::class);

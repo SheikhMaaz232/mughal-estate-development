@@ -154,6 +154,16 @@ class JournalVoucherController extends Controller
         // }
     }
 
+    public function print($id)
+    {
+        $journalVoucher = JournalVoucher::with([
+            'journalEntries.debitAccount',
+            'journalEntries.creditAccount',
+        ])->findOrFail($id);
+
+        return view('registration.vouchers.jv.print', compact('journalVoucher'));
+    }
+
     /**
      * Remove the specified journalVoucher from storage.
      */

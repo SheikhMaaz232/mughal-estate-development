@@ -7,6 +7,10 @@
                 <i class="fa fa-building me-1"></i>@lang('messages.jv_voucher_details')
             </h3>
             <div class="block-options">
+                <a href="{{ route('jv-voucher.print', $journalVoucher->id) }}" target="_blank"
+                    class="btn btn-sm btn-alt-secondary me-1">
+                    <i class="fa fa-print me-1"></i>Print
+                </a>
                 <a href="{{ route('jv-voucher.edit', $journalVoucher->id) }}" class="btn btn-sm btn-alt-primary">
                     <i class="fa fa-edit me-1"></i>@lang('messages.edit-jv')
                 </a>

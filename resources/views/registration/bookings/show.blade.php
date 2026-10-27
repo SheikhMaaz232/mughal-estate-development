@@ -1789,7 +1789,7 @@
             text-align: center;">
                             {{ $booking->calculated_total_amount }}</td>
                     </tr>
-                @endforeach 
+                @endforeach
                 @php
                     $balanceAmount = 0;
                 @endphp
@@ -1832,8 +1832,8 @@
 
             @if ($loop->first)
                 <div class="header">
-                    <h1>Mughal Estate Developers</h1>
-                    <h2>{{ $bookingApplicationData->project->name_en }}</h2>
+                    <h1></h1>
+                    <h1>{{ $bookingApplicationData->project->name_en }}</h1>
                 </div>
 
                 <div class="info">
@@ -1889,7 +1889,7 @@
                 </thead>
 
                 <tbody>
-                    
+
                     @foreach ($pageSchedules as $schedule)
                         @php
                             $balanceAmount += $schedule->pay_amount;

@@ -130,6 +130,11 @@
                                             data-bs-original-title="View journalVoucher">
                                             <i class="fa fa-fw fa-eye"></i>
                                         </a>
+                                        <a href="{{ route('jv-voucher.print', $journalVoucher->id) }}" target="_blank"
+                                            class="btn btn-sm btn-alt-secondary" aria-label="Print journal voucher"
+                                            title="Print journal voucher">
+                                            <i class="fa fa-fw fa-print"></i>
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
