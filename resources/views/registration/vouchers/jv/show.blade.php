@@ -9,7 +9,7 @@
             <div class="block-options">
                 <a href="{{ route('jv-voucher.print', $journalVoucher->id) }}" target="_blank"
                     class="btn btn-sm btn-alt-secondary me-1">
-                    <i class="fa fa-print me-1"></i>Print
+                    <i class="fa fa-print me-1"></i>@lang('messages.print')
                 </a>
                 <a href="{{ route('jv-voucher.edit', $journalVoucher->id) }}" class="btn btn-sm btn-alt-primary">
                     <i class="fa fa-edit me-1"></i>@lang('messages.edit-jv')
@@ -48,8 +48,8 @@
 
                             <div class="row mt-3">
                                 <div class="col-md-6">
-                                    <h5 class="text-muted mb-3">@lang('messages.debit_account')</h5>
-                                    <div class="p-3 bg-light rounded">
+                                    <h5 class="text-muted mb-3">@lang('messages.description')</h5>
+                                    <div class="p-3 bg-light rounded" dir="{{ app()->getLocale() === 'ur' ? 'rtl' : 'ltr' }}">
                                         {{$journalVoucher->description}}
                                     </div>
                                 </div>

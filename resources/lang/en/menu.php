@@ -100,6 +100,7 @@ return [
     'direct-products-report' => 'Projects Plots Summary',
     'bank_book' => 'Bank Book',
     'executive-reports' => 'Executive Reports',
+    'notebooks' => 'Notebooks',
     'approvals' => 'Approvals',
     'brv_approval' => 'BRV Approval',
     'product_approvals' => 'Product Approvals',

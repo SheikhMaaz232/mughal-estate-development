@@ -1,15 +1,23 @@
+@php
+    $locale = app()->getLocale() === 'ur' ? 'ur' : 'en';
+@endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ $locale }}" dir="{{ $locale === 'ur' ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Payment Receipt {{ $journalVoucher->voucher_no }}</title>
+    <title>{{ __('messages.jv') }} {{ $journalVoucher->voucher_no }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
     <style>
         :root {
             font-family: Arial, Helvetica, sans-serif;
             color: #1c2b40;
             background: #eef1f5;
+        }
+
+        [dir="rtl"] {
+            font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', Arial, sans-serif;
         }
 
         * {
@@ -97,7 +105,6 @@
             color: #18395d;
             font-size: 10pt;
             font-weight: 700;
-            letter-spacing: .045em;
         }
 
         .entry {
@@ -150,7 +157,6 @@
         .amount .field-label {
             margin: 0;
             font-size: 11pt;
-            white-space: nowrap;
         }
 
         .currency {
@@ -188,9 +194,7 @@
             color: #526176;
             font-size: 9pt;
             font-weight: 600;
-            letter-spacing: .035em;
             text-align: center;
-            text-transform: uppercase;
         }
 
         @page {
@@ -259,42 +263,49 @@
 
 <body>
     <div class="toolbar">
-        <button class="print-button" type="button" onclick="window.print()">Print / Save as PDF</button>
+        <button class="print-button" type="button" onclick="window.print()">
+            @lang('messages.print')
+        </button>
     </div>
 
     <main class="sheet">
         <div class="content">
             <header>
-                <h1>PAYMENT RECEIPT</h1>
+                <h1>@lang('messages.jv')</h1>
                 <div class="gold-rule" aria-hidden="true"></div>
             </header>
 
-            <section class="fields" aria-label="Payment receipt">
+            <section class="fields" aria-label="{{ __('messages.jv') }}">
                 <div>
-                    <span class="field-label">Receipt No.:</span>
+                    <span class="field-label">@lang('messages.voucher_no'):</span>
                     <div class="entry">{{ $journalVoucher->voucher_no }}</div>
                 </div>
 
                 <div>
-                    <span class="field-label">Payment Date:</span>
+                    <span class="field-label">@lang('messages.Date'):</span>
                     <div class="entry">
                         {{ $journalVoucher->voucher_date ? \Carbon\Carbon::parse($journalVoucher->voucher_date)->format('d-m-Y') : '' }}
                     </div>
                 </div>
 
                 <div class="remarks">
-                    <span class="field-label">Remarks:</span>
+                    <span class="field-label">@lang('messages.description'):</span>
                     <div class="remarks-entry">
                         @foreach ($journalVoucher->journalEntries as $entry)
-                            @if (filled($entry->detail_description_en))
-                                <p class="remark">{{ $entry->detail_description_en }}</p>
+                            @php
+                                $description = $locale === 'ur'
+                                    ? $entry->detail_description_ur
+                                    : $entry->detail_description_en;
+                            @endphp
+                            @if (filled($description))
+                                <p class="remark">{{ $description }}</p>
                             @endif
                         @endforeach
                     </div>
                 </div>
 
                 <div class="amount">
-                    <span class="field-label">Amount:</span>
+                    <span class="field-label">@lang('messages.amount'):</span>
                     <span class="currency">PKR</span>
                     <div class="amount-value">
                         {{ $journalVoucher->total_debit !== null ? number_format((float) $journalVoucher->total_debit, 2) : '' }}
@@ -302,10 +313,10 @@
                 </div>
             </section>
 
-            <footer class="signatures" aria-label="Signatures">
-                <div class="signature">Prepared By</div>
-                <div class="signature">Received By</div>
-                <div class="signature">Authorized Signature</div>
+            <footer class="signatures" aria-label="@lang('messages.prepared_by')">
+                <div class="signature">@lang('messages.prepared_by')</div>
+                <div class="signature">@lang('messages.received_by')</div>
+                <div class="signature">@lang('messages.authorized_signature')</div>
             </footer>
         </div>
     </main>

@@ -102,6 +102,7 @@ return [
     'outstanding-receivables' => 'بقایا جات',
     'receipt-history' => 'رسیدوں کی تاریخ',
     'executive-reports' => 'ایگزیکٹو رپورٹس',
+    'notebooks' => 'نوٹ بکس',
     'approvals' => 'منظوریاں',
     'brv_approval' => 'بی آر وی کی منظوری',
     'product_approvals' => 'مصنوعات کی منظوری',

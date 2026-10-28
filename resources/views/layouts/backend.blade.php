@@ -1578,7 +1578,7 @@
                             </li>
 
                             <li
-                                class="nav-main-item{{ request()->is('exective-reports*') || request()->is('exective-reports.direct-products.filter.*') || request()->routeIs('bank-receipt-voucher.approval-list', 'products.index', 'bookings.bookingListing', 'purchase-order.index', 'grn.index', 'purchase-invoice.index', 'plot-purchase-invoice.index', 'sale-invoice.index', 'purchase-return.index', 'bookingReturns.index', 'client-invoices.index', 'contractor-bills.index') ? ' open' : '' }}">
+                                class="nav-main-item{{ request()->is('exective-reports*') || request()->is('exective-reports.direct-products.filter.*') || request()->routeIs('executive-reports.notebooks.*', 'bank-receipt-voucher.approval-list', 'products.index', 'bookings.bookingListing', 'purchase-order.index', 'grn.index', 'purchase-invoice.index', 'plot-purchase-invoice.index', 'sale-invoice.index', 'purchase-return.index', 'bookingReturns.index', 'client-invoices.index', 'contractor-bills.index') ? ' open' : '' }}">
                                 @can('executive-reports.view')
                                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                         aria-haspopup="true" aria-expanded="true" href="#">
@@ -1700,7 +1700,12 @@
                                             </a>
                                         </li>
 
-
+                                        <li class="nav-main-item">
+                                            <a class="nav-main-link{{ request()->routeIs('executive-reports.notebooks.*') ? ' active' : '' }}"
+                                                href="{{ route('executive-reports.notebooks.index') }}">
+                                                <span class="nav-main-link-name">@lang('menu.notebooks')</span>
+                                            </a>
+                                        </li>
 
 
                                         {{-- <li class="nav-item">

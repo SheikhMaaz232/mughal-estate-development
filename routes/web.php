@@ -12,6 +12,7 @@ use App\Http\Controllers\ConstructionModule\ContractorPaymentController;
 use App\Http\Controllers\ConstructionModule\TenderController;
 use App\Http\Controllers\ConstructionModule\WorkOrderController;
 use App\Http\Controllers\ConstructionModule\WorkProgressController;
+use App\Http\Controllers\ExecutiveReports\NotebookController;
 use App\Http\Controllers\LandPurchase\LandRegistrationController;
 use App\Http\Controllers\LandPurchase\RegistryTypeController;
 use App\Http\Controllers\LandRegistration\LandController;
@@ -515,6 +516,17 @@ Route::middleware(['auth'])->group(function () {
         '/exective-reports/direct-products',
         [ReportController::class, 'directProductProjectReport']
     )->name('exective-reports.direct-products.report');
+
+    Route::prefix('executive-reports/notebooks')
+        ->name('executive-reports.notebooks.')
+        ->middleware('can:executive-reports.view')
+        ->controller(NotebookController::class)
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/', 'store')->name('store');
+            Route::put('/{notebook}', 'update')->name('update');
+            Route::delete('/{notebook}', 'destroy')->name('destroy');
+        });
 
     Route::get(
         '/reports/sale-report/filter',
