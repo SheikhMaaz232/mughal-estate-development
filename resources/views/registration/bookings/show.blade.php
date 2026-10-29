@@ -517,6 +517,8 @@
                         style="min-width:480px; text-align: center;">{{ $bookingData->dealer->name_en ?? '' }}</span>
                     C-Value: <span class="value"
                         style="min-width:93px; text-align: center;">{{ $bookingData->commission ?? '' }}</span>
+                    Burj Commission: <span class="value"
+                        style="min-width:93px; text-align: center;">{{ $bookingData->burj_commission ?? '' }}</span>
                     &nbsp;
                 </p>
                 <p style=" line-height: 0.2 !important;"><Strong>Note:</Strong>The Payment Schedule is attached to the

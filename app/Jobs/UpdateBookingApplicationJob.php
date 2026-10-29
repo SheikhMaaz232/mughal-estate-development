@@ -52,17 +52,25 @@ class UpdateBookingApplicationJob implements ShouldQueue
                     AccountLedger::where('invoice_id', $booking->id)->where('document_number', $documentNo)->delete();
                     GeneralJournal::where('invoice_id', $booking->id)->where('document_number', $documentNo)->delete();
                     StockLedger::where('invoice_id', $booking->id)->where('document_number', $documentNo)->where('product_id', $booking->product_id)->delete();
-                    AccountLedger::create($prepared['commissionCreditData']);
-                    AccountLedger::create($prepared['commissionDebitData']);
-                    AccountLedger::create($prepared['receivableCommissionCreditData']);
-                    AccountLedger::create($prepared['receivableCommissionDebitData']);
                     AccountLedger::create($prepared['creditData']);
-                    GeneralJournal::create($prepared['generalJournalsCommissionCreditData']);
-                    GeneralJournal::create($prepared['generalJournalsCommissionDebitData']);
-                    GeneralJournal::create($prepared['receivableGeneralJournalsCommissionCreditData']);
-                    GeneralJournal::create($prepared['receivableGeneralJournalsCommissionDebitData']);
                     GeneralJournal::create($prepared['generalJournalCreditData']);
                     StockLedger::create($prepared['stockLedgerData']);
+                    if ($booking->commission > 0) {
+                        AccountLedger::create($prepared['commissionCreditData']);
+                        AccountLedger::create($prepared['commissionDebitData']);
+                        AccountLedger::create($prepared['receivableCommissionCreditData']);
+                        AccountLedger::create($prepared['receivableCommissionDebitData']);
+                        GeneralJournal::create($prepared['generalJournalsCommissionCreditData']);
+                        GeneralJournal::create($prepared['generalJournalsCommissionDebitData']);
+                        GeneralJournal::create($prepared['receivableGeneralJournalsCommissionCreditData']);
+                        GeneralJournal::create($prepared['receivableGeneralJournalsCommissionDebitData']);
+                    }
+                    if ($booking->burj_commission > 0) {
+                        AccountLedger::create($prepared['burjCommissionCreditData']);
+                        AccountLedger::create($prepared['burjCommissionDebitData']);
+                        GeneralJournal::create($prepared['generalJournalsBurjCommissionCreditData']);
+                        GeneralJournal::create($prepared['generalJournalsBurjCommissionDebitData']);
+                    }
                     if (!empty($prepared['discountCreditData'])) {
                         AccountLedger::create($prepared['discountCreditData']);
                         GeneralJournal::create($prepared['discountCreditData']);

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreBookingApplicationRequest extends FormRequest
 {
@@ -21,8 +22,36 @@ class StoreBookingApplicationRequest extends FormRequest
             'party_id'          => 'required|exists:parties,id',
             'detail_account_id' => 'required|exists:detail_accounts,id',
             'transfer_charges_account_id' => 'nullable|exists:detail_accounts,id',
-            'dealer_id'         => 'nullable',
-            'receivable_dealer_id'         => 'nullable|exists:detail_accounts,id',
+            'dealer_id' => [
+                Rule::requiredIf(fn () => $this->input('case') !== 'transfer' && (float) $this->input('burj_commission', 0) > 0),
+                'nullable',
+                'exists:detail_accounts,id',
+            ],
+            'receivable_dealer_id' => [
+                Rule::requiredIf(fn () => $this->input('case') !== 'transfer' && (float) $this->input('commission', 0) > 0),
+                'nullable',
+                'exists:detail_accounts,id',
+            ],
+            'project_dealer_id' => [
+                Rule::requiredIf(fn () => $this->input('case') !== 'transfer' && (float) $this->input('commission', 0) > 0),
+                'nullable',
+                'exists:detail_accounts,id',
+            ],
+            'project_exp_account_id' => [
+                Rule::requiredIf(fn () => $this->input('case') !== 'transfer' && (float) $this->input('commission', 0) > 0),
+                'nullable',
+                'exists:detail_accounts,id',
+            ],
+            'receivable_income_account_id' => [
+                Rule::requiredIf(fn () => $this->input('case') !== 'transfer' && (float) $this->input('commission', 0) > 0),
+                'nullable',
+                'exists:detail_accounts,id',
+            ],
+            'exp_account_id' => [
+                Rule::requiredIf(fn () => $this->input('case') !== 'transfer' && (float) $this->input('burj_commission', 0) > 0),
+                'nullable',
+                'exists:detail_accounts,id',
+            ],
             'date'              => 'required|date',
             'previous_booking_id' => 'nullable',
             'care_off'          => 'nullable|string|max:255',
@@ -40,6 +69,7 @@ class StoreBookingApplicationRequest extends FormRequest
             'add_value'         => 'nullable|numeric|min:0',
             'discount'          => 'nullable|numeric|min:0',
             'commission'        => 'nullable|numeric|min:0',
+            'burj_commission'   => 'nullable|numeric|min:0',
             'total_amount'      => 'required|numeric|min:0',
             'grand_total_amount' => 'required|numeric|min:0',
 

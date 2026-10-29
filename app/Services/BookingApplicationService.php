@@ -42,6 +42,8 @@ class BookingApplicationService
     public function createLedgerEntry($booking, $bookingPayment): void
     {
         $dealerMainParty = DetailAccount::where('id', $booking->dealer_id)->value('party_id');
+        $projectDealerMainParty = DetailAccount::where('id', $booking->project_dealer_id)->value('party_id');
+        $receivableDealerMainParty = DetailAccount::where('id', $booking->receivable_dealer_id)->value('party_id');
         $productNameEN = Product::where('id', $booking->product_id)->value('name_en');
         $productNameUR = Product::where('id', $booking->product_id)->value('name_ur');
         $projectNameEN = Project::where('id', $booking->project_id)->value('name_en');
@@ -133,133 +135,171 @@ class BookingApplicationService
             StockLedger::create($stockLedgerData);
         }
 
-        $commissionCreditData = [
-            'date' => $booking->date,
-            'project_id' => $booking->project_id,
-            'invoice_id' => $booking->id,
-            'is_fee_entry' => 0,
-            'transaction_type' => null,
-            'party_id' => $dealerMainParty ?? null,
-            'detail_account_id' => $booking->dealer_id,
-            'description_en' => 'Commission On Sale Of' . $productNameEN . 'of' . $projectNameEN,
-            'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
-            'document_number' => 'B-A' . '-' . $booking->id,
-            'debit' => 0,
-            'credit' => $booking->commission,
-        ];
-        if (!empty($commissionCreditData)) {
-            AccountLedger::create($commissionCreditData);
-            GeneralJournal::create($commissionCreditData);
+        if ($booking->commission > 0) {
+            $commissionCreditData = [
+                'date' => $booking->date,
+                'project_id' => $booking->project_id,
+                'invoice_id' => $booking->id,
+                'is_fee_entry' => 0,
+                'transaction_type' => null,
+                'party_id' => $projectDealerMainParty ?? null,
+                'detail_account_id' => $booking->project_dealer_id,
+                'description_en' => 'Commission On Sale Of' . $productNameEN . 'of' . $projectNameEN,
+                'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
+                'document_number' => 'B-A' . '-' . $booking->id,
+                'debit' => 0,
+                'credit' => $booking->commission,
+            ];
+            if (!empty($commissionCreditData)) {
+                AccountLedger::create($commissionCreditData);
+                GeneralJournal::create($commissionCreditData);
+            }
+
+            $commissionDebitData = [
+                'date' => $booking->date,
+                'project_id' => $booking->project_id,
+                'invoice_id' => $booking->id,
+                'is_fee_entry' => 0,
+                'transaction_type' => null,
+                'party_id' => null,
+                'detail_account_id' => $booking->project_exp_account_id,
+                'description_en' => 'Commission On Sale Of ' . $productNameEN . ' of ' . $projectNameEN,
+                'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
+                'document_number' => 'B-A' . '-' . $booking->id,
+                'debit' => $booking->commission,
+                'credit' => 0,
+            ];
+            if (!empty($commissionDebitData)) {
+                AccountLedger::create($commissionDebitData);
+            }
+
+
+
+            $generalJournalsCommissionDebitData = [
+                'date' => $booking->date,
+                'project_id' => $booking->project_id,
+                'invoice_id' => $booking->id,
+                'is_fee_entry' => 0,
+                'transaction_type' => null,
+                'party_id' => null,
+                'detail_account_id' => $booking->project_exp_account_id,
+                'description_en' => 'Commission On Sale Of ' . $productNameEN . ' of ' . $projectNameEN,
+                'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
+                'document_number' => 'B-A' . '-' . $booking->id,
+                'debit' => $booking->commission,
+                'credit' => 0,
+            ];
+            if (!empty($generalJournalsCommissionDebitData)) {
+                GeneralJournal::create($generalJournalsCommissionDebitData);
+            }
+
+            $receivableCommissionCreditData = [
+                'date' => $booking->date,
+                'project_id' => $booking->project_id,
+                'invoice_id' => $booking->id,
+                'is_fee_entry' => 0,
+                'transaction_type' => null,
+                'party_id' => null,
+                'detail_account_id' => $booking->receivable_income_account_id,
+                'description_en' => 'Commission Received On Sale Of ' . $productNameEN . ' of ' . $projectNameEN,
+                'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن وصولی',
+                'document_number' => 'B-A' . '-' . $booking->id,
+                'debit' => 0,
+                'credit' => $booking->commission,
+            ];
+            if (!empty($receivableCommissionCreditData)) {
+                AccountLedger::create($receivableCommissionCreditData);
+            }
+
+            $generalJournalsReceivableCommissionCreditData = [
+                'date' => $booking->date,
+                'project_id' => $booking->project_id,
+                'invoice_id' => $booking->id,
+                'is_fee_entry' => 0,
+                'transaction_type' => null,
+                'party_id' => null,
+                'detail_account_id' => $booking->receivable_income_account_id,
+                'description_en' => 'Commission Received On Sale Of ' . $productNameEN . ' of ' . $projectNameEN,
+                'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن وصولی',
+                'document_number' => 'B-A' . '-' . $booking->id,
+                'debit' => 0,
+                'credit' => $booking->commission,
+            ];
+            if (!empty($generalJournalsReceivableCommissionCreditData)) {
+                GeneralJournal::create($generalJournalsReceivableCommissionCreditData);
+            }
+
+            $receivableCommissionDebitData = [
+                'date' => $booking->date,
+                'project_id' => $booking->project_id,
+                'invoice_id' => $booking->id,
+                'is_fee_entry' => 0,
+                'transaction_type' => null,
+                'party_id' => $receivableDealerMainParty ?? null,
+                'detail_account_id' => $booking->receivable_dealer_id,
+                'description_en' => 'Commission On Sale Of ' . $productNameEN . ' of ' . $projectNameEN,
+                'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
+                'document_number' => 'B-A' . '-' . $booking->id,
+                'debit' => $booking->commission,
+                'credit' => 0,
+            ];
+            if (!empty($receivableCommissionDebitData)) {
+                AccountLedger::create($receivableCommissionDebitData);
+            }
+
+            $generalJournalsReceivableCommissionDebitData = [
+                'date' => $booking->date,
+                'project_id' => $booking->project_id,
+                'invoice_id' => $booking->id,
+                'is_fee_entry' => 0,
+                'transaction_type' => null,
+                'party_id' => $receivableDealerMainParty ?? null,
+                'detail_account_id' => $booking->receivable_dealer_id,
+                'description_en' => 'Commission On Sale Of ' . $productNameEN . ' of ' . $projectNameEN,
+                'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
+                'document_number' => 'B-A' . '-' . $booking->id,
+                'debit' => $booking->commission,
+                'credit' => 0,
+            ];
+            if (!empty($generalJournalsReceivableCommissionDebitData)) {
+                GeneralJournal::create($generalJournalsReceivableCommissionDebitData);
+            }
+
         }
 
-        $commissionDebitData = [
-            'date' => $booking->date,
-            'project_id' => $booking->project_id,
-            'invoice_id' => $booking->id,
-            'is_fee_entry' => 0,
-            'transaction_type' => null,
-            'party_id' => null,
-            'detail_account_id' => $product,
-            'description_en' => 'Commission On Sale Of ' . $productNameEN . ' of ' . $projectNameEN,
-            'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
-            'document_number' => 'B-A' . '-' . $booking->id,
-            'debit' => $booking->commission,
-            'credit' => 0,
-        ];
-        if (!empty($commissionDebitData)) {
-            AccountLedger::create($commissionDebitData);
-        }
-
-
-
-        $generalJournalsCommissionDebitData = [
-            'date' => $booking->date,
-            'project_id' => $booking->project_id,
-            'invoice_id' => $booking->id,
-            'is_fee_entry' => 0,
-            'transaction_type' => null,
-            'party_id' => null,
-            'detail_account_id' => $product,
-            'description_en' => 'Commission On Sale Of ' . $productNameEN . ' of ' . $projectNameEN,
-            'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
-            'document_number' => 'B-A' . '-' . $booking->id,
-            'debit' => $booking->commission,
-            'credit' => 0,
-        ];
-        if (!empty($generalJournalsCommissionDebitData)) {
-            GeneralJournal::create($generalJournalsCommissionDebitData);
-        }
-
-        $receivableCommissionCreditData = [
-            'date' => $booking->date,
-            'project_id' => $booking->project_id,
-            'invoice_id' => $booking->id,
-            'is_fee_entry' => 0,
-            'transaction_type' => null,
-            'party_id' => null,
-            'detail_account_id' => $product,
-            'description_en' => 'Commission Received On Sale Of ' . $productNameEN . ' of ' . $projectNameEN,
-            'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن وصولی',
-            'document_number' => 'B-A' . '-' . $booking->id,
-            'debit' => 0,
-            'credit' => $booking->commission,
-        ];
-        if (!empty($receivableCommissionCreditData)) {
-            AccountLedger::create($receivableCommissionCreditData);
-        }
-
-        $generalJournalsReceivableCommissionCreditData = [
-            'date' => $booking->date,
-            'project_id' => $booking->project_id,
-            'invoice_id' => $booking->id,
-            'is_fee_entry' => 0,
-            'transaction_type' => null,
-            'party_id' => null,
-            'detail_account_id' => $product,
-            'description_en' => 'Commission Received On Sale Of ' . $productNameEN . ' of ' . $projectNameEN,
-            'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن وصولی',
-            'document_number' => 'B-A' . '-' . $booking->id,
-            'debit' => 0,
-            'credit' => $booking->commission,
-        ];
-        if (!empty($generalJournalsReceivableCommissionCreditData)) {
-            GeneralJournal::create($generalJournalsReceivableCommissionCreditData);
-        }
-
-        $receivableCommissionDebitData = [
-            'date' => $booking->date,
-            'project_id' => $booking->project_id,
-            'invoice_id' => $booking->id,
-            'is_fee_entry' => 0,
-            'transaction_type' => null,
-            'party_id' => null,
-            'detail_account_id' => $booking->receivable_dealer_id,
-            'description_en' => 'Commission On Sale Of ' . $productNameEN . ' of ' . $projectNameEN,
-            'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
-            'document_number' => 'B-A' . '-' . $booking->id,
-            'debit' => $booking->commission,
-            'credit' => 0,
-        ];
-        if (!empty($receivableCommissionDebitData)) {
-            AccountLedger::create($receivableCommissionDebitData);
-        }
-
-        $generalJournalsReceivableCommissionDebitData = [
-            'date' => $booking->date,
-            'project_id' => $booking->project_id,
-            'invoice_id' => $booking->id,
-            'is_fee_entry' => 0,
-            'transaction_type' => null,
-            'party_id' => null,
-            'detail_account_id' => $booking->receivable_dealer_id,
-            'description_en' => 'Commission On Sale Of ' . $productNameEN . ' of ' . $projectNameEN,
-            'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
-            'document_number' => 'B-A' . '-' . $booking->id,
-            'debit' => $booking->commission,
-            'credit' => 0,
-        ];
-        if (!empty($generalJournalsReceivableCommissionDebitData)) {
-            GeneralJournal::create($generalJournalsReceivableCommissionDebitData);
+        if ($booking->burj_commission > 0) {
+            $burjCommissionCreditData = [
+                'date' => $booking->date,
+                'project_id' => $booking->project_id,
+                'invoice_id' => $booking->id,
+                'is_fee_entry' => 0,
+                'transaction_type' => null,
+                'party_id' => $dealerMainParty ?? null,
+                'detail_account_id' => $booking->dealer_id,
+                'description_en' => 'Burj Commission On Sale Of ' . $productNameEN . ' of ' . $projectNameEN,
+                'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی برج کمیشن',
+                'document_number' => 'B-A' . '-' . $booking->id,
+                'debit' => 0,
+                'credit' => $booking->burj_commission,
+            ];
+            $burjCommissionDebitData = [
+                'date' => $booking->date,
+                'project_id' => $booking->project_id,
+                'invoice_id' => $booking->id,
+                'is_fee_entry' => 0,
+                'transaction_type' => null,
+                'party_id' => null,
+                'detail_account_id' => $booking->exp_account_id,
+                'description_en' => 'Burj Commission On Sale Of ' . $productNameEN . ' of ' . $projectNameEN,
+                'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی برج کمیشن',
+                'document_number' => 'B-A' . '-' . $booking->id,
+                'debit' => $booking->burj_commission,
+                'credit' => 0,
+            ];
+            AccountLedger::create($burjCommissionCreditData);
+            GeneralJournal::create($burjCommissionCreditData);
+            AccountLedger::create($burjCommissionDebitData);
+            GeneralJournal::create($burjCommissionDebitData);
         }
 
         // Possession Fees
@@ -1433,11 +1473,16 @@ class BookingApplicationService
             'product_id'       => $data['product_id'],
             'status'       => $data['status'],
             'dealer_id'        => $data['dealer_id'],
+            'project_dealer_id' => $data['project_dealer_id'] ?? null,
+            'project_exp_account_id' => $data['project_exp_account_id'] ?? null,
+            'receivable_income_account_id' => $data['receivable_income_account_id'] ?? null,
+            'exp_account_id' => $data['exp_account_id'] ?? null,
             'care_off'        => $data['care_off'] ?? null,
             'date'             => $data['date'],
             'add_value'        => $data['add_value'] ?? 0,
             'discount'         => $data['discount'] ?? 0,
             'commission'       => $data['commission'] ?? 0,
+            'burj_commission'  => $data['burj_commission'] ?? 0,
             'total_amount'     => $data['total_amount'] ?? 0,
             'grand_total_amount'  => $data['grand_total_amount'] ?? 0,
             'possession_fees'   => $data['possession_fees'] ?? 0,
@@ -1504,11 +1549,17 @@ class BookingApplicationService
             'product_id'       => $data['product_id'],
             'status'       => $data['status'],
             'dealer_id'        => $data['dealer_id'],
+            'project_dealer_id' => $data['project_dealer_id'] ?? null,
+            'project_exp_account_id' => $data['project_exp_account_id'] ?? null,
+            'receivable_dealer_id' => $data['receivable_dealer_id'] ?? null,
+            'receivable_income_account_id' => $data['receivable_income_account_id'] ?? null,
+            'exp_account_id' => $data['exp_account_id'] ?? null,
             'care_off'        => $data['care_off'] ?? null,
             'date'             => $data['date'],
             'add_value'        => $data['add_value'] ?? 0,
             'discount'         => $data['discount'] ?? 0,
             'commission'       => $data['commission'] ?? 0,
+            'burj_commission'  => $data['burj_commission'] ?? 0,
             'total_amount'     => $data['total_amount'] ?? 0,
             'grand_total_amount'  => $data['grand_total_amount'] ?? 0,
             'possession_fees'   => $data['possession_fees'] ?? 0,
@@ -1563,7 +1614,9 @@ class BookingApplicationService
         $projectNameUR = Project::where('id', $data['project_id'])->value('name_ur');
         $partyNameEN = Party::where('id', $data['party_id'])->value('name_en');
         $partyNameUR = Party::where('id', $data['party_id'])->value('name_ur');
-        $dealerMainParty = DetailAccount::where('id', $data['dealer_id'])->value('party_id');
+        $dealerMainParty = DetailAccount::where('id', $data['dealer_id'] ?? null)->value('party_id');
+        $projectDealerMainParty = DetailAccount::where('id', $data['project_dealer_id'] ?? null)->value('party_id');
+        $receivableDealerMainParty = DetailAccount::where('id', $data['receivable_dealer_id'] ?? null)->value('party_id');
         $product = DetailAccount::where('project_id', $data['project_id'])->where('name_en', $productNameEN)->value('id');
 
         $bookingData = [
@@ -1583,11 +1636,16 @@ class BookingApplicationService
             'product_id'       => $data['product_id'],
             'status'       => $data['status'],
             'dealer_id'        => $data['dealer_id'],
+            'project_dealer_id' => $data['project_dealer_id'] ?? null,
+            'project_exp_account_id' => $data['project_exp_account_id'] ?? null,
+            'receivable_income_account_id' => $data['receivable_income_account_id'] ?? null,
+            'exp_account_id' => $data['exp_account_id'] ?? null,
             'care_off'        => $data['care_off'] ?? null,
             'date'             => $data['date'],
             'add_value'        => $data['add_value'] ?? 0,
             'discount'         => $data['discount'] ?? 0,
             'commission'       => $data['commission'] ?? 0,
+            'burj_commission'  => $data['burj_commission'] ?? 0,
             'total_amount'     => $data['total_amount'] ?? 0,
             'grand_total_amount'  => $data['grand_total_amount'] ?? 0,
             'possession_fees'   => $data['possession_fees'] ?? 0,
@@ -1638,8 +1696,8 @@ class BookingApplicationService
             'date' => $data['date'],
             'project_id' => $data['project_id'],
             'invoice_id' => $id,
-            'party_id' => $dealerMainParty ?? null,
-            'detail_account_id' => $data['dealer_id'],
+            'party_id' => $projectDealerMainParty ?? null,
+            'detail_account_id' => $data['project_dealer_id'] ?? null,
             'description_en' => 'Commission On Sale Of' . $productNameEN . 'of' . $projectNameEN,
             'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
             'document_number' => 'B-A' . '-' . $id,
@@ -1653,8 +1711,8 @@ class BookingApplicationService
             'date' => $data['date'],
             'project_id' => $data['project_id'],
             'invoice_id' => $id,
-            'party_id' => $dealerMainParty ?? null,
-            'detail_account_id' => $data['dealer_id'],
+            'party_id' => $projectDealerMainParty ?? null,
+            'detail_account_id' => $data['project_dealer_id'] ?? null,
             'description_en' => 'Commission On Sale Of' . $productNameEN . 'of' . $projectNameEN,
             'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
             'document_number' => 'B-A' . '-' . $id,
@@ -1669,7 +1727,7 @@ class BookingApplicationService
             'project_id' => $data['project_id'],
             'invoice_id' => $id,
             'party_id' =>  null,
-            'detail_account_id' => $product,
+            'detail_account_id' => $data['project_exp_account_id'] ?? null,
             'description_en' => 'Commission On Sale Of' . $productNameEN . 'of' . $projectNameEN,
             'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
             'document_number' => 'B-A' . '-' . $id,
@@ -1684,7 +1742,7 @@ class BookingApplicationService
             'project_id' => $data['project_id'],
             'invoice_id' => $id,
             'party_id' => null,
-            'detail_account_id' => $product,
+            'detail_account_id' => $data['project_exp_account_id'] ?? null,
             'description_en' => 'Commission On Sale Of' . $productNameEN . 'of' . $projectNameEN,
             'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
             'document_number' => 'B-A' . '-' . $id,
@@ -1699,7 +1757,7 @@ class BookingApplicationService
             'project_id' => $data['project_id'],
             'invoice_id' => $id,
             'party_id' =>  null,
-            'detail_account_id' => $product,
+            'detail_account_id' => $data['receivable_income_account_id'] ?? null,
             'description_en' => 'Commission Received On Sale Of' . $productNameEN . 'of' . $projectNameEN,
             'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن وصولی',
             'document_number' => 'B-A' . '-' . $id,
@@ -1714,7 +1772,7 @@ class BookingApplicationService
             'project_id' => $data['project_id'],
             'invoice_id' => $id,
             'party_id' =>  null,
-            'detail_account_id' => $product,
+            'detail_account_id' => $data['receivable_income_account_id'] ?? null,
             'description_en' => 'Commission On Sale Of' . $productNameEN . 'of' . $projectNameEN,
             'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
             'document_number' => 'B-A' . '-' . $id,
@@ -1728,8 +1786,8 @@ class BookingApplicationService
             'date' => $data['date'],
             'project_id' => $data['project_id'],
             'invoice_id' => $id,
-            'party_id' => $dealerMainParty ?? null,
-            'detail_account_id' => $data['receivable_dealer_id'],
+            'party_id' => $receivableDealerMainParty ?? null,
+            'detail_account_id' => $data['receivable_dealer_id'] ?? null,
             'description_en' => 'Commission On Sale Of' . $productNameEN . 'of' . $projectNameEN,
             'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
             'document_number' => 'B-A' . '-' . $id,
@@ -1743,8 +1801,8 @@ class BookingApplicationService
             'date' => $data['date'],
             'project_id' => $data['project_id'],
             'invoice_id' => $id,
-            'party_id' => $dealerMainParty ?? null,
-            'detail_account_id' => $data['receivable_dealer_id'],
+            'party_id' => $receivableDealerMainParty ?? null,
+            'detail_account_id' => $data['receivable_dealer_id'] ?? null,
             'description_en' => 'Commission On Sale Of' . $productNameEN . 'of' . $projectNameEN,
             'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی فروخت پر کمیشن',
             'document_number' => 'B-A' . '-' . $id,
@@ -1753,6 +1811,39 @@ class BookingApplicationService
             'debit' => $data['commission'],
             'credit' => 0,
         ];
+
+        $burjCommissionCreditData = [
+            'date' => $data['date'],
+            'project_id' => $data['project_id'],
+            'invoice_id' => $id,
+            'party_id' => $dealerMainParty ?? null,
+            'detail_account_id' => $data['dealer_id'],
+            'description_en' => 'Commission On Sale Of ' . $productNameEN . ' of ' . $projectNameEN,
+            'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی کمیشن',
+            'document_number' => 'B-A' . '-' . $id,
+            'transaction_type' => null,
+            'is_fee_entry' => 0,
+            'debit' => 0,
+            'credit' => $data['burj_commission'] ?? 0,
+        ];
+
+        $burjCommissionDebitData = [
+            'date' => $data['date'],
+            'project_id' => $data['project_id'],
+            'invoice_id' => $id,
+            'party_id' => null,
+            'detail_account_id' => $data['exp_account_id'] ?? null,
+            'description_en' => 'Commission On Sale Of ' . $productNameEN . ' of ' . $projectNameEN,
+            'description_ur' => $projectNameUR . ' کے ' . $productNameUR . ' کی کمیشن',
+            'document_number' => 'B-A' . '-' . $id,
+            'transaction_type' => null,
+            'is_fee_entry' => 0,
+            'debit' => $data['burj_commission'] ?? 0,
+            'credit' => 0,
+        ];
+
+        $generalJournalsBurjCommissionCreditData = $burjCommissionCreditData;
+        $generalJournalsBurjCommissionDebitData = $burjCommissionDebitData;
 
         $discountCreditData = [
             'date' => $data['date'],
@@ -2174,6 +2265,8 @@ class BookingApplicationService
             'receivableCommissionDebitData' => $receivableCommissionDebitData,
             'receivableGeneralJournalsCommissionCreditData' => $receivableGeneralJournalsCommissionCreditData,
             'receivableGeneralJournalsCommissionDebitData' => $receivableGeneralJournalsCommissionDebitData,
+            'burjCommissionCreditData' => $burjCommissionCreditData,
+            'burjCommissionDebitData' => $burjCommissionDebitData,
             'commissionCreditData' => $commissionCreditData,
             'commissionDebitData' => $commissionDebitData,
             'discountDebitData' => $discountDebitData ?? null,
@@ -2181,6 +2274,8 @@ class BookingApplicationService
             'generalJournalCreditData' => $generalJournalCreditData,
             'generalJournalsCommissionCreditData' => $generalJournalsCommissionCreditData,
             'generalJournalsCommissionDebitData' => $generalJournalsCommissionDebitData,
+            'generalJournalsBurjCommissionCreditData' => $generalJournalsBurjCommissionCreditData,
+            'generalJournalsBurjCommissionDebitData' => $generalJournalsBurjCommissionDebitData,
             'generalJournalDebitData' => $generalJournalDebitData,
             // 'sevenEChalanEntries' => $sevenEChalanEntries ?? [],
             'gstEntries' => $gstEntries ?? [],
@@ -2210,11 +2305,17 @@ class BookingApplicationService
             'product_id'       => $data['product_id'],
             'status'       => $data['status'],
             'dealer_id'        => $data['dealer_id'],
+            'project_dealer_id' => $data['project_dealer_id'] ?? null,
+            'project_exp_account_id' => $data['project_exp_account_id'] ?? null,
+            'receivable_dealer_id' => $data['receivable_dealer_id'] ?? null,
+            'receivable_income_account_id' => $data['receivable_income_account_id'] ?? null,
+            'exp_account_id' => $data['exp_account_id'] ?? null,
             'care_off'        => $data['care_off'] ?? null,
             'date'             => $data['date'],
             'add_value'        => $data['add_value'] ?? 0,
             'discount'         => $data['discount'] ?? 0,
             'commission'       => $data['commission'] ?? 0,
+            'burj_commission'  => $data['burj_commission'] ?? 0,
             'total_amount'     => $data['total_amount'] ?? 0,
             'grand_total_amount'  => $data['grand_total_amount'] ?? 0,
             'possession_fees'   => $data['possession_fees'] ?? 0,

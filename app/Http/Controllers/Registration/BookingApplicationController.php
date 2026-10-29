@@ -93,8 +93,8 @@ class BookingApplicationController extends Controller
             ->search($search)
             ->when(
                 $request->boolean('approval_queue'),
-                fn ($query) => $query->where('status', 'Unverified'),
-                fn ($query) => $query->where('status', '!=', 'Unverified')
+                fn($query) => $query->where('status', 'Unverified'),
+                fn($query) => $query->where('status', '!=', 'Unverified')
             )
             ->latest()
             ->paginate(10)
@@ -118,6 +118,15 @@ class BookingApplicationController extends Controller
         $bookingNo = BookingApplication::generateBookingNo();
         $projectSubSubSubHeads = SubSubSubHead::select('id', 'name_en', 'name_ur')->where('project_id', $product->project_id)->pluck('id');
         $bankAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 19)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
+
+
+        $dealerExpAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 181)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
+        $commissionIncomeAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 1174)->where('sub_sub_sub_head_id', 1801)->get();
+        $burjCommExpAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 181)->where('sub_sub_sub_head_id', 16428)->get();
+        $burjDealersAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 39)->where('sub_sub_sub_head_id', 1814)->get();
+
+
+
         $dealerAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 39)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
         $dealerReceivableAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 1176)->get();
         $possessionAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 4)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
@@ -142,7 +151,11 @@ class BookingApplicationController extends Controller
                 'gstAccounts' => $gstAccounts,
                 'sevenEAccounts' => $sevenEAccounts,
                 'operatingChargesAccounts' => $operatingChargesAccounts,
-                'expenseAccounts' => $expenseAccounts
+                'expenseAccounts' => $expenseAccounts,
+                'dealerExpAccounts' => $dealerExpAccounts,
+                'commissionIncomeAccounts' => $commissionIncomeAccounts,
+                'burjCommExpAccounts' => $burjCommExpAccounts,
+                'burjDealersAccounts' => $burjDealersAccounts,
             ],
             $this->getMasterData()
         ));
@@ -157,8 +170,12 @@ class BookingApplicationController extends Controller
         $bookingNo = BookingApplication::generateBookingNo();
         $projectSubSubSubHeads = SubSubSubHead::select('id', 'name_en', 'name_ur')->where('project_id', $product->project_id)->pluck('id');
         $bankAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_head_id', 2)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
+        $dealerExpAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 181)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
+        $burjCommExpAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 181)->where('sub_sub_sub_head_id', 16428)->get();
         $dealerAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 39)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
+        $burjDealersAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 39)->where('sub_sub_sub_head_id', 1814)->get();
         $dealerReceivableAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 1176)->get();
+        $commissionIncomeAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 1174)->where('sub_sub_sub_head_id', 1801)->get();
         $transferAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 6)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
         $transferCharges =  $bookingApplication->total_amount * 0.05;
         $possessionAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 4)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
@@ -173,13 +190,17 @@ class BookingApplicationController extends Controller
             [
                 'product' => $product,
                 'expenseAccounts' => $expenseAccounts,
+                'dealerExpAccounts' => $dealerExpAccounts,
                 'bookingApplication' => $bookingApplication,
                 'bookingNo' => $bookingNo,
                 'bankAccounts' => $bankAccounts,
                 'dealerReceivableAccounts' => $dealerReceivableAccounts,
+                'commissionIncomeAccounts' => $commissionIncomeAccounts,
+                'burjCommExpAccounts' => $burjCommExpAccounts,
                 'transferAccounts' => $transferAccounts,
                 'transferCharges' => $transferCharges,
                 'dealerAccounts' => $dealerAccounts,
+                'burjDealersAccounts' => $burjDealersAccounts,
                 'case' => $case,
                 'possessionAccounts' => $possessionAccounts,
                 'proceedingAccounts' => $proceedingAccounts,
@@ -269,8 +290,12 @@ class BookingApplicationController extends Controller
             $schedules = BookingPaymentShedule::where('booking_id', $booking->id)->get();
             $projectSubSubSubHeads = SubSubSubHead::select('id', 'name_en', 'name_ur')->where('project_id', $product->project_id)->pluck('id');
             $bankAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_head_id', 2)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
+            $dealerExpAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 181)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
             $dealerAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 39)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
+            $burjCommExpAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 181)->where('sub_sub_sub_head_id', 16428)->get();
             $dealerReceivableAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 1176)->get();
+            $burjDealersAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 39)->where('sub_sub_sub_head_id', 1814)->get();
+            $commissionIncomeAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 1174)->where('sub_sub_sub_head_id', 1801)->get();
             $possessionAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 4)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
             $proceedingAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 3)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
             $developmentChargesAccounts = DetailAccount::select('id', 'name_en', 'name_ur')->where('sub_sub_head_id', 9)->whereIn('sub_sub_sub_head_id', $projectSubSubSubHeads)->get();
@@ -287,6 +312,7 @@ class BookingApplicationController extends Controller
                     'schedules' => $schedules,
                     'bankAccounts' => $bankAccounts,
                     'dealerReceivableAccounts' => $dealerReceivableAccounts,
+                    'commissionIncomeAccounts' => $commissionIncomeAccounts,
                     'dealerAccounts' => $dealerAccounts,
                     'possessionAccounts' => $possessionAccounts,
                     'proceedingAccounts' => $proceedingAccounts,
@@ -294,7 +320,10 @@ class BookingApplicationController extends Controller
                     'gstAccounts' => $gstAccounts,
                     'sevenEAccounts' => $sevenEAccounts,
                     'operatingChargesAccounts' => $operatingChargesAccounts,
-                    'expenseAccounts' => $expenseAccounts
+                    'expenseAccounts' => $expenseAccounts,
+                    'dealerExpAccounts' => $dealerExpAccounts,
+                    'burjCommExpAccounts' => $burjCommExpAccounts,
+                    'burjDealersAccounts' => $burjDealersAccounts
                 ],
                 $this->getMasterData()
             ));

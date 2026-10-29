@@ -107,20 +107,44 @@
                     @if ($booking->case === 'transfer')
                         <input type="hidden" name="dealer_id" value="">
                         <input type="hidden" name="receivable_dealer_id" value="">
+                        <input type="hidden" name="project_dealer_id" value="">
+                        <input type="hidden" name="project_exp_account_id" value="">
+                        <input type="hidden" name="receivable_income_account_id" value="">
+                        <input type="hidden" name="exp_account_id" value="">
+                        <input type="hidden" name="burj_commission" value="0">
                     @else
+                        <div class="col-12">
+                            <h4 class="card-title mb-3">@lang('messages.commission_details')</h4>
+                        </div>
                         <div class="col-md-6 mb-3">
-                            <label for="dealer_id">@lang('messages.dealers_liability_account')</label>
-                            <select name="dealer_id" id="dealer_id"
-                                class="form-control select2 form-select @error('dealer_id') is-invalid @enderror">
-                                <option value="">@lang('messages.main_party')</option>
-                                @foreach ($dealerAccounts as $coaDealer)
-                                    <option value="{{ $coaDealer->id }}"
-                                        {{ old('dealer_id', $booking->dealer_id) == $coaDealer->id ? 'selected' : '' }}>
-                                        {{ App::getLocale() === 'ur' ? $coaDealer->name_ur ?? '-' : $coaDealer->name_en ?? '-' }}
+                            <label for="project_exp_account_id">@lang('messages.project_exp_account')</label>
+                            <select name="project_exp_account_id" id="project_exp_account_id"
+                                class="form-control select2 form-select @error('project_exp_account_id') is-invalid @enderror">
+                                <option value="">@lang('messages.project_exp_account')</option>
+                                @foreach ($dealerExpAccounts as $account)
+                                    <option value="{{ $account->id }}"
+                                        {{ old('project_exp_account_id', $booking->project_exp_account_id) == $account->id ? 'selected' : '' }}>
+                                        {{ App::getLocale() === 'ur' ? $account->name_ur ?? '-' : $account->name_en ?? '-' }}
                                     </option>
                                 @endforeach
                             </select>
-                            @error('dealer_id')
+                            @error('project_exp_account_id')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="project_dealer_id">@lang('messages.project_dealer_account')</label>
+                            <select name="project_dealer_id" id="project_dealer_id"
+                                class="form-control select2 form-select @error('project_dealer_id') is-invalid @enderror">
+                                <option value="">@lang('messages.project_dealer_account')</option>
+                                @foreach ($dealerAccounts as $account)
+                                    <option value="{{ $account->id }}"
+                                        {{ old('project_dealer_id', $booking->project_dealer_id) == $account->id ? 'selected' : '' }}>
+                                        {{ App::getLocale() === 'ur' ? $account->name_ur ?? '-' : $account->name_en ?? '-' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('project_dealer_id')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                         </div>
@@ -137,6 +161,54 @@
                                 @endforeach
                             </select>
                             @error('receivable_dealer_id')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="receivable_income_account_id">@lang('messages.receivable_income_account')</label>
+                            <select name="receivable_income_account_id" id="receivable_income_account_id"
+                                class="form-control select2 form-select @error('receivable_income_account_id') is-invalid @enderror">
+                                <option value="">@lang('messages.receivable_income_account')</option>
+                                @foreach ($commissionIncomeAccounts as $account)
+                                    <option value="{{ $account->id }}"
+                                        {{ old('receivable_income_account_id', $booking->receivable_income_account_id) == $account->id ? 'selected' : '' }}>
+                                        {{ App::getLocale() === 'ur' ? $account->name_ur ?? '-' : $account->name_en ?? '-' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('receivable_income_account_id')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="exp_account_id">@lang('messages.burj_exp_account')</label>
+                            <select name="exp_account_id" id="exp_account_id"
+                                class="form-control select2 form-select @error('exp_account_id') is-invalid @enderror">
+                                <option value="">@lang('messages.burj_exp_account')</option>
+                                @foreach ($burjCommExpAccounts as $account)
+                                    <option value="{{ $account->id }}"
+                                        {{ old('exp_account_id', $booking->exp_account_id) == $account->id ? 'selected' : '' }}>
+                                        {{ App::getLocale() === 'ur' ? $account->name_ur ?? '-' : $account->name_en ?? '-' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('exp_account_id')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="dealer_id">@lang('messages.burj_dealer_account')</label>
+                            <select name="dealer_id" id="dealer_id"
+                                class="form-control select2 form-select @error('dealer_id') is-invalid @enderror">
+                                <option value="">@lang('messages.main_party')</option>
+                                @foreach ($burjDealersAccounts as $coaDealer)
+                                    <option value="{{ $coaDealer->id }}"
+                                        {{ old('dealer_id', $booking->dealer_id) == $coaDealer->id ? 'selected' : '' }}>
+                                        {{ App::getLocale() === 'ur' ? $coaDealer->name_ur ?? '-' : $coaDealer->name_en ?? '-' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('dealer_id')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                         </div>
@@ -562,7 +634,7 @@
                                     <input type="hidden" name="add_value" value="0">
                                     <input type="hidden" name="commission" value="0">
                                     <input type="hidden" name="discount" value="0">
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md mb-3">
                                         <label for="total_amount">@lang('messages.total_amount') </label>
                                         <input type="number" class="form-control" id="total_amount" name="total_amount"
                                             step="any" min="0" onwheel="this.blur()"
@@ -577,7 +649,7 @@
                                 </div>
                             @else
                                 <div class="row">
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md mb-3">
                                         <label for="add_value">@lang('messages.add_value') </label>
                                         <input type="number" class="form-control" id="add_value" name="add_value"
                                             step="any" min="0" onwheel="this.blur()"
@@ -587,7 +659,7 @@
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md mb-3">
                                         <label for="discount">@lang('messages.discount') </label>
                                         <input type="number" class="form-control" id="discount" name="discount"
                                             step="any" min="0" onwheel="this.blur()"
@@ -597,7 +669,17 @@
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md mb-3">
+                                        <label for="burj_commission">@lang('messages.burj_commission') </label>
+                                        <input type="number" class="form-control" id="burj_commission" name="burj_commission"
+                                            step="any" min="0" onwheel="this.blur()"
+                                            value="{{ old('burj_commission', $booking->burj_commission) }}"
+                                            placeholder="@lang('messages.burj_commission')" autocomplete="off">
+                                        @error('burj_commission')
+                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md mb-3">
                                         <label for="commission">@lang('messages.commission') </label>
                                         <input type="number" class="form-control" id="commission" name="commission"
                                             step="any" min="0" onwheel="this.blur()"
@@ -607,7 +689,7 @@
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md mb-3">
                                         <label for="total_amount">@lang('messages.total_amount') </label>
                                         <input type="number" class="form-control" id="total_amount" name="total_amount"
                                             step="any" min="0" onwheel="this.blur()"

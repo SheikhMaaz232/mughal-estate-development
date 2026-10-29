@@ -15,6 +15,10 @@ class BookingApplication extends Model implements Auditable
         'party_id',
         'detail_account_id',
         'receivable_dealer_id',
+        'project_dealer_id',
+        'project_exp_account_id',
+        'receivable_income_account_id',
+        'exp_account_id',
         'previous_booking_id',
         'project_id',
         'product_id',
@@ -34,6 +38,7 @@ class BookingApplication extends Model implements Auditable
         'add_value',
         'discount',
         'commission',
+        'burj_commission',
         'total_amount',
         'grand_total_amount',
         'possession_fees',
@@ -117,6 +122,26 @@ class BookingApplication extends Model implements Auditable
     public function receivableDealer()
     {
         return $this->belongsTo(DetailAccount::class, 'receivable_dealer_id');
+    }
+
+    public function projectDealer()
+    {
+        return $this->belongsTo(DetailAccount::class, 'project_dealer_id');
+    }
+
+    public function projectExpenseAccount()
+    {
+        return $this->belongsTo(DetailAccount::class, 'project_exp_account_id');
+    }
+
+    public function receivableIncomeAccount()
+    {
+        return $this->belongsTo(DetailAccount::class, 'receivable_income_account_id');
+    }
+
+    public function expenseAccount()
+    {
+        return $this->belongsTo(DetailAccount::class, 'exp_account_id');
     }
 
     public function nominee()
