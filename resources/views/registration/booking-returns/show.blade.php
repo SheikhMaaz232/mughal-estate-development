@@ -368,7 +368,8 @@
 
             <div style="margin-bottom:15px;">
                 <p>
-                    “<b>Important!</b>   I acknowledge that the above plot has been cancelled at my request in accordance with the
+                    “<b>Important!</b> I acknowledge that the above plot has been cancelled at my request in accordance
+                    with the
                     cancellation policy of the company. The refundable amount will be paid in accordance with the
                     company’s policy and procedure.
                     I fully agree that I will not bring any legal claim, suit or action against the company, its
@@ -382,9 +383,9 @@
 
         <!-- Signatures -->
         <div class="signatures2" style="margin-top: 1.2in;">
-            <div>Accountant Signature</div>
-            <div>Customer Signature</div>
             <div>Company Signature</div>
+            <div>Customer Signature</div>
+            <div>Accountant Signature</div>
         </div>
 
     </div>

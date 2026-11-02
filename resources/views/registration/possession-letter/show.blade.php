@@ -279,7 +279,8 @@
 
                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px;">
                         <tr>
-                            <td>East Side:<span class="value" style="display:inline-block; width:135px; text-align:center;">
+                            <td>East Side:<span class="value"
+                                    style="display:inline-block; width:135px; text-align:center;">
                                     {{ $possessionLetter->east_side ?? '' }}</span></td>
                             <td>Bounded by:<span class="value"
                                     style="display:inline-block; width:134px; text-align:center;">{{ $possessionLetter->east_bounded_by ?? '' }}</span>
@@ -317,7 +318,7 @@
 
                     <p style="margin: 0 0 6px 0;">
                         2. Total(Standard) Area:
-                         K<span class="value"
+                        K<span class="value"
                             style=" width:5% !important; text-align:center;">{{ $possessionLetter->kanal ?? '' }}</span>
                         M<span class="value"
                             style="width:5%; text-align:center;">{{ $possessionLetter->marla ?? '' }}</span><br>
@@ -326,8 +327,9 @@
                     </p>
 
                     <p style="margin: 0 0 6px 0;">3. I, the allottee of the plot, hereby undertake that:</p>
-                    <p style="margin: 0 0 6px 0;">1. I shall not indulge in any unauthorized encroachments and violations of the Bye-Laws of
-                    Authorities.</p>
+                    <p style="margin: 0 0 6px 0;">1. I shall not indulge in any unauthorized encroachments and
+                        violations of the Bye-Laws of
+                        Authorities.</p>
                 </div>
 
                 <!-- RIGHT COLUMN (Compass + Grid) -->
@@ -400,9 +402,9 @@
         </div>
         <!-- Signatures -->
         <div class="signatures2">
-            <div>Site Engineer Signature</div>
-            <div>Customer Signature</div>
             <div>Company Signature</div>
+            <div>Customer Signature</div>
+            <div>Site Engineer Signature</div>
         </div>
 
     </div>
