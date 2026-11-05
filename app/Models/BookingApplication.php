@@ -81,7 +81,7 @@ class BookingApplication extends Model implements Auditable
 
     public function dealer()
     {
-        return $this->belongsTo(DetailAccount::class, 'dealer_id');
+        return $this->belongsTo(DetailAccount::class, 'project_dealer_id');
     }
 
     public function possessionFeesReceivableAccount()
