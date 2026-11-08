@@ -65,6 +65,7 @@ class CashReceiptVoucherService
         $cashReceiptVoucher = CashReceiptVoucher::findOrFail($id);
         $documentNo = 'CRV' . '-' . $id;
         AccountLedger::where('document_number', $documentNo)->where('invoice_id', $id)->delete();
+        GeneralJournal::where('document_number', $documentNo)->where('invoice_id', $id)->delete();
         //  delete the cashReceiptVoucher
         return $cashReceiptVoucher->delete();
     }

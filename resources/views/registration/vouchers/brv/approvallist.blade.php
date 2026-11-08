@@ -80,7 +80,8 @@
                     <button class="btn btn-primary" type="submit">@lang('messages.search')</button>
 
                     @if (request()->hasAny(['detail_account_id', 'bank_id']))
-                        <a href="{{ route('bank-receipt-voucher.approval-list') }}" class="btn btn-secondary">@lang('messages.clear')</a>
+                        <a href="{{ route('bank-receipt-voucher.approval-list') }}"
+                            class="btn btn-secondary">@lang('messages.clear')</a>
                     @endif
                 </div>
             </div>
@@ -151,20 +152,20 @@
 
                                             </form>
                                         @endif
+
+                                        <form method="POST"
+                                            action="{{ route('bank-receipt-voucher.destroy', $bankReceiptVoucher->id) }}"
+                                            class="d-inline-block delete-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button"
+                                                class="btn btn-sm btn-alt-danger js-bs-tooltip-enabled btn-delete"
+                                                data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                                <i class="fa fa-fw fa-times text-danger"></i>
+                                            </button>
+
+                                        </form>
                                         @if ($bankReceiptVoucher->status === 'verified')
-                                            <form method="POST"
-                                                action="{{ route('bank-receipt-voucher.destroy', $bankReceiptVoucher->id) }}"
-                                                class="d-inline-block delete-form">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button"
-                                                    class="btn btn-sm btn-alt-danger js-bs-tooltip-enabled btn-delete"
-                                                    data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                                                    <i class="fa fa-fw fa-times text-danger"></i>
-                                                </button>
-
-                                            </form>
-
                                             <a href="{{ route('bank-receipt-voucher.show', $bankReceiptVoucher->id) }}"
                                                 class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
                                                 data-bs-toggle="tooltip" aria-label="View bankReceiptVoucher"

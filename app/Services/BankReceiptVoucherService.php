@@ -64,7 +64,8 @@ class BankReceiptVoucherService
         $bankReceiptVoucher = BankReceiptVoucher::findOrFail($id);
         $documentNo = 'BRV' . '-' . $id;
         AccountLedger::where('document_number', $documentNo)->where('invoice_id', $id)->delete();
-        //  delete the bankReceiptVoucher
+        GeneralJournal::where('document_number', $documentNo)->where('invoice_id', $id)->delete();
+        // delete the bankReceiptVoucher
         return $bankReceiptVoucher->delete();
     }
 

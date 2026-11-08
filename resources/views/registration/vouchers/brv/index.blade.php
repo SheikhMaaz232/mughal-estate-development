@@ -156,21 +156,22 @@
                                                 </form>
                                             @endcan
                                         @endif
-                                        @if ($bankReceiptVoucher->status === 'verified')
-                                            @can('brv.delete')
-                                                <form method="POST"
-                                                    action="{{ route('bank-receipt-voucher.destroy', $bankReceiptVoucher->id) }}"
-                                                    class="d-inline-block delete-form">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-alt-danger js-bs-tooltip-enabled btn-delete"
-                                                        data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                                                        <i class="fa fa-fw fa-times text-danger"></i>
-                                                    </button>
 
-                                                </form>
-                                            @endcan
+                                        @can('brv.delete')
+                                            <form method="POST"
+                                                action="{{ route('bank-receipt-voucher.destroy', $bankReceiptVoucher->id) }}"
+                                                class="d-inline-block delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button"
+                                                    class="btn btn-sm btn-alt-danger js-bs-tooltip-enabled btn-delete"
+                                                    data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                                    <i class="fa fa-fw fa-times text-danger"></i>
+                                                </button>
+
+                                            </form>
+                                        @endcan
+                                        @if ($bankReceiptVoucher->status === 'verified')
                                             @can('brv.show')
                                                 <a href="{{ route('bank-receipt-voucher.show', $bankReceiptVoucher->id) }}"
                                                     class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
