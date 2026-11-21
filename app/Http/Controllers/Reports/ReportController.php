@@ -1102,7 +1102,7 @@ class ReportController extends Controller
                         continue;
                     }
 
-                    $nodes =& $chart[$mainHeadId]['children'];
+                    $nodes = &$chart[$mainHeadId]['children'];
                     $path = [
                         ['id' => $account->control_head_id, 'type' => 'control', 'model' => $account->controlHead],
                         ['id' => $account->sub_head_id, 'type' => 'sub', 'model' => $account->subHead],
@@ -1125,7 +1125,7 @@ class ReportController extends Controller
                                 'children' => [],
                             ];
                         }
-                        $nodes =& $nodes[$key]['children'];
+                        $nodes = &$nodes[$key]['children'];
                     }
 
                     $detailKey = 'detail-' . $account->id;
@@ -1330,12 +1330,12 @@ class ReportController extends Controller
 
     public function directProductProjectReportFilter()
     {
-
         return view('exective_reports.direct_products.filterFile', $this->getMasterData());
     }
 
     public function directProductProjectReport(Request $request)
     {
+
         $query = Product::with('project')
             ->where('type', 'Direct');
 
@@ -1356,6 +1356,8 @@ class ReportController extends Controller
             ->values();
 
         $bookedAmountByProject = BookingApplication::whereIn('product_id', $bookedProductIds)
+            ->where('case', '!=', 'ownership_changed')
+            ->where('status', '=', 'Verified')
             ->selectRaw('project_id, SUM(total_amount) as total_amount')
             ->groupBy('project_id')
             ->get()
@@ -1365,10 +1367,11 @@ class ReportController extends Controller
 
 
 
-        $bookingApplications = BookingApplication::whereIn(
-            'product_id',
-            $bookedProductIds
-        )
+        $bookingApplications = BookingApplication::where('case', '!=', 'ownership_changed')
+            ->where('status', '=', 'Verified')->whereIn(
+                'product_id',
+                $bookedProductIds
+            )
             ->whereNotNull('detail_account_id')
             ->get([
                 'id',
@@ -1398,6 +1401,79 @@ class ReportController extends Controller
                 ];
             });
 
+        $receivedPossessionAmountByAccount = AccountLedger::whereIn(
+            'detail_account_id',
+            $detailAccountIds
+        )
+            ->where('transaction_type', 'possession_fees')
+            ->selectRaw('detail_account_id, SUM(credit) as received_amount')
+            ->groupBy('detail_account_id')
+            ->get()
+            ->mapWithKeys(function ($row) {
+                return [
+                    $row->detail_account_id => (float) $row->received_amount
+                ];
+            });
+
+        $receivedProceedingAmountByAccount = AccountLedger::whereIn(
+            'detail_account_id',
+            $detailAccountIds
+        )
+            ->where('transaction_type', 'proceeding_fees')
+            ->selectRaw('detail_account_id, SUM(credit) as received_amount')
+            ->groupBy('detail_account_id')
+            ->get()
+            ->mapWithKeys(function ($row) {
+                return [
+                    $row->detail_account_id => (float) $row->received_amount
+                ];
+            });
+
+        $receivedDevelopmentAmountByAccount = AccountLedger::whereIn(
+            'detail_account_id',
+            $detailAccountIds
+        )
+            ->where('transaction_type', 'development_charges')
+            ->selectRaw('detail_account_id, SUM(credit) as received_amount')
+            ->groupBy('detail_account_id')
+            ->get()
+            ->mapWithKeys(function ($row) {
+                return [
+                    $row->detail_account_id => (float) $row->received_amount
+                ];
+            });
+
+        $receivedGSTAmountByAccount = AccountLedger::whereIn(
+            'detail_account_id',
+            $detailAccountIds
+        )
+            ->where('transaction_type', 'gst')
+            ->selectRaw('detail_account_id, SUM(credit) as received_amount')
+            ->groupBy('detail_account_id')
+            ->get()
+            ->mapWithKeys(function ($row) {
+                return [
+                    $row->detail_account_id => (float) $row->received_amount
+                ];
+            });
+
+
+        $receivedRegistryAmountByAccount = AccountLedger::whereIn(
+            'detail_account_id',
+            $detailAccountIds
+        )
+            ->where('transaction_type', 'registry_fees')
+            ->selectRaw('detail_account_id, SUM(credit) as received_amount')
+            ->groupBy('detail_account_id')
+            ->get()
+            ->mapWithKeys(function ($row) {
+                return [
+                    $row->detail_account_id => (float) $row->received_amount
+                ];
+            });
+
+
+
         /*
     |--------------------------------------------------------------------------
     | Received Amount By Project
@@ -1418,12 +1494,85 @@ class ReportController extends Controller
                 ];
             });
 
+        $receivedPossessionAmountByProject = $bookingApplications
+            ->groupBy('project_id')
+            ->mapWithKeys(function ($applications, $projectId) use ($receivedPossessionAmountByAccount) {
+
+                $receivedAmount = $applications->sum(function ($application) use ($receivedPossessionAmountByAccount) {
+
+                    return $receivedPossessionAmountByAccount[$application->detail_account_id] ?? 0;
+                });
+
+                return [
+                    $projectId => (float) $receivedAmount
+                ];
+            });
+
+        $receivedProceedingAmountByProject = $bookingApplications
+            ->groupBy('project_id')
+            ->mapWithKeys(function ($applications, $projectId) use ($receivedProceedingAmountByAccount) {
+
+                $receivedAmount = $applications->sum(function ($application) use ($receivedProceedingAmountByAccount) {
+
+                    return $receivedProceedingAmountByAccount[$application->detail_account_id] ?? 0;
+                });
+
+                return [
+                    $projectId => (float) $receivedAmount
+                ];
+            });
+
+        $receivedDevelopmentAmountByProject = $bookingApplications
+            ->groupBy('project_id')
+            ->mapWithKeys(function ($applications, $projectId) use ($receivedDevelopmentAmountByAccount) {
+
+                $receivedAmount = $applications->sum(function ($application) use ($receivedDevelopmentAmountByAccount) {
+
+                    return $receivedDevelopmentAmountByAccount[$application->detail_account_id] ?? 0;
+                });
+
+                return [
+                    $projectId => (float) $receivedAmount
+                ];
+            });
+
+        $receivedGSTAmountByProject = $bookingApplications
+            ->groupBy('project_id')
+            ->mapWithKeys(function ($applications, $projectId) use ($receivedGSTAmountByAccount) {
+
+                $receivedAmount = $applications->sum(function ($application) use ($receivedGSTAmountByAccount) {
+
+                    return $receivedGSTAmountByAccount[$application->detail_account_id] ?? 0;
+                });
+
+                return [
+                    $projectId => (float) $receivedAmount
+                ];
+            });
+
+        $receivedRegistryAmountByProject = $bookingApplications
+            ->groupBy('project_id')
+            ->mapWithKeys(function ($applications, $projectId) use ($receivedRegistryAmountByAccount) {
+
+                $receivedAmount = $applications->sum(function ($application) use ($receivedRegistryAmountByAccount) {
+
+                    return $receivedRegistryAmountByAccount[$application->detail_account_id] ?? 0;
+                });
+
+                return [
+                    $projectId => (float) $receivedAmount
+                ];
+            });
+
         $grandTotals = [
             'marla_all' => $products->sum('total_marla'),
             'amount_all' => $products->sum('total_amount'),
             'marla_booked' => $products->filter(fn($product) => strtolower((string) $product->status) === 'booked')->sum('total_marla'),
             'amount_booked' => $bookedAmountByProject->sum(),
             'amount_received' => $receivedAmountByProject->sum(),
+            'amount_received_proceeding' => $receivedProceedingAmountByProject->sum(),
+            'amount_received_development' => $receivedDevelopmentAmountByProject->sum(),
+            'amount_received_gst' => $receivedGSTAmountByProject->sum(),
             'marla_verified' => $products->filter(fn($product) => strtolower((string) $product->status) === 'verified')->sum('total_marla'),
             'amount_verified' => $products->filter(fn($product) => strtolower((string) $product->status) === 'verified')->sum('total_amount'),
         ];
@@ -1432,7 +1581,12 @@ class ReportController extends Controller
             'groupedProjects',
             'grandTotals',
             'bookedAmountByProject',
-            'receivedAmountByProject'
+            'receivedAmountByProject',
+            'receivedPossessionAmountByProject',
+            'receivedProceedingAmountByProject',
+            'receivedDevelopmentAmountByProject',
+            'receivedGSTAmountByProject',
+            'receivedRegistryAmountByProject'
         ));
     }
 
@@ -1658,7 +1812,7 @@ class ReportController extends Controller
 
 
         // ONLY VERIFIED BOOKINGS
-        $query->whereRaw('LOWER(status) = ?', ['verified']);
+        $query->whereRaw('LOWER(status) = ?', ['Verified']);
 
         // EXCLUDE OWNERSHIP CHANGED
         $query->where(function ($q) {
