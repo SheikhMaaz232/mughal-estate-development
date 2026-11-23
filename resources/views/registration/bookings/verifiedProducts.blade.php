@@ -124,11 +124,13 @@
 
                                             </form>
                                         @elseif ($product->status === 'Verified')
-                                            <a href="{{ route('bookings.create', ['product_id' => $product->id]) }}"
-                                                class="btn btn-sm btn-info js-bs-tooltip-enabled" data-bs-toggle="tooltip"
-                                                aria-label="Add Booking" data-bs-original-title="Add Booking">
-                                                <i class="fa fa-fw fa-calendar-plus"></i>
-                                            </a>
+                                            @can('booking.create')
+                                                <a href="{{ route('bookings.create', ['product_id' => $product->id]) }}"
+                                                    class="btn btn-sm btn-info js-bs-tooltip-enabled" data-bs-toggle="tooltip"
+                                                    aria-label="Add Booking" data-bs-original-title="Add Booking">
+                                                    <i class="fa fa-fw fa-calendar-plus"></i>
+                                                </a>
+                                            @endcan
                                         @endif
                                     </div>
                                 </td>

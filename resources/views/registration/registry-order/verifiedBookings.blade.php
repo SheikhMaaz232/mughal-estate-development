@@ -144,13 +144,14 @@
                                 </td>
 
                                 <td class="text-left">
-
+                                    @can('registry-order.create')
                                     <a href="{{ route('registry-order.create', ['id' => $booking->id]) }}"
                                         class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip"
                                         aria-label="View Booking" data-bs-original-title="View Booking"><i
                                             class="fa fa-file-alt me-1"></i> @lang('messages.registry-letter')
 
                                     </a>
+                                     @endcan
 
                                 </td>
 

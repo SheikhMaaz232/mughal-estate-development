@@ -144,6 +144,7 @@
                                     @endif
                                 </td>
 
+                                @can('possession-letter.create')
                                 <td class="text-left">
 
                                     <a href="{{ route('possession-letter.create', ['id' => $booking->id]) }}"
@@ -154,7 +155,7 @@
                                     </a>
 
                                 </td>
-
+                                @endcan
 
 
                             </tr>

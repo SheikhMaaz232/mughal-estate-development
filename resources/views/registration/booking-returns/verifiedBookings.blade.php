@@ -157,26 +157,25 @@
 
                                 <td class="text-left">
                                     @if ($booking->status !== 'Cancelled' && $booking->status === 'Verified')
-                                        <div class="mt-2">
+                                        @can('booking-returns.create')
                                             <div class="mt-2">
-                                                <form method="GET" action="{{ route('bookingReturns.create') }}"
-                                                    class="d-inline-block">
-                                                    @csrf
-                                                    <input type="hidden" name="booking_id" value="{{ $booking->id }}">
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-primary js-bs-tooltip-enabled btn-cancel"
-                                                        data-bs-toggle="modal" data-bs-target="#confirmCancelModal">
-                                                        @lang('messages.cancel_booking')
-                                                    </button>
-                                                </form>
+                                                <div class="mt-2">
+                                                    <form method="GET" action="{{ route('bookingReturns.create') }}"
+                                                        class="d-inline-block">
+                                                        @csrf
+                                                        <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                                                        <button type="button"
+                                                            class="btn btn-sm btn-primary js-bs-tooltip-enabled btn-cancel"
+                                                            data-bs-toggle="modal" data-bs-target="#confirmCancelModal">
+                                                            @lang('messages.cancel_booking')
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endcan
                                     @endif
 
                                 </td>
-
-
-
                             </tr>
                         @endforeach
                     </tbody>

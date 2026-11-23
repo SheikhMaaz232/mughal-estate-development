@@ -37,7 +37,7 @@
         @endif
 
         <form method="GET" action="{{ route('bookings.bookingListing') }}">
-            @if(request()->boolean('approval_queue'))
+            @if (request()->boolean('approval_queue'))
                 <input type="hidden" name="approval_queue" value="1">
             @endif
             <div class="row">
@@ -121,7 +121,8 @@
                     <button class="btn btn-primary" type="submit">@lang('messages.search')</button>
 
                     @if (request()->hasAny(['search', 'project_id']))
-                        <a href="{{ route('bookings.bookingListing', request()->boolean('approval_queue') ? ['approval_queue' => 1] : []) }}" class="btn btn-secondary">@lang('messages.clear')</a>
+                        <a href="{{ route('bookings.bookingListing', request()->boolean('approval_queue') ? ['approval_queue' => 1] : []) }}"
+                            class="btn btn-secondary">@lang('messages.clear')</a>
                     @endif
                 </div>
             </div>
@@ -188,80 +189,91 @@
                                         {{-- First row with edit, delete, verify --}}
                                         <div class="btn-group mb-2">
                                             @if ($booking->status !== 'Cancelled')
-                                                {{-- Edit button --}}
-                                                <a href="{{ route('bookings.edit', $booking->id) }}"
-                                                    class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                                    data-bs-toggle="tooltip" aria-label="Edit booking"
-                                                    data-bs-original-title="Edit booking">
-                                                    <i class="fa fa-fw fa-pencil-alt"></i>
-                                                </a>
+                                                @can('booking.edit')
+                                                    {{-- Edit button --}}
+                                                    <a href="{{ route('bookings.edit', $booking->id) }}"
+                                                        class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                        data-bs-toggle="tooltip" aria-label="Edit booking"
+                                                        data-bs-original-title="Edit booking">
+                                                        <i class="fa fa-fw fa-pencil-alt"></i>
+                                                    </a>
+                                                @endcan
                                             @endif
 
                                             {{-- Delete button --}}
                                             @if ($booking->status === 'Unverified')
-                                                <form method="POST" action="{{ route('bookings.destroy', $booking->id) }}"
-                                                    class="d-inline-block delete-form">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-alt-danger js-bs-tooltip-enabled btn-delete"
-                                                        data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                                                        <i class="fa fa-fw fa-times text-danger"></i>
-                                                    </button>
-                                                </form>
+                                                @can('booking.delete')
+                                                    <form method="POST"
+                                                        action="{{ route('bookings.destroy', $booking->id) }}"
+                                                        class="d-inline-block delete-form">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button"
+                                                            class="btn btn-sm btn-alt-danger js-bs-tooltip-enabled btn-delete"
+                                                            data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                                            <i class="fa fa-fw fa-times text-danger"></i>
+                                                        </button>
+                                                    </form>
+                                                @endcan
                                             @endif
 
                                             {{-- Verify button (only if unverified) --}}
                                             @if ($booking->status === 'Unverified')
-                                                <form method="POST"
-                                                    action="{{ route('bookings.updateStatus', $booking->id) }}"
-                                                    class="d-inline-block">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    @if ($booking->case === 'First Booking')
-                                                        <input type="hidden" name="status" value="Verified">
-                                                    @else
-                                                        <input type="hidden" name="status" value="Verified">
-                                                        <input type="hidden" name="case" value="ownership_changed">
-                                                    @endif
+                                                @can('booking.approve')
+                                                    <form method="POST"
+                                                        action="{{ route('bookings.updateStatus', $booking->id) }}"
+                                                        class="d-inline-block">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        @if ($booking->case === 'First Booking')
+                                                            <input type="hidden" name="status" value="Verified">
+                                                        @else
+                                                            <input type="hidden" name="status" value="Verified">
+                                                            <input type="hidden" name="case" value="ownership_changed">
+                                                        @endif
 
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-success js-bs-tooltip-enabled btn-verify"
-                                                        data-bs-toggle="modal" data-bs-target="#confirmVerifyModal"
-                                                        aria-label="Verify booking"
-                                                        data-bs-original-title="Verify booking">
-                                                        <i class="fa fa-fw fa-check"></i>
-                                                    </button>
-                                                </form>
+                                                        <button type="button"
+                                                            class="btn btn-sm btn-success js-bs-tooltip-enabled btn-verify"
+                                                            data-bs-toggle="modal" data-bs-target="#confirmVerifyModal"
+                                                            aria-label="Verify booking"
+                                                            data-bs-original-title="Verify booking">
+                                                            <i class="fa fa-fw fa-check"></i>
+                                                        </button>
+                                                    </form>
+                                                @endcan
                                             @endif
                                         </div>
 
                                         @if ($booking->status !== 'Unverified')
-                                            <a href="{{ route('bookings.show', $booking->id) }}"
-                                                class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                                data-bs-toggle="tooltip" aria-label="View Booking"
-                                                data-bs-original-title="View Booking">
-                                                <i class="fa fa-fw fa-eye"></i>
-                                            </a>
+                                            @can('booking.show')
+                                                <a href="{{ route('bookings.show', $booking->id) }}"
+                                                    class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                    data-bs-toggle="tooltip" aria-label="View Booking"
+                                                    data-bs-original-title="View Booking">
+                                                    <i class="fa fa-fw fa-eye"></i>
+                                                </a>
+                                            @endcan
                                         @endif
 
                                         {{-- Second row with your new button --}}
                                         @if ($booking->status !== 'Cancelled' && $booking->status === 'Verified')
-                                            <div class="mt-2">
+                                            @can('booking-returns.create')
                                                 <div class="mt-2">
-                                                    <form method="GET" action="{{ route('bookingReturns.create') }}"
-                                                        class="d-inline-block">
-                                                        @csrf
-                                                        <input type="hidden" name="booking_id"
-                                                            value="{{ $booking->id }}">
-                                                        <button type="button"
-                                                            class="btn btn-sm btn-primary js-bs-tooltip-enabled btn-cancel"
-                                                            data-bs-toggle="modal" data-bs-target="#confirmCancelModal">
-                                                            @lang('messages.cancel_booking')
-                                                        </button>
-                                                    </form>
+                                                    <div class="mt-2">
+                                                        <form method="GET" action="{{ route('bookingReturns.create') }}"
+                                                            class="d-inline-block">
+                                                            @csrf
+                                                            <input type="hidden" name="booking_id"
+                                                                value="{{ $booking->id }}">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-primary js-bs-tooltip-enabled btn-cancel"
+                                                                data-bs-toggle="modal" data-bs-target="#confirmCancelModal">
+                                                                @lang('messages.cancel_booking')
+                                                            </button>
+                                                        </form>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            @endcan
                                         @endif
                                         {{-- <form method="POST" action="{{ route('bookings.scheduleCreate', $booking->id) }}"
                                         class="d-inline-block">
@@ -275,40 +287,44 @@
                                         </button>
                                         </form> --}}
                                         @if ($booking->status === 'Verified')
-                                            <form method="POST"
-                                                action="{{ route('bookings.pre-clearanceLetter', $booking->id) }}"
-                                                class="d-inline-block">
-                                                @csrf
-                                                @method('PATCH')
+                                            @can('booking.pre-clearanceLetter')
+                                                <form method="POST"
+                                                    action="{{ route('bookings.pre-clearanceLetter', $booking->id) }}"
+                                                    class="d-inline-block">
+                                                    @csrf
+                                                    @method('PATCH')
 
-                                                <button type="submit" class="btn btn-sm btn-primary"
-                                                    style="margin-top: 5px !important;"
-                                                    onclick="openPreview({{ $booking->id }})">
-                                                    @lang('messages.pre-clearanceLetter')
-                                                </button>
-                                            </form>
-                                            <form method="POST"
-                                                action="{{ route('bookings.clearanceLetter', $booking->id) }}"
-                                                class="d-inline-block">
-                                                @csrf
-                                                @method('PATCH')
+                                                    <button type="submit" class="btn btn-sm btn-primary"
+                                                        style="margin-top: 5px !important;"
+                                                        onclick="openPreview({{ $booking->id }})">
+                                                        @lang('messages.pre-clearanceLetter')
+                                                    </button>
+                                                </form>
+                                                <form method="POST"
+                                                    action="{{ route('bookings.clearanceLetter', $booking->id) }}"
+                                                    class="d-inline-block">
+                                                    @csrf
+                                                    @method('PATCH')
 
-                                                <button type="submit" class="btn btn-sm btn-primary"
-                                                    style="margin-top: 5px !important;"
-                                                    onclick="openPreview({{ $booking->id }})">
-                                                    @lang('messages.clearanceLetter')
-                                                </button>
-                                            </form>
+                                                    <button type="submit" class="btn btn-sm btn-primary"
+                                                        style="margin-top: 5px !important;"
+                                                        onclick="openPreview({{ $booking->id }})">
+                                                        @lang('messages.clearanceLetter')
+                                                    </button>
+                                                </form>
+                                            @endcan
 
-                                            <form action="{{ route('bookings.transfer') }}" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="booking_id" value="{{ $booking->id }}">
-                                                <button type="submit" class="btn btn-sm btn-primary"
-                                                    style="margin-top: 5px !important;"
-                                                    onclick="openPreview({{ $booking->id }})">
-                                                    @lang('messages.transfer')
-                                                </button>
-                                            </form>
+                                            @can('booking.transfer')
+                                                <form action="{{ route('bookings.transfer') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                                                    <button type="submit" class="btn btn-sm btn-primary"
+                                                        style="margin-top: 5px !important;"
+                                                        onclick="openPreview({{ $booking->id }})">
+                                                        @lang('messages.transfer')
+                                                    </button>
+                                                </form>
+                                            @endcan
                                             {{--
                                         <form method="POST" action="{{ route('bookings.transfer', $booking->id) }}"
                                             class="d-inline-block">
@@ -321,21 +337,24 @@
                                                 @lang('messages.transfer')
                                             </button>
                                         </form> --}}
-                                            <a href="{{ route('registry-order.create', ['id' => $booking->id]) }}"
-                                                class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled mt-2"
-                                                data-bs-toggle="tooltip" aria-label="View Booking"
-                                                data-bs-original-title="View Booking">
-                                                @lang('messages.registry-letter')
+                                            @can('registry-order.create')
+                                                <a href="{{ route('registry-order.create', ['id' => $booking->id]) }}"
+                                                    class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled mt-2"
+                                                    data-bs-toggle="tooltip" aria-label="View Booking"
+                                                    data-bs-original-title="View Booking">
+                                                    @lang('messages.registry-letter')
 
-                                            </a>
+                                                </a>
+                                            @endcan
+                                            @can('possession-letter.create')
+                                                <a href="{{ route('possession-letter.create', ['id' => $booking->id]) }}"
+                                                    class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled mt-2"
+                                                    data-bs-toggle="tooltip" aria-label="View Booking"
+                                                    data-bs-original-title="View Booking">
+                                                    @lang('messages.possession-letter')
 
-                                            <a href="{{ route('possession-letter.create', ['id' => $booking->id]) }}"
-                                                class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled mt-2"
-                                                data-bs-toggle="tooltip" aria-label="View Booking"
-                                                data-bs-original-title="View Booking">
-                                                @lang('messages.possession-letter')
-
-                                            </a>
+                                                </a>
+                                            @endcan
                                         @endif
                                     </td>
                                 @endif
@@ -344,50 +363,54 @@
                         @endforeach
                     </tbody>
                 </table>
-                <div class="modal fade" id="confirmVerifyModal" tabindex="-1" aria-labelledby="confirmVerifyLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header bg-success text-white">
-                                <h5 class="modal-title" id="confirmVerifyLabel">@lang('messages.confirm_verification')</h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                                    aria-label="@lang('messages.close')"></button>
-                            </div>
-                            <div class="modal-body text-center">
-                                <p>@lang('messages.verify_confirmation_text_booking')</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-alt-secondary"
-                                    data-bs-dismiss="modal">@lang('messages.cancel')</button>
-                                <button type="button" class="btn btn-success"
-                                    id="confirmVerifyBtn">@lang('messages.yes_verify')</button>
+                @can('booking.approve')
+                    <div class="modal fade" id="confirmVerifyModal" tabindex="-1" aria-labelledby="confirmVerifyLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header bg-success text-white">
+                                    <h5 class="modal-title" id="confirmVerifyLabel">@lang('messages.confirm_verification')</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                        aria-label="@lang('messages.close')"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <p>@lang('messages.verify_confirmation_text_booking')</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-alt-secondary"
+                                        data-bs-dismiss="modal">@lang('messages.cancel')</button>
+                                    <button type="button" class="btn btn-success"
+                                        id="confirmVerifyBtn">@lang('messages.yes_verify')</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endcan
 
                 {{-- Cancel Confirmation Modal --}}
-                <div class="modal fade" id="confirmCancelModal" tabindex="-1" aria-labelledby="confirmCancelModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="confirmCancelModalLabel">@lang('messages.cancel_booking')</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="@lang('messages.close')"></button>
-                            </div>
-                            <div class="modal-body">
-                                @lang('messages.are_you_sure_cancel')
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">@lang('messages.no')</button>
-                                <button type="button" class="btn btn-danger"
-                                    id="confirmCancelButton">@lang('messages.yes_cancel')</button>
+                @can('booking.cancel')
+                    <div class="modal fade" id="confirmCancelModal" tabindex="-1" aria-labelledby="confirmCancelModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="confirmCancelModalLabel">@lang('messages.cancel_booking')</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="@lang('messages.close')"></button>
+                                </div>
+                                <div class="modal-body">
+                                    @lang('messages.are_you_sure_cancel')
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">@lang('messages.no')</button>
+                                    <button type="button" class="btn btn-danger"
+                                        id="confirmCancelButton">@lang('messages.yes_cancel')</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endcan
 
                 <!-- Pagination -->
                 <div class="d-flex justify-content-center">
@@ -398,35 +421,40 @@
     </div>
     <script>
         let currentVerifyForm;
+        const confirmVerifyButton = document.getElementById('confirmVerifyBtn');
 
-        // When verify button clicked
-        document.querySelectorAll('.btn-verify').forEach(button => {
-            button.addEventListener('click', function() {
-                currentVerifyForm = this.closest('form'); // store current form
+        if (confirmVerifyButton) {
+            document.querySelectorAll('.btn-verify').forEach(button => {
+                button.addEventListener('click', function() {
+                    currentVerifyForm = this.closest('form');
+                });
             });
-        });
 
-        document.getElementById('confirmVerifyBtn').addEventListener('click', function() {
-            if (currentVerifyForm) {
-                this.disabled = true; // prevent double-click
-                this.innerText = '{{ __('messages.processing') }}';
-                currentVerifyForm.submit();
-            }
-        });
+            confirmVerifyButton.addEventListener('click', function() {
+                if (currentVerifyForm) {
+                    this.disabled = true;
+                    this.innerText = '{{ __('messages.processing') }}';
+                    currentVerifyForm.submit();
+                }
+            });
+        }
     </script>
     <script>
         let currentCancelForm;
+        const confirmCancelButton = document.getElementById('confirmCancelButton');
 
-        document.querySelectorAll('.btn-cancel').forEach(button => {
-            button.addEventListener('click', function() {
-                currentCancelForm = this.closest('form'); // store form reference
+        if (confirmCancelButton) {
+            document.querySelectorAll('.btn-cancel').forEach(button => {
+                button.addEventListener('click', function() {
+                    currentCancelForm = this.closest('form');
+                });
             });
-        });
 
-        document.getElementById('confirmCancelButton').addEventListener('click', function() {
-            if (currentCancelForm) {
-                currentCancelForm.submit();
-            }
-        });
+            confirmCancelButton.addEventListener('click', function() {
+                if (currentCancelForm) {
+                    currentCancelForm.submit();
+                }
+            });
+        }
     </script>
 @endsection

@@ -27,7 +27,7 @@
         @endif
 
         <form method="GET" action="{{ route('bookingReturns.index') }}">
-            @if(request()->boolean('approval_queue'))
+            @if (request()->boolean('approval_queue'))
                 <input type="hidden" name="approval_queue" value="1">
             @endif
             <div class="row">
@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="row mb-3">
-                 <div class="col-lg-6">
+                <div class="col-lg-6">
                     <label for="search">@lang('messages.booking_application_no')</label>
                     <input type="number" step="any" min="0" onwheel="this.blur()" class="form-control"
                         name="booking_application_no" placeholder="@lang('messages.booking_application_no')"
@@ -88,7 +88,8 @@
                     <button class="btn btn-primary" type="submit">@lang('messages.search')</button>
 
                     {{-- @if (request()->hasAny(['search'])) --}}
-                        <a href="{{ route('bookingReturns.index', request()->boolean('approval_queue') ? ['approval_queue' => 1] : []) }}" class="btn btn-secondary">@lang('messages.clear')</a>
+                    <a href="{{ route('bookingReturns.index', request()->boolean('approval_queue') ? ['approval_queue' => 1] : []) }}"
+                        class="btn btn-secondary">@lang('messages.clear')</a>
                     {{-- @endif --}}
                 </div>
             </div>
@@ -140,35 +141,41 @@
                                 </td>
                                 <td class="text-center">
                                     @if ($bookingReturn->status === 'Unverified')
-                                        <form method="POST"
-                                            action="{{ route('bookingReturns.updateStatus', $bookingReturn->id) }}"
-                                            class="d-inline-block">
-                                            @csrf
-                                            @method('PATCH')
-                                            <input type="hidden" name="status" value="Verified">
-                                            <input type="hidden" name="booking_id"
-                                                value="{{ $bookingReturn->booking_id }}">
-                                            <button type="button"
-                                                class="btn btn-sm btn-success js-bs-tooltip-enabled btn-verify"
-                                                data-bs-toggle="modal" data-bs-target="#confirmVerifyModal"
-                                                aria-label="Verify booking" data-bs-original-title="Verify booking Return">
-                                                <i class="fa fa-fw fa-check"></i>
-                                            </button>
-                                        </form>
+                                        @can('booking-returns.approve')
+                                            <form method="POST"
+                                                action="{{ route('bookingReturns.updateStatus', $bookingReturn->id) }}"
+                                                class="d-inline-block">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="status" value="Verified">
+                                                <input type="hidden" name="booking_id"
+                                                    value="{{ $bookingReturn->booking_id }}">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-success js-bs-tooltip-enabled btn-verify"
+                                                    data-bs-toggle="modal" data-bs-target="#confirmVerifyModal"
+                                                    aria-label="Verify booking" data-bs-original-title="Verify booking Return">
+                                                    <i class="fa fa-fw fa-check"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
                                     @endif
                                     @if ($bookingReturn->status === 'Unverified')
-                                        <a href="{{ route('bookingReturns.show', $bookingReturn->id) }}"
-                                            class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                            data-bs-toggle="tooltip" aria-label="View Booking"
-                                            data-bs-original-title="View Booking">
-                                            <i class="fa fa-fw fa-eye"></i>
-                                        </a>
+                                        @can('booking-returns.show')
+                                            <a href="{{ route('bookingReturns.show', $bookingReturn->id) }}"
+                                                class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                data-bs-toggle="tooltip" aria-label="View Booking"
+                                                data-bs-original-title="View Booking">
+                                                <i class="fa fa-fw fa-eye"></i>
+                                            </a>
+                                        @endcan
                                     @endif
+                                    @can('booking-returns.edit')
                                     <a href="{{ route('bookingReturns.edit', $bookingReturn->id) }}"
                                         class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip"
                                         aria-label="Edit booking" data-bs-original-title="Edit booking">
                                         <i class="fa fa-fw fa-pencil-alt"></i>
                                     </a>
+                                    @endcan
                                     {{-- @endif --}}
                                 </td>
                             </tr>

@@ -140,13 +140,15 @@
 
                                 <td class="text-center">
                                     <div class="btn-group">
+                                        @can('registry-order.edit')
+                                            <a href="{{ route('registry-order.edit', $registryOrderListing->id) }}"
+                                                class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                data-bs-toggle="tooltip" aria-label="Edit sub Head"
+                                                data-bs-original-title="Edit sub Head"> <i
+                                                    class="fa fa-fw fa-pencil-alt"></i></a>
+                                        @endcan
 
-                                        <a href="{{ route('registry-order.edit', $registryOrderListing->id) }}"
-                                            class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                            data-bs-toggle="tooltip" aria-label="Edit sub Head"
-                                            data-bs-original-title="Edit sub Head"> <i
-                                                class="fa fa-fw fa-pencil-alt"></i></a>
-
+                                        @can('registry-order.delete')
                                         <form method="POST"
                                             action="{{ route('registry-order.destroy', $registryOrderListing->id) }}"
                                             class="d-inline-block delete-form">
@@ -159,12 +161,15 @@
                                             </button>
 
                                         </form>
+                                        @endcan
+                                        @can('registry-order.show')
                                         <a href="{{ route('registry-order.show', $registryOrderListing->id) }}"
                                             class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
                                             data-bs-toggle="tooltip" aria-label="View registryOrderListing"
                                             data-bs-original-title="View registryOrderListing">
                                             <i class="fa fa-fw fa-eye"></i>
                                         </a>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>

@@ -133,31 +133,35 @@
 
                                 <td class="text-center">
                                     <div class="btn-group">
+                                        @can('possession-letter.edit')
+                                            <a href="{{ route('possession-letter.edit', $possessionLetter->id) }}"
+                                                class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                data-bs-toggle="tooltip" aria-label="Edit sub Head"
+                                                data-bs-original-title="Edit sub Head"> <i
+                                                    class="fa fa-fw fa-pencil-alt"></i></a>
+                                        @endcan
+                                        @can('possession-letter.delete')
+                                            <form method="POST"
+                                                action="{{ route('possession-letter.destroy', $possessionLetter->id) }}"
+                                                class="d-inline-block delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button"
+                                                    class="btn btn-sm btn-alt-danger js-bs-tooltip-enabled btn-delete"
+                                                    data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                                    <i class="fa fa-fw fa-times text-danger"></i>
+                                                </button>
 
-                                        <a href="{{ route('possession-letter.edit', $possessionLetter->id) }}"
-                                            class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                            data-bs-toggle="tooltip" aria-label="Edit sub Head"
-                                            data-bs-original-title="Edit sub Head"> <i
-                                                class="fa fa-fw fa-pencil-alt"></i></a>
-
-                                        <form method="POST"
-                                            action="{{ route('possession-letter.destroy', $possessionLetter->id) }}"
-                                            class="d-inline-block delete-form">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button"
-                                                class="btn btn-sm btn-alt-danger js-bs-tooltip-enabled btn-delete"
-                                                data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                                                <i class="fa fa-fw fa-times text-danger"></i>
-                                            </button>
-
-                                        </form>
-                                        <a href="{{ route('possession-letter.show', $possessionLetter->id) }}"
-                                            class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                            data-bs-toggle="tooltip" aria-label="View possessionLetter"
-                                            data-bs-original-title="View possessionLetter">
-                                            <i class="fa fa-fw fa-eye"></i>
-                                        </a>
+                                            </form>
+                                        @endcan
+                                        @can('possession-letter.show')
+                                            <a href="{{ route('possession-letter.show', $possessionLetter->id) }}"
+                                                class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                data-bs-toggle="tooltip" aria-label="View possessionLetter"
+                                                data-bs-original-title="View possessionLetter">
+                                                <i class="fa fa-fw fa-eye"></i>
+                                            </a>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>
