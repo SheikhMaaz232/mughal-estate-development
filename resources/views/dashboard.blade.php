@@ -17,6 +17,13 @@
                             <div class="small text-muted">@lang('messages.reporting_period')</div>
                             <div class="fw-semibold">{{ now()->startOfMonth()->format('d M Y') }} - {{ now()->format('d M Y') }}
                             </div>
+                            <div class="input-group input-group-sm mt-2">
+                                <input type="search" class="form-control"
+                                    placeholder="@lang('messages.search_current_page')"
+                                    aria-label="@lang('messages.search_current_page')" data-active-page-search>
+                                <span class="input-group-text small" data-active-page-search-status
+                                    aria-live="polite"></span>
+                            </div>
                         </div>
                     </div>
                 </div>

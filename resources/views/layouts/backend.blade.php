@@ -407,6 +407,16 @@
             background-color: #f8f9fa;
             /* Light gray if image fails */
         }
+
+        .active-page-search-match {
+            background-color: #ffe066;
+            color: #212529;
+            padding: 0 0.05em;
+        }
+
+        .active-page-search-match.is-current {
+            outline: 2px solid #e0a800;
+        }
     </style>
 
     <link rel="stylesheet" href="{{ asset('css/keyboard.css') }}">
@@ -1760,16 +1770,14 @@
 
                     <!-- Open Search Section (visible on smaller screens) -->
                     <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
-                    <button type="button" class="btn btn-sm btn-alt-secondary d-md-none" data-toggle="layout"
+                    <button type="button" class="btn btn-sm btn-alt-secondary" data-toggle="layout"
                         data-action="header_search_on">
                         <i class="fa fa-fw fa-search"></i>
                     </button>
                     <!-- END Open Search Section -->
 
                     <!-- Search Form (visible on larger screens) -->
-                    <form class="d-none d-md-inline-block" action="/dashboard" method="POST">
-                        @csrf
-
+                    <div class="d-none d-md-inline-block">
                         <div class="d-flex align-items-center px-2 text-dark fw-bold">
                             @if (isset($selectedCompany))
                                 <img src="{{ $selectedCompany->logo ? asset('storage/' . $selectedCompany->logo) : asset('images/avatar.jpg') }}"
@@ -1780,8 +1788,7 @@
                                 <i class="fa fa-building me-2 text-primary"></i>
                             @endif
                         </div>
-
-                    </form>
+                    </div>
                     <!-- END Search Form -->
                 </div>
                 <!-- END Left Section -->
@@ -1952,18 +1959,19 @@
             <!-- Header Search -->
             <div id="page-header-search" class="overlay-header bg-body-extra-light">
                 <div class="content-header">
-                    <form class="w-100" action="/dashboard" method="POST">
-                        @csrf
+                    <div class="w-100" role="search">
                         <div class="input-group">
                             <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
                             <button type="button" class="btn btn-alt-danger" data-toggle="layout"
                                 data-action="header_search_off">
                                 <i class="fa fa-fw fa-times-circle"></i>
                             </button>
-                            <input type="text" class="form-control" placeholder="Search or hit ESC.."
-                                id="page-header-search-input" name="page-header-search-input">
+                            <input type="search" class="form-control" placeholder="@lang('messages.search_current_page')"
+                                id="page-header-search-input" data-active-page-search
+                                aria-label="@lang('messages.search_current_page')">
+                            <span class="input-group-text small" data-active-page-search-status aria-live="polite"></span>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
             <!-- END Header Search -->
@@ -2396,3 +2404,106 @@
         selectPlaceholder: @json(__('messages.select-an-option'))
     };
 </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const content = document.getElementById('main-container');
+            const searchInputs = Array.from(document.querySelectorAll('[data-active-page-search]'));
+            const statusElements = Array.from(document.querySelectorAll('[data-active-page-search-status]'));
+            const noMatchesText = @json(__('messages.search_no_matches'));
+            const matchCountText = @json(__('messages.search_match_count', ['count' => '__COUNT__']));
+            let matches = [];
+            let currentMatch = -1;
+
+            if (!content || searchInputs.length === 0) {
+                return;
+            }
+
+            function clearHighlights() {
+                content.querySelectorAll('.active-page-search-match').forEach(function(mark) {
+                    mark.replaceWith(document.createTextNode(mark.textContent));
+                });
+                content.normalize();
+                matches = [];
+                currentMatch = -1;
+            }
+
+            function searchPage(term) {
+                clearHighlights();
+                const query = term.trim().toLocaleLowerCase();
+
+                if (!query) {
+                    statusElements.forEach(status => status.textContent = '');
+                    return;
+                }
+
+                const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT);
+                const textNodes = [];
+                let node;
+
+                while ((node = walker.nextNode())) {
+                    const parent = node.parentElement;
+                    if (!parent || parent.closest('script, style, noscript, input, textarea, select, button, svg, canvas, [data-active-page-search-status]')) {
+                        continue;
+                    }
+                    textNodes.push(node);
+                }
+
+                textNodes.forEach(function(textNode) {
+                    const text = textNode.nodeValue;
+                    const normalizedText = text.toLocaleLowerCase();
+                    let offset = 0;
+                    let matchIndex = normalizedText.indexOf(query, offset);
+
+                    if (matchIndex === -1) {
+                        return;
+                    }
+
+                    const fragment = document.createDocumentFragment();
+                    while (matchIndex !== -1) {
+                        fragment.append(document.createTextNode(text.slice(offset, matchIndex)));
+                        const mark = document.createElement('mark');
+                        mark.className = 'active-page-search-match';
+                        mark.textContent = text.slice(matchIndex, matchIndex + query.length);
+                        fragment.append(mark);
+                        matches.push(mark);
+                        offset = matchIndex + query.length;
+                        matchIndex = normalizedText.indexOf(query, offset);
+                    }
+                    fragment.append(document.createTextNode(text.slice(offset)));
+                    textNode.replaceWith(fragment);
+                });
+
+                const status = matches.length === 0
+                    ? noMatchesText
+                    : matchCountText.replace('__COUNT__', String(matches.length));
+                statusElements.forEach(element => element.textContent = status);
+            }
+
+            searchInputs.forEach(function(input) {
+                input.addEventListener('input', function() {
+                    searchInputs.forEach(otherInput => {
+                        if (otherInput !== input) {
+                            otherInput.value = input.value;
+                        }
+                    });
+                    searchPage(input.value);
+                });
+
+                input.addEventListener('keydown', function(event) {
+                    if (event.key !== 'Enter' || matches.length === 0) {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    if (currentMatch >= 0) {
+                        matches[currentMatch].classList.remove('is-current');
+                    }
+                    currentMatch = event.shiftKey
+                        ? (currentMatch - 1 + matches.length) % matches.length
+                        : (currentMatch + 1) % matches.length;
+                    matches[currentMatch].classList.add('is-current');
+                    matches[currentMatch].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+            });
+        });
+    </script>
